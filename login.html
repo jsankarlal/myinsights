@@ -19,9 +19,7 @@
 
     <!-- Bootstrap core CSS -->
      <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
+    
 	<style>
 		body {
   padding-top: 40px;
@@ -70,17 +68,22 @@
     <div class="container">
 
       <form class="form-signin">
-        <h2 class="form-signin-heading">Please sign in</h2>
+        <!--
+		<h2 class="form-signin-heading">Please sign in</h2>
         <label for="inputEmail" class="sr-only">Email address</label>
         <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+		-->
+		<div class="form-group">
+			<h2 class="form-signin-heading">Provide Access Token to login : </h2>
+			<input type="password" id="access-token" class="form-control" placeholder="Access Token" required autofocus>
+		</div>
+		      
+        	
+        <a class="btn btn-lg btn-primary btn-block dashboard-view" href="manager.html">Manager view</a>
+		<a class="btn btn-lg btn-primary btn-block dashboard-view" href="reps-account.html">Reps Account view</a>
+		<a class="btn btn-lg btn-primary btn-block dashboard-view" href="reps-territory.html">Reps Territory view</a>
       </form>
 
     </div> <!-- /container -->
@@ -105,5 +108,21 @@
 <script src="assets/js/Chart.min.js"></script>
 <!-- Light Bootstrap Dashboard Core javascript and methods -->
 <script src="assets/js/light-bootstrap-dashboard.js"></script>
+<!-- <script src="assets/js/login.js"></script> -->
+<script>
+	$(document).ready(function(){
+		$('.dashboard-view').on('click', function(event){
+			var token = $('#access-token').val().trim();
+			event.preventDefault();
+			if (token != '') {
+				$(this).parent().removeClass('has-error');
+				document.cookie = 'barrier=' + token + '; expires=Thu, 18 Dec 2018 12:00:00 UTC; path=/';
+				location.href = $(this).attr('href');
+			} else {
+				$(this).parent().addClass('has-error');
+			}
+		});
+	});
+</script>
   </body>
 </html>
