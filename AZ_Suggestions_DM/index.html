@@ -248,10 +248,11 @@ function aggregateSuggestionsForTable(data) {
                     row.type = 'Insight';
                     break;
             }
-            if (data.suggestions[i].Actioned_vod__c) {
+            console.log('checking status');
+            if (data.suggestions[i].Marked_As_Complete_vod__c || data.suggestions[i].Actioned_vod__c) {
+              /*   row.status = 'Marked Complete';
+            } else if (data.suggestions[i].Actioned_vod__c) { */
                 row.status = 'Actioned';
-            } else if (data.suggestions[i].Marked_As_Complete_vod__c) {
-                row.status = 'Marked Complete';
             } else if (data.suggestions[i].Dismissed_vod__c) {
                 row.status = 'Dismissed';
             } else {
@@ -1266,16 +1267,20 @@ $(document).ready(function() {
                             //console.log(suggestions[i].OwnerId);
                             if (suggestions[i].Owner_District_AZ_US__c === children_with_counts[j].Owner_District_AZ_US__c) {
                                 //console.log("it's a match");
-                                if (!(suggestions[i].Marked_As_Complete_vod__c === null || suggestions[i].Marked_As_Complete_vod__c === 0)) {
+                                var flag = false;
+                                if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
                                     //console.log("Complete!");
-                                    children_with_counts[j].completed++;
-                                } else if (!(suggestions[i].Actioned_vod__c === null || suggestions[i].Actioned_vod__c === 0)) {
+                                    //children_with_counts[j].completed++;
+                                	children_with_counts[j].actioned++;
+                                	flag = true;
+                                /* } else if (suggestions[i].Actioned_vod__c) {
                                     //console.log("Actioned!");
-                                    children_with_counts[j].actioned++;
-                                } else if (!(suggestions[i].Dismissed_vod__c === null || suggestions[i].Dismissed_vod__c === 0)) {
+                                    children_with_counts[j].actioned++; */
+                                } else if (suggestions[i].Dismissed_vod__c) {
                                     //console.log("Dismissed!");
                                     children_with_counts[j].dismissed++;
-                                } else if (suggestions[i].IsPending === 1) {
+                                    flag = true;
+                                } else if (suggestions[i].IsPending === 1 || !flag) {
                                     //console.log("Pending!!");
                                     children_with_counts[j].pending++;
                                 }
@@ -1290,16 +1295,20 @@ $(document).ready(function() {
                 for (var j = 0; j < children_with_counts.length; j++) {
                     if (suggestions[i].Owner_District_AZ_US__c === children_with_counts[j].Owner_District_AZ_US__c) {
                         //console.log("it's a match");
-                        if (!(suggestions[i].Marked_As_Complete_vod__c === null || suggestions[i].Marked_As_Complete_vod__c === 0)) {
+                        var flag = false;
+                        if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
                             //console.log("Complete!");
-                            children_with_counts[j].completed++;
-                        } else if (!(suggestions[i].Actioned_vod__c === null || suggestions[i].Actioned_vod__c === 0)) {
+                            //children_with_counts[j].completed++;
+                        	children_with_counts[j].actioned++;
+                        	flag = true;
+                        /* } else if (suggestions[i].Actioned_vod__c) {
                             //console.log("Actioned!");
-                            children_with_counts[j].actioned++;
-                        } else if (!(suggestions[i].Dismissed_vod__c === null || suggestions[i].Dismissed_vod__c === 0)) {
+                            children_with_counts[j].actioned++; */
+                        } else if (suggestions[i].Dismissed_vod__c) {
                             //console.log("Dismissed!");
                             children_with_counts[j].dismissed++;
-                        } else if (suggestions[i].IsPending === 1) {
+                            flag = true;
+                        } else if (suggestions[i].IsPending === 1 || !flag) {
                             //console.log("Pending!!");
                             children_with_counts[j].pending++;
                         }

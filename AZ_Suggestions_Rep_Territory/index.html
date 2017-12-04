@@ -954,11 +954,11 @@ $(document).ready(function() {
 
 
                     	var flag = false;
-	                   	 if (suggestions[i].Marked_As_Complete_vod__c) {
+	                   	 if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
 	                            //console.log("Complete!");
-	       	                 my_count["completed"]++;
+	       	                 /* my_count["completed"]++;
 	       	                 flag = true;
-	       	             } else if (suggestions[i].Actioned_vod__c) {
+	       	             } else if (suggestions[i].Actioned_vod__c) { */
 	       	                     //console.log("Actioned!");
 	       	                     my_count["actioned"]++;
 	       	                     flag = true;
@@ -982,11 +982,11 @@ $(document).ready(function() {
             } else { //no need to respect the filters
                     //console.log("it's a match");
             	var flag = false;
-            	 if (suggestions[i].Marked_As_Complete_vod__c) {
+            	 if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
                      //console.log("Complete!");
-	                 my_count["completed"]++;
+	                 /* my_count["completed"]++;
 	                 flag = true;
-	             } else if (suggestions[i].Actioned_vod__c) {
+	             } else if (suggestions[i].Actioned_vod__c) { */
 	                     //console.log("Actioned!");
 	                     my_count["actioned"]++;
 	                     flag = true;
@@ -1042,9 +1042,9 @@ $(document).ready(function() {
             }
             //match status
             console.log('checking status');
-            if (data.suggestions[i].Marked_As_Complete_vod__c) {
-                row.status = 'Marked Complete';
-            } else if (data.suggestions[i].Actioned_vod__c) {
+            if (data.suggestions[i].Marked_As_Complete_vod__c || data.suggestions[i].Actioned_vod__c) {
+              /*   row.status = 'Marked Complete';
+            } else if (data.suggestions[i].Actioned_vod__c) { */
                 row.status = 'Actioned';
             } else if (data.suggestions[i].Dismissed_vod__c) {
                 row.status = 'Dismissed';
