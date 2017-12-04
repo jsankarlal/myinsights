@@ -1,0 +1,1806 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>AZ Suggestion Manager View Mockup</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <!-- Bootstrap core CSS     -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <!--  Light Bootstrap Dashboard core CSS    -->
+    <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
+    <!--     Fonts and icons     -->
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href='assets/css/roboto.css' rel='stylesheet' type='text/css'>
+    <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+</head>
+
+<body class="sidebar-mini">
+    <div class="wrapper">
+    	<div id="response">
+    	</div>
+        <div class="main-panel">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                 <!--   <div class="navbar-header">
+                        <a class="navbar-brand"></a>
+                    </div>
+				-->
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li style="width: 320px;padding-left:5px;">
+                                <select multiple data-title="Please Select Team Members" name="my_team" id="team_picker" class="selectpicker team_picker" data-style="btn-info btn-fill btn-block">
+                                </select>
+                            </li>
+                            <!--
+                            <li>
+                                <a id="driver_filter_label">Driver:</a>
+                            </li> -->
+                            <li style="width: 320px;padding-left:5px;">
+                                <select multiple name="driver" id="driver_filter" class="selectpicker driver-filter" data-title="Select Driver(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
+                                </select>
+                            </li>
+                            <!--
+                            <li>
+                                <a id="product_filter_label">Product:</a>
+                            </li> -->
+                            <li style="width: 320px;padding-left:5px;">
+                                <select multiple name="product" id="product_filter" class="selectpicker product-filter" data-title="Select Product(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
+                                </select>
+                            </li>
+                    </div>
+                    </ul>
+                </div>
+        </div>
+        </nav>
+        <div class="content" style="background-color: #f2f2f2">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6" id="team_continer">
+                        <div class="card" id="suggestions_card">
+                            <div class="chart-container" style="position: relative;height: 90px;width:100%;padding:0px 5px;">
+                                <canvas id="suggestions_average"></canvas>
+                            </div>
+                            <div class="chart-container" id="team_chart_container" style="position: relative; height:250px; width:100%; margin: 0px 5px; padding:0px 5px">
+                                <canvas id="suggestions"></canvas>
+                            </div>
+                            <div class="footer text-center text-muted" style= "margin: 0px; padding: 0px 10px">
+                                Total # of Suggestions
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="suggestions_by_type_section">
+                        <div class="card text-center">
+                            <div class="header" >
+                                Suggestions by Type
+                            </div>
+                            <div class="chart-container" id="suggestions_by_type_container" style="position: relative; height:305px; width:100%;">
+                                <canvas id="suggestions_by_type"></canvas>
+                            </div>
+                            <div class="footer text-center text-muted" style= "margin: 0px; padding: 0px 10px">
+                                Total # of Suggestions
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="header">
+                                # of Suggestions YTD
+                            </div>
+                            <div class="chart-container" id="trends_container" style="position: relative; height:250px; width:100%;">
+                                <canvas id="chart1"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="toolbar">
+                                </div>
+                                <table id="bootstrap-table" class="table-bordered">
+                                    <thead>
+                                        <th data-field="name" data-sortable="true">Assigned To</th>
+										<!--    <th data-field="title" data-sortable="true">Title</th> -->
+										<th data-field="accountName" data-sortable="true">Account Name</th>
+                                        <th data-field="type" data-sortable="true">Type</th>
+                                        <th data-field="status" data-sortable="true">Status</th>
+                                        <th data-field="postedDate" data-sortable="true">Posted Date</th>
+										<th data-field="expirationDate" data-sortable="true">Expiration Date</th>
+										<th data-field="reason" data-sortable="true">Reason</th>
+                                    </thead>
+                                    <tbody id="tablebody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!--   Core JS Files and PerfectScrollbar library inside jquery.ui   -->
+<script src="assets/js/jquery.min.js" type="text/javascript"></script>
+<script src="assets/js/jquery-ui.min.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap-table.js"></script>
+<script src="assets/js/bootstrap-table-multiple-search.js"></script>
+<script src="assets/js/bootstrap-table-filter.js"></script>
+<!-- time library -->
+<script src="assets/js/moment.min.js"></script>
+<!-- Q.js Promise Library. Required for Veeva MyInsights Library -->
+<script src="assets/js/q.js"></script>
+<!-- Veeva MyInsights Library -->
+<script src="assets/js/MyInsightsLibrary.js"></script>
+<!--  Select Picker Plugin -->
+<script src="assets/js/bootstrap-selectpicker.js"></script>
+<script src="assets/js/sweetalert2.js"></script>
+<!--  Chart.js 2.6.0 -->
+<script src="assets/js/Chart.min.js"></script>
+<!-- Light Bootstrap Dashboard Core javascript and methods -->
+<script src="assets/js/light-bootstrap-dashboard.js"></script>
+<script>
+//proper color scheme for data visualizations
+//5DA5DA (blue), rgb(93,165,218)
+//FAA43A (orange), rgb(250,164,58)
+//60BD68 (green), rgb(96,189,104)
+//F17CB0 (pink), rgb(241,124,176)
+//DECF3F (yellow), rgb(222,207,63)
+//B276B2 (purple), rgb(178,118,178)
+//4D4D4D (gray), rgb(77,77,77)
+//F15854 (red), rgb(241,88,84)
+//B2912F (brown), rgb(178,145,47)
+var first_run = true;
+
+let pendingColor = ['rgba(250,164,58, 1)'];
+let dismissedColor = ['rgba(242,227,83, 1)'];
+let completedColor = ['rgba(169,208,94, 1)'];
+let actionedColor = ['rgba(96,189,104, 1)'];
+
+var pendingColorDisplay = ['rgba(250,164,58, 1)'];
+var dismissedColorDisplay = ['rgba(242,227,83, 1)'];
+var completedColorDisplay = ['rgba(169,208,94, 1)'];
+var actionedColorDisplay = ['rgba(96,189,104, 1)'];
+
+
+
+$(document).ready(function() {
+
+    function createTeamChart(teamData) {
+
+        $('#team_chart_container').empty();
+        $('#team_chart_container').append('<canvas id="suggestions"></canvas>');
+        if (myChart) {
+            myChart.destroy();
+        }
+
+        var names = [];
+        var pending = [];
+        var dismissed = [];
+        var completed = [];
+        var actioned = [];
+
+        for (var i = 0; i < teamData.length; i++) {
+            pendingColorDisplay[i] = 'rgba(250,164,58, 1)';
+            dismissedColorDisplay[i] = 'rgba(242,227,83, 1)';
+            completedColorDisplay[i] = 'rgba(169,208,94, 1)';
+            actionedColorDisplay[i] = 'rgba(96,189,104, 1)';
+            names.push(teamData[i].Name);
+            pending.push(teamData[i].pending);
+            dismissed.push(teamData[i].dismissed);
+            completed.push(teamData[i].completed);
+            actioned.push(teamData[i].actioned);
+        }
+
+        var myDataSets = [];
+        for (var i = 0; i < completed.length; i++) {
+
+        }
+        //suggestions chart
+        var ctx = document.getElementById("suggestions");
+        var myChart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: {
+                labels: names,
+                datasets: [{
+                    label: 'Pending',
+                    data: pending,
+                    backgroundColor: pendingColorDisplay,
+                    borderColor: pendingColorDisplay
+                },{
+                    label: 'Dismissed',
+                    data: dismissed,
+                    backgroundColor: dismissedColorDisplay,
+                    borderColor: dismissedColorDisplay
+                },{
+                    label: 'Marked Complete',
+                    data: completed,
+                    backgroundColor: completedColorDisplay,
+                    borderColor: completedColorDisplay
+                }, {
+                    label: 'Actioned',
+                    data: actioned,
+                    backgroundColor: actionedColorDisplay,
+                    borderColor: actionedColorDisplay
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                title: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        stacked: true,
+                        ticks: {
+                            beginAtZero: true
+                        },
+                    }],
+                    xAxes: [{
+                        display: true,
+                        stacked: true,
+                    }]
+                },
+                legend: {
+                    display: true,
+                    labels: {
+                        filter: function (legendItem, chartData) {
+                            console.log(legendItem);
+                            console.log(chartData);
+                            
+                            for (var i = 0; i < chartData.datasets.length; i++) {
+                                if (legendItem.text === chartData.datasets[i].label) {
+                                    var hasValue = false;
+                                    for (var j = 0; j < chartData.datasets[i].data.length; j++) {
+                                        if (chartData.datasets[i].data[j] > 0) {
+                                            hasValue = true;
+                                        }
+                                    }
+                                    return hasValue;
+                                }
+                            }
+                            
+                        }
+                    }
+                },
+                tooltips: {
+                    enabled: false
+                },
+                onClick: handleClick,
+                animation: {
+                    onComplete: function() {
+                        var chartInstance = this.chart,
+                        ctx = chartInstance.ctx,
+						preset = 0;
+
+                        ctx.font = Chart.helpers.fontString(10, "bold", Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'center';
+
+                        this.data.datasets.forEach(function(dataset, i) {
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                            meta.data.forEach(function(bar, index) {
+                                var data = dataset.data[index];
+                                //console.log(bar._model.x);
+                                if (data > 0) {
+                                	ctx.fillText(data, bar._model.base+(bar._model.x - bar._model.base)/2, bar._model.y-6);
+    								preset = bar._model.x;
+                                }   
+                            });
+                        });
+                    }
+                }
+            }
+        });
+
+        function handleClick(e) {
+        /**
+        var currentChart = myChart.getElementAtEvent(e)[0];
+        console.log(currentChart);
+        var currentTeamMember = currentChart._view.label;
+        console.log(currentTeamMember);
+        var currentDataset = currentChart._datasetIndex;
+        var currentData = currentChart._index;
+
+        //var dataset = myChart1.getElementAtEvent(e)[0]._datasetIndex;
+        swal({
+            html: "<h4>" + currentTeamMember + "</h4><br/>Pending: <strong>" + pending[currentData] +
+                "</strong><br/>Dismissed: <strong>" + dismissed[currentData] + "</strong><br/>Marked Complete: <strong>" +
+                completed[currentData] + "</strong><br/>Actioned: <strong>" + actioned[currentData] + "</strong>"
+        });**/
+
+
+            console.log(myChart.getElementAtEvent(e));
+            var chartData = myChart.getElementAtEvent(e)[0]._view;
+            console.log(chartData);
+        /**console.log(currentChart);
+        $(".search").find(".form-control").val(currentChart._view.label + '&' + currentChart._view.datasetLabel);
+        $(".search").find(".form-control").trigger("keyup");**/
+
+
+            buildTable(appData.table_data, chartData.label, chartData.datasetLabel);
+
+            document.location.href = 'index.html#bootstrap-table';
+        }
+    }
+
+//createTeamChart();
+
+function createAverageChart(mydata) {
+    //console.log(mydata);
+    //suggestions average chart
+    var ctxAverage = document.getElementById("suggestions_average");
+    var myChartAverage = new Chart(ctxAverage, {
+        type: 'horizontalBar',
+        data: {
+            labels: ['Overall Team Average'],
+            datasets: [{
+                label: 'Pending',
+                data: [mydata.pending],
+                backgroundColor: pendingColor,
+                borderColor: pendingColor
+            }, {
+                label: 'Dismissed',
+                data: [mydata.dismissed],
+                backgroundColor: dismissedColor,
+                borderColor: dismissedColor
+            }, {
+                label: 'Marked Complete',
+                data: [mydata.completed],
+                backgroundColor: completedColor,
+                borderColor: completedColor
+            }, {
+                label: 'Actioned',
+                data: [mydata.actioned],
+                backgroundColor: actionedColor,
+                borderColor: actionedColor
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            title: {
+                display: false
+            },
+            scales: {
+
+                yAxes: [{
+                    display: true,
+                    stacked: true,
+                    ticks: {
+                        fontStyle: 'bold'
+                    },
+                }],
+                xAxes: [{
+                    display: true,
+                    stacked: true,
+                }]
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+			animation: {
+				onComplete: function() {
+					var chartInstance = this.chart,
+					    ctx = chartInstance.ctx,
+						preset = 0;
+
+					ctx.font = Chart.helpers.fontString(10, "bold", Chart.defaults.global.defaultFontFamily);
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'center';
+
+					this.data.datasets.forEach(function(dataset, i) {
+						var meta = chartInstance.controller.getDatasetMeta(i);
+						meta.data.forEach(function(bar, index) {
+							//var data = dataset.data[index];
+							var data = Number(dataset.data[index]).toFixed(2);
+							//console.log(bar._model.x);
+							if (data > 0) {
+								//ctx.fillText(data, bar._model.x, bar._model.base - (bar._model.base - bar._model.y)/2-5);								
+								ctx.fillText(data, bar._model.base+(bar._model.x - bar._model.base)/2, bar._model.y+3);
+								preset = bar._model.x;
+							}   
+						});
+					});
+				}
+			}
+        }
+    });
+}
+
+
+//0 = calls
+//1 = email
+//2 = insight
+//3 = call objective
+function createSuggestionsByTypeChart(type_data) {
+
+    $('#suggestions_by_type_container').empty();
+    $('#suggestions_by_type_container').append('<canvas id="suggestions_by_type"></canvas>');
+    if (myChart1) {
+        myChart1.destroy();
+    }
+
+    var labels = ["Call", "Email", "Insight", "Call Objective"];
+    var labels_to_display = [];
+    var data_to_display = [];
+
+    for (var i = 0; i < labels.length; i++) {
+        if (type_data[i] !== 0) {
+            labels_to_display.push(labels[i]);
+            data_to_display.push(type_data[i]);
+        }
+    }
+
+    if (data_to_display.length > 1) {//only render the chart if there are meaningful types to break down.
+        first_run = false;
+        var ctx1 = document.getElementById("suggestions_by_type");
+
+        var myChart1 = new Chart(ctx1, {
+			type: 'horizontalBar',
+			data: {
+				labels: labels_to_display,
+				datasets: [{
+					label: 'Sugestions by Type',
+					data: data_to_display,
+					backgroundColor: [
+						'rgba(93,165,218, 1)', 'rgba(93,165,218, 1)', 'rgba(93,165,218, 1)', 'rgba(93,165,218, 1)', 'rgba(93,165,218, 1)'
+					],
+					borderColor: [
+						'rgba(93,165,218, 1)'
+					]
+				}]
+			},
+			options: {
+				maintainAspectRatio: false,
+				responsive: true,
+				title: {
+					display: false
+				},
+				scales: {
+					yAxes: [{
+						display: true,
+						stacked: false,
+						ticks: {
+							beginAtZero: true
+						},
+					}],
+					xAxes: [{
+						display: true,
+						stacked: false,
+						barPercentage: 0.7,
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				},
+				legend: {
+					display: false,
+					labels: {
+						display: true
+					}
+				},
+				tooltips: {
+					enabled: false
+				},
+				onClick: handleClick,
+				animation: {
+					onComplete: function() {
+						var chartInstance = this.chart,
+							ctx = chartInstance.ctx;
+
+						ctx.font = Chart.helpers.fontString(10, "bold", Chart.defaults.global.defaultFontFamily);
+						ctx.textAlign = 'center';
+						ctx.textBaseline = 'center';
+
+						this.data.datasets.forEach(function(dataset, i) {
+							var meta = chartInstance.controller.getDatasetMeta(i);
+							meta.data.forEach(function(bar, index) {
+								var data = dataset.data[index];
+								//console.log(bar._model.x);
+								if (data > 0) {
+									ctx.fillText(data, bar._model.base+(bar._model.x - bar._model.base)/2, bar._model.y);
+								}   
+							});
+						});
+					}
+				}
+            }
+        });
+
+    } else if (first_run){
+        $("#suggestions_by_type_section").remove();
+        $("#team_continer").removeClass("col-md-6");
+        $("#team_continer").addClass("col-md-12");
+    }
+
+    
+
+    function handleClick(e) {
+        /**var currentChart = myChart1.getElementAtEvent(e)[0];
+        console.log(labels_to_display[currentChart._datasetIndex]);
+        console.log(data_to_display[currentChart._index]);
+        //var dataset = myChart1.getElementAtEvent(e)[0]._datasetIndex;
+        var myhtml = "";
+        for (var i = 0; i < labels_to_display.length; i++) {
+            myhtml += "<strong>" + labels_to_display[i] + ": </strong> " +
+                data_to_display + "<br/>";
+        }
+        swal({
+            html: myhtml
+        });
+        **/
+        //document.location.href = 'index.html#bootstrap-table';
+        //console.log(chart_config.data.datasets[activeElement[0]._datasetIndex].data[activeElement[0]._index]);
+
+
+        /**
+
+        switch (data.suggestions[i].RecordTypeId) {
+                case data.recordtype_map.Call_vod:
+                    row.type = 'Call';
+                    break;
+                case data.recordtype_map.Call_Objective_vod:
+                    row.type = 'Call Objective';
+                    break;
+                case data.recordtype_map.Email_vod:
+                    row.type = 'Email';
+                case data.recordtype_map.Insight_vod:
+                    row.type = 'Insight';
+            }
+
+        **/
+
+        var chartData = myChart1.getElementAtEvent(e)[0]._view;
+        console.log(chartData);
+        /**console.log(currentChart);
+        $(".search").find(".form-control").val(currentChart._view.label + '&' + currentChart._view.datasetLabel);
+        $(".search").find(".form-control").trigger("keyup");**/
+
+        //function buildTable(data, nameFilter, statusFilter, typeFilter)
+        buildTable(appData.table_data, null, null, chartData.label);
+
+
+        document.location.href = 'index.html#bootstrap-table';
+
+    }
+}
+
+function createTrendsChart(months, totals, completes) {
+
+    $('#trends_container').empty();
+    $('#trends_container').append('<canvas id="chart1"></canvas>');
+    if (myChart3) {
+        myChart3.destroy();
+    }
+
+    var ctx3 = document.getElementById("chart1");
+    var myChart3 = new Chart(ctx3, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                type: 'line',
+                label: 'Total',
+                data: totals,
+                backgroundColor: 'rgba(93,165,218, 0.5)',
+                borderColor: 'rgba(93,165,218, 1)',
+                borderWidth: 1
+            }, {
+                type: 'line',
+                label: 'Completed/Actioned',
+                data: completes,
+                backgroundColor: 'rgba(96,189,104, 0.9)',
+                borderColor: 'rgba(96,189,104,1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        beginAtZero: true,
+                        fontStyle: 'bold'
+                    }
+                }],
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: false
+                    }
+                }],
+            },
+            legend: {
+                labels: {
+                    fontColor: '#777',
+                    fontFamily: 'Arial'
+                }
+            },
+            animation: {
+				onComplete: function() {
+					var chartInstance = this.chart,
+						ctx = chartInstance.ctx;
+
+					ctx.font = Chart.helpers.fontString(9, "bold", Chart.defaults.global.defaultFontFamily);
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'center';
+					ctx.fillStyle = 'rgba(0, 0, 0,.7)';
+
+					this.data.datasets.forEach(function(dataset, i) {
+						var meta = chartInstance.controller.getDatasetMeta(i);
+						meta.data.forEach(function(bar, index) {
+							var data = dataset.data[index];
+							//console.log(bar._model.x);
+							if (data > 0) {
+								ctx.fillText(data, bar._model.x, bar._model.y-15);
+							}   
+						});
+					});
+				}
+			}
+        }
+    });
+}
+
+    //initialize the promise library
+    $q = window.Q;
+    //console.log("q.js initialized");
+
+    function getUserId() {
+        //console.log("getting userId");
+        var deferred = $q.defer();
+
+        ds.getDataForCurrentObject('User', 'Id')
+            .then(function(result) {
+                //console.log(result);
+                deferred.resolve(result.User.Id);
+            })
+
+        return deferred.promise;
+    }
+
+    function getCurrentUserTerritoryId(userId) {
+        //console.log("getting UserTerr data based on userid = " + userId);
+        //var inUserTerr = ds.getInStatement([userId]);
+        var queryConfig = {
+            userTerr: {
+                object: 'UserTerritory',
+                fields: ['TerritoryId'],
+                where: "UserId = '" + userId + "'"
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.userTerr)
+            .then(function(result) {
+                //console.log(result)
+                deferred.resolve(result.data); //we're assuming only 1 territory is assigned per user
+            });
+
+        return deferred.promise;
+    }
+
+    //accepts a single value territory SFDC Id
+    function getChildTerritoryIds(terrId) {
+        //console.log("getting more territories");
+        //var inTerr = ds.getInStatement([terrId]);
+        var queryConfig = {
+            childTerr: {
+                object: 'Territory',
+                fields: ['Id'],
+                where: 'ParentTerritoryId = \'' + terrId + '\''
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.childTerr)
+            .then(function(result) {
+                //console.log(result);
+                deferred.resolve(result.data); //we're assuming only 1 level of child territories deep
+            });
+
+        return deferred.promise;
+
+    }
+
+    //accepts an array of territory SFDC Id's
+    function getChildUserIds(terrIds) {
+        //console.log("getting user id's of the manager's minions");
+        var inTerr = ds.getInStatement(terrIds);
+
+        var queryConfig = {
+            childTerr: {
+                object: 'UserTerritory',
+                fields: ['UserId'],
+                where: 'TerritoryId IN ' + inTerr
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.childTerr)
+            .then(function(result) {
+                //console.log(result);
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise; //returning a list of User SFDC Ids
+    }
+
+    //accepts an array of User SFDC id's
+    function getChildUsers(userIds) {
+        //console.log("getting the usernames and id's together");
+        var inTerr = ds.getInStatement(userIds);
+
+        var queryConfig = {
+            childTerr: {
+                object: 'User',
+                fields: ['Name', 'Id'],
+                where: 'Id IN ' + inTerr
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.childTerr)
+            .then(function(result) {
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise; //returning a list of User Names for display
+    }
+
+    function getProducts() {
+        //console.log("querying product catalog");
+        var queryConfig = {
+            all_products: {
+                object: 'Product_vod__c',
+                fields: ['Name', 'Id'],
+                where: ''
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.all_products)
+            .then(function(result) {
+                //console.log(result);
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise; //returning a list of products
+    }
+
+    function getRecordTypes() {
+        //console.log('getting recordtypes');
+
+        var inObject = ds.getInStatement(['Suggestion_vod__c', 'Suggestion_Tag_vod__c']);
+
+        var queryConfig = {
+            recordTypes: {
+                object: 'RecordType',
+                fields: ['Id', 'DeveloperName'],
+                where: 'SobjectType IN ' + inObject
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.recordTypes)
+            .then(function(result) {
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+
+    function getSuggestions(userIds) {
+        //console.log("getting Suggestion header records");
+        var inOwner = ds.getInStatement(userIds);
+   //     $('#response').append('<div> Owner :' + JSON.stringify(inOwner, null, "\t") + '</div>');
+
+        var queryConfig = {
+            suggestions: {
+                object: 'Suggestion_vod__c',
+                fields: ['OwnerId','Account_Name_Stamp_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c','Title_vod__c','Reason_vod__c','Posted_Date_vod__c', 'Expiration_Date_vod__c']
+   //             where: 'OwnerId IN ' + inOwner
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.suggestions)
+            .then(function(result) {
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+	
+	function getAccountNames(accountIds) {
+        //console.log("getting Account Names from account Id's");
+        
+        var accIds = ds.getInStatement(accountIds);
+        //var accIds = ds.getInStatement(['001U000000pMeKfIAK', '001U000000pLpEpIAK', '001U000000pLpEQIA0','001U000000pLwcvIAC', '001U000000pM78IIAS', '0010P00001oXvksQAC', '001U000000pM3YPIA0','001U000001OdO3NIAV','001U000001OdO3NIAV', '001U000000pLwxEIAS','001U000000pLwxEIAS','001U000000pM0WnIAK','001U000000pMqtRIAS','001U000001Vli5eIAB','001U000000pLmJmIAK']);
+      //  $('#response').append('<pre> accounts :' + JSON.stringify(accIds, null, "\t") + '</pre>');
+        var queryConfig = {
+            accounts: {
+                object: 'Account',
+                fields: ['Name', 'Id'],
+                where: 'Id IN ' + accIds
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.accounts)
+            .then(function(result) {
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+	
+    function getSuggestionTags(suggestions) {
+
+        var suggestionIds = [];
+        for (var i = 0; i < suggestions.length; i++) {
+            suggestionIds.push(suggestions[i].Id);
+        }
+        //console.log("getting tags");
+        var inSuggest = ds.getInStatement(suggestionIds);
+
+
+        var queryConfig = {
+            suggestionTags: {
+                object: 'Suggestion_Tag_vod__c',
+                fields: ['Product_Name__c', 'Suggestion_vod__c', 'Driver_vod__c'],
+                where: 'Suggestion_vod__c IN ' + inSuggest
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.suggestionTags)
+            .then(function(result) {
+                //console.log(result);
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+
+    function disableProductFilter() {
+        //console.log('sup');
+
+        $('.product-filter').remove();
+        $('#product_filter_label').remove();
+        //$('.product-filter').children().css({color: "#9A9A9A"; border-color: "#9A9A9A"});
+        //$('.product-filter').selectPicker('setStyle','btn-default','add');
+        //$('.product-filter').prop('disabled', true);
+        //$('.product-filter').selectpicker('refresh');
+    }
+
+    function disableDriverFilter() {
+        $('.driver-filter').remove();
+        $('#driver_filter_label').remove();
+    }
+
+    function getAllSuggestionFeedback() {
+        //console.log("getting feedback");
+
+        var queryConfig = {
+            suggestionFeedback: {
+                object: 'Suggestion_Feedback_vod__c',
+                fields: ['Suggestion_vod__c'],
+                where: ''
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.suggestionFeedback)
+            .then(function(result) {
+                //console.log(result);
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+
+    //returns true if a match is found
+    function countAgainstTagFilters(applyProductFilter, applyDriverFilter, productFilter, driverFilter, suggestionTags) {
+        //console.log(suggestionTags);
+        var product_match = false;
+        var driver_match = false;
+
+        if (applyProductFilter) {
+            if (suggestionTags) {
+                for (var i = 0; i < suggestionTags.length; i++) {
+                    if (productFilter.has(suggestionTags[i].Product_Name__c)) {
+                        product_match = true;
+                    }
+                }
+            }
+        }
+        if (applyDriverFilter) {
+            if (suggestionTags) {
+                //console.log("checking driver filter");
+                for (var i = 0; i < suggestionTags.length; i++) {
+                    if (driverFilter.has(suggestionTags[i].Driver_vod__c)) {
+                        driver_match = true;
+                        //console.log("passed!");
+                    }
+                }
+            }
+
+        }
+        return (product_match || driver_match);
+    }
+
+    //only supporting one value per filter, not a multi-select
+    function countSuggestionsByType(productFilter, driverFilter, userFilter, recordTypeMap, suggestions) {
+        //console.log(suggestions);
+        //console.log(recordTypeMap);
+        var calls = 0;
+        var email = 0;
+        var insight = 0;
+        var objective = 0;
+
+        var applyProductFilter = false;
+        if (productFilter) {
+            applyProductFilter = true;
+        }
+
+        var applyDriverFilter = false;
+        if (driverFilter) {
+            applyDriverFilter = true;
+        }
+        var applyUserFilter = false;
+        if(userFilter) {
+            applyUserFilter = true;
+
+        }
+        var userSet = new Set(userFilter);
+
+
+        for (var i = 0; i < suggestions.length; i++) {
+
+            if (applyUserFilter) {
+                if (!userSet.has(suggestions[i].OwnerId)) {
+                    //console.log("filtering out a suggestion");
+                    continue;
+                }
+            }
+
+            var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));//hacky thing, not good for production
+
+            switch (suggestions[i].RecordTypeId) {
+                case recordTypeMap.Call_vod:
+                    if (applyProductFilter || applyDriverFilter) {
+                        if (!hasTags) { // no tags get filtered out, not counting them
+                            break;
+                        } else { //check tags
+                            if (countAgainstTagFilters(applyProductFilter,
+                                    applyDriverFilter,
+                                    productFilter,
+                                    driverFilter,
+                                    suggestions[i].tags)) {
+                                calls++
+                            }
+                        }
+                    } else {
+                        calls++;
+                    }
+                    break;
+                case recordTypeMap.Email_vod:
+                    if (applyProductFilter || applyDriverFilter) {
+                        if (!hasTags) { // no tags get filtered out, not counting them
+                            break;
+                        } else { //check tags
+                            if (countAgainstTagFilters(applyProductFilter,
+                                    applyDriverFilter,
+                                    productFilter,
+                                    driverFilter,
+                                    suggestions[i].tags)) {
+                                email++
+                            }
+                        }
+                    } else {
+                        email++;
+                    }
+                    break;
+                case recordTypeMap.Insight_vod:
+                    if (applyProductFilter || applyDriverFilter) {
+                        if (!hasTags) { // no tags get filtered out, not counting them
+                            break;
+                        } else { //check tags
+                            if (countAgainstTagFilters(applyProductFilter,
+                                    applyDriverFilter,
+                                    productFilter,
+                                    driverFilter,
+                                    suggestions[i].tags)) {
+                                insight++
+                            }
+                        }
+                    } else {
+                        insight++;
+                    }
+                    break;
+                case recordTypeMap.Call_Objective_vod:
+                    if (applyProductFilter || applyDriverFilter) {
+                        if (!hasTags) { // no tags get filtered out, not counting them
+                            break;
+                        } else { //check tags
+                            if (countAgainstTagFilters(applyProductFilter,
+                                    applyDriverFilter,
+                                    productFilter,
+                                    driverFilter,
+                                    suggestions[i].tags)) {
+                                objective++
+                            }
+                        }
+                    } else {
+                        objective++;
+                    }
+                    break;
+            }
+        }
+        return [calls, email, insight, objective];
+    }
+
+    //returns two arrays of counts, one for total suggestions, one for completed/actioned suggestions
+    //0 = january, 11 = december.
+    //array must be truncated to only show YTD 
+    //disregarding any suggestions that are older than 1 year old
+    //use product/driver filters if applicable
+    function countSuggestionsByMonth(productFilter, driverFilter, userFilter, suggestions) {
+
+        //userFilter = array of User SFDC Id's
+        //console.log(userFilter);
+        //transform into a Set
+        var userSet = new Set(userFilter);
+
+        var count = {
+            total: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            complete: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        };
+
+        var applyProductFilter = !(productFilter === null);
+        var applyDriverFilter = !(driverFilter === null);
+        var applyUserFilter = !(userFilter === null);
+
+            for (var i = 0; i < suggestions.length; i++) {
+
+                //don't count any tags older than a year old
+                if (moment().diff(suggestions[i].CreatedDate, 'years') > 0) {
+                    continue;
+                }
+
+                if (applyUserFilter) { //skip over users that don't match
+
+                    if (!userSet.has(suggestions[i].OwnerId)) {
+                        continue;
+                    }
+                }
+
+                if (applyProductFilter || applyDriverFilter) {
+                    var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));
+
+                    if (!hasTags && !applyUserFilter) { // no tags get filtered out, not counting them
+                        continue;
+                    } else { //check tags
+                        if (countAgainstTagFilters(applyProductFilter,
+                                applyDriverFilter,
+                                productFilter,
+                                driverFilter,
+                                suggestions[i].tags)) {
+
+                            var month = new Date(suggestions[i].CreatedDate).getMonth();
+                            count.total[month]++;
+                            if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
+                                count.complete[month]++;
+                            }
+                        } else {
+                            continue;
+                        }
+                    }
+                } else {
+                    var month = new Date(suggestions[i].CreatedDate).getMonth();
+                    count.total[month]++;
+                    if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
+                        count.complete[month]++;
+                    }
+                }
+            }
+
+        return count;
+    }
+
+    function countSuggestionsByUserByStatus(productFilter, driverFilter, suggestions, childUsers) {
+        //console.log(suggestions);
+        //console.log(childUsers);
+        /** this is the going to be the shape of our output 
+        var userCount = [{
+            Id: '0934034039403',
+            Name: 'Vincent Vega',
+            pending: 0,
+            dismissed: 0,
+            actioned: 0,
+            completed: 0
+        }];
+        **/
+        var children_with_counts = childUsers.slice(0);
+        //initialize the object shape
+        for (var i = 0; i < children_with_counts.length; i++) {
+
+            children_with_counts[i]["pending"] = 0;
+            children_with_counts[i]["dismissed"] = 0;
+            children_with_counts[i]["actioned"] = 0;
+            children_with_counts[i]["completed"] = 0;
+        }
+        //console.log(children_with_counts);
+
+        var applyProductFilter = !(productFilter === null);
+        var applyDriverFilter = !(driverFilter === null);
+
+        for (var i = 0; i < suggestions.length; i++) {
+            if (applyProductFilter || applyDriverFilter) { //if we're respecting the filters
+                var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));
+                if (!hasTags) { // no tags get filtered out, not counting them
+                    continue;
+                } else { //check tags
+                    if (countAgainstTagFilters(applyProductFilter,
+                            applyDriverFilter,
+                            productFilter,
+                            driverFilter,
+                            suggestions[i].tags)) {
+                        //we passed! compare this suggestion to our user array
+                        for (var j = 0; j < children_with_counts.length; j++) {
+                            //console.log(suggestions[i].OwnerId);
+                            if (suggestions[i].OwnerId === children_with_counts[j].Id) {
+                                //console.log("it's a match");
+                                if (suggestions[i].Marked_As_Complete_vod__c) {
+                                    //console.log("Complete!");
+                                    children_with_counts[j].completed++;
+                                } else if (suggestions[i].Actioned_vod__c) {
+                                    //console.log("Actioned!");
+                                    children_with_counts[j].actioned++;
+                                } else if (suggestions[i].Dismissed_vod__c) {
+                                    //console.log("Dismissed!");
+                                    children_with_counts[j].dismissed++;
+                                } else if (suggestions[i].IsPending === 1) {
+                                    //console.log("Pending!!");
+                                    children_with_counts[j].pending++;
+                                }
+                            }
+                        }
+
+                    } else {
+                        continue;
+                    }
+                }
+            } else { //no need to respect the filters
+                for (var j = 0; j < children_with_counts.length; j++) {
+
+                	if (suggestions[i].OwnerId === children_with_counts[j].Id) {
+                        //console.log("it's a match");
+                        if (suggestions[i].Marked_As_Complete_vod__c) {
+                            //console.log("Complete!");
+                            children_with_counts[j].completed++;
+                        } else if (suggestions[i].Actioned_vod__c) {
+                            //console.log("Actioned!");
+                            children_with_counts[j].actioned++;
+                        } else if (suggestions[i].Dismissed_vod__c) {
+                            //console.log("Dismissed!");
+                            children_with_counts[j].dismissed++;
+                        } else if (suggestions[i].IsPending === 1) {
+                            //console.log("Pending!!");
+                            children_with_counts[j].pending++;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //console.log(children_with_counts);
+        return children_with_counts;
+    }
+
+    function createTeamPicker(users) {
+        var team_options = '';
+        for (var i = 0; i < users.length; i++) {
+            team_options += '<option value="' + users[i].Id + '">' + users[i].Name + '</option>';
+        }
+
+        $("#team_picker").append(team_options);
+        $('#team_picker').selectpicker('refresh');
+        $('#team_picker').selectpicker('render');
+
+    }
+
+    function aggregateSuggestionsForTable(data) {
+        /**<th data-field="name" data-sortable="true">Team Member Name</th>
+        <th data-field="type" data-sortable="true">Type</th>
+        <th data-field="status" data-sortable="true">Quantity Remaining</th>
+        <th data-field="date" data-sortable="true">Date Assigned</th>**/
+        //console.log(data);
+        var table_data = [];
+
+        for (var i = 0; i < data.suggestions.length; i++) {
+            var row = {};
+            //match to team member
+            //console.log('looking for matching team member');
+            for (var j = 0; j < data.subordinateUsers.length; j++) {
+                if (data.subordinateUsers[j].Id === data.suggestions[i].OwnerId) {
+                    row.name = data.subordinateUsers[j].Name;
+                }
+            }
+            row.title = data.suggestions[i].Title_vod__c;
+            row.reason = data.suggestions[i].Reason_vod__c;
+            //match type
+            //console.log(data.suggestions[i].RecordTypeId);
+            switch (data.suggestions[i].RecordTypeId) {
+                case data.recordtype_map.Call_vod:
+                    row.type = 'Call';
+                    break;
+                case data.recordtype_map.Call_Objective_vod:
+                    row.type = 'Call Objective';
+                    break;
+                case data.recordtype_map.Email_vod:
+                    row.type = 'Email';
+                    break;
+                case data.recordtype_map.Insight_vod:
+                    row.type = 'Insight';
+                    break;
+            }
+            //console.log(row.type);
+            //match status
+            //console.log('checking status');
+            if (data.suggestions[i].Marked_As_Complete_vod__c) {
+                row.status = 'Marked Complete';
+            } else if (data.suggestions[i].Actioned_vod__c) {
+                row.status = 'Actioned';
+            } else if (data.suggestions[i].Dismissed_vod__c) {
+                row.status = 'Dismissed';
+            } else {
+                row.status = 'Pending';
+            }
+            //console.log(row.status);
+            //stamp date
+            //console.log('checking date');
+            row.postedDate = moment(data.suggestions[i].Posted_Date_vod__c).format('LL');
+            //console.log(row.postedDate);
+			row.expirationDate = moment(data.suggestions[i].Expiration_Date_vod__c).format('LL');
+			row.accountName = data.suggestions[i].AccountName;
+            table_data.push(row);
+        }
+
+        return table_data;
+    }
+
+    function buildTable(data, nameFilter, statusFilter, typeFilter) {
+
+        var $table = $('#bootstrap-table');
+
+        var rows = [];
+
+        var markup = '';
+        for (var i = 0; i < data.length; i++) {
+
+            var row = {
+                name: data[i].name,
+  //              title: data[i].title,
+  				accountName: data[i].accountName,
+                type: data[i].type,
+                status: data[i].status,
+                postedDate: data[i].postedDate,
+				expirationDate: data[i].expirationDate,
+				reason: data[i].reason
+            }
+            //console.log(row.status);
+
+            if (nameFilter || statusFilter) {
+                if (nameFilter === row.name && statusFilter === row.status) {
+                    rows.push(row);
+                }
+            } else if (typeFilter) {
+                if (typeFilter === row.type) {
+                    rows.push(row);
+                }
+            } else {
+                rows.push(row);
+            }
+
+            
+
+
+            /**
+            markup += '<tr><td>' + data[i].name + '</td><td>' + data[i].title + '</td><td>' + data[i].reason + '</td><td>' + data[i].type + '</td>' 
+
+            switch (data[i].status) {
+                case 'Actioned':
+                    markup += '<td class="text-success">'
+                    break;
+                case 'Marked Complete':
+                    markup += '<td class="text-warning">'
+                    break;
+                case 'Dismissed':
+                    markup += '<td class="text-warning">'
+                    break;
+                case 'Pending':
+                    markup += '<td class="text-danger">'
+                    break;
+            }
+            markup += data[i].status + '</td><td>' + data[i].date + '</td></tr>'; **/
+
+        }
+        //$("#tablebody").append(markup);
+
+        function operateFormatter(value, row, index) {
+            return [
+                '<div class="table-icons">',
+                '<a rel="tooltip" title="View" class="btn btn-simple btn-info btn-icon table-action view" href="javascript:void(0)">',
+                '<i class="ti-image"></i>',
+                '</a>',
+                '<a rel="tooltip" title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+                '<i class="ti-pencil-alt"></i>',
+                '</a>',
+                '<a rel="tooltip" title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+                '<i class="ti-close"></i>',
+                '</a>',
+                '</div>',
+            ].join('');
+        }
+        $table.bootstrapTable({
+            toolbar: ".toolbar",
+            clickToSelect: true,
+            showRefresh: false,
+            search: true,
+            showToggle: false,
+            showColumns: false,
+            pagination: true,
+            searchAlign: 'left',
+            pageSize: 5,
+            clickToSelect: false,
+            pageList: [5, 10, 15, 20],
+            multipleSearch: true,
+            delimeter: '&',
+            showFilter: true,
+            filterControl: true,
+
+
+            formatShowingRows: function(pageFrom, pageTo, totalRows) {
+                //do nothing here, we don't want to show the text "showing x of y from..."
+            },
+            formatRecordsPerPage: function(pageNumber) {
+                return pageNumber + " rows visible";
+            },
+            icons: {
+                refresh: 'fa fa-refresh',
+                toggle: 'fa fa-th-list',
+                columns: 'fa fa-columns',
+                detailOpen: 'fa fa-plus-circle',
+                detailClose: 'ti-close'
+            }
+        });
+
+        $table.bootstrapTable('load', rows);
+
+        //activate the tooltips after the data table is initialized
+        $('[rel="tooltip"]').tooltip();
+
+        $(window).resize(function() {
+            $table.bootstrapTable('resetView');
+        });
+
+    }
+
+    var appData = {
+            product_map: [{
+                Id: '',
+                Name: ''
+            }],
+            currentUser: {
+                Id: '',
+                territoryId: ''
+            },
+            childTerrIds: [],
+            subordinateUserIds: [],
+            subordinateUsers: [],
+            recordtype_map: { //best practice is to actually store this in a unique object per SFDC object
+                Call_vod: '',
+                Call_Objective_vod: '',
+                Email_vod: '',
+                Insight_vod: '',
+                Driver_vod: '', //for Suggestion tag
+                Product_vod: '' //for Suggestion tag
+            },
+            suggestionIds: [],
+            accountIds: [],
+            suggestions: [{
+                Id: '',
+                OwnerId: '',
+                Dismissed_vod__c: 0,
+                Marked_As_Complete_vod__c: 0,
+                Actioned_vod__c: 0,
+                CreatedDate: '',
+                RecordTypeId: '',
+                tags: [{
+                    RecordTypeId: '',
+                    Driver_vod__c: '',
+                    Product_Name__c: ''
+                }],
+                IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
+            }],
+            monthly_suggestions: {
+                complete: [],
+                total: []
+            },
+            months_to_date: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            average_data: {
+                pending: 0,
+                dismissed: 0,
+                actioned: 0,
+                completed: 0
+            },
+            suggestions_by_type_data: []
+        };
+
+    var products_master_set = new Set();
+    var drivers_master_set = new Set();
+
+    var selected_drivers = null;
+    var selected_products = null;
+    var selected_users = null;
+        
+    function refreshCharts(users, drivers, products) {
+        
+        var selected_drivers_set = null;
+        if (drivers) {
+            selected_drivers_set = new Set(selected_drivers);
+        }
+        var selected_products_set = null;
+        if (products) {
+            selected_products_set = new Set(selected_products);
+        }
+                //console.log(selected_driver);
+                //console.log(appData.suggestions);
+                //console.log(appData.subordinateUsers);
+        var team_subset = [];
+        var use_team_subset = false;
+                //console.log($("#team_picker").val());
+        if (users) {
+            //pair down subordinate user data set if we're using those filters
+            for (var i = 0; i < appData.subordinateUsers.length; i++) {
+                for (var j = 0; j < selected_users.length; j++) {
+                    if (selected_users[j] === appData.subordinateUsers[i].Id) {
+                        team_subset.push(appData.subordinateUsers[i]);
+                        use_team_subset = true;
+                    }
+                }
+            }
+        }
+        //console.log(appData.suggestions_by_type_data);
+        var new_user_chart_data;
+        if (use_team_subset) {
+            new_user_chart_data = countSuggestionsByUserByStatus(selected_products_set, selected_drivers_set, appData.suggestions, team_subset);
+        } else {
+            new_user_chart_data = countSuggestionsByUserByStatus(selected_products_set, selected_drivers_set, appData.suggestions, appData.subordinateUsers);
+        }
+        //console.log(new_user_chart_data);
+        createTeamChart(new_user_chart_data);
+        var new_monthly_count = countSuggestionsByMonth(selected_products_set, selected_drivers_set, selected_users, appData.suggestions);
+                //console.log(new_monthly_count);
+        var this_month_remove = ((new Date().getMonth()) + 1);
+        
+        new_monthly_count.total = new_monthly_count.total.slice(0, this_month_remove);
+        new_monthly_count.complete = new_monthly_count.complete.slice(0, this_month_remove);
+        createTrendsChart(appData.months_to_date, new_monthly_count.total, new_monthly_count.complete);
+                //udpate the type chart
+        createSuggestionsByTypeChart(countSuggestionsByType(selected_products_set, selected_drivers_set, selected_users, appData.recordtype_map, appData.suggestions));
+    }
+
+
+    function mainController() {
+        
+        getUserId().then(function(userId) {
+            //console.log(userId);
+            appData.currentUser.Id = userId;
+            //console.log(appData.currentUser.Id);
+            return getCurrentUserTerritoryId(appData.currentUser.Id);
+        }).then(function(terrId) {
+            //console.log(terrId);
+   //         $('#response').append('<div>getCurrentUserTerritoryId - passed </div>');
+            appData.currentUser.territoryId = terrId[0].TerritoryId.value; //we assume the manager is only aligned to 1 territory
+            //console.log(appData.currentUser.territoryId);
+            return getChildTerritoryIds(appData.currentUser.territoryId);
+        }).then(function(childTerrIds) {
+            //console.log(childTerrIds);
+    //        $('#response').append('<div>getChildTerritoryIds - passed </div>');
+            for (var i = 0; i < childTerrIds.length; i++) {
+                appData.childTerrIds.push(childTerrIds[i].Id.value);
+            }
+            //console.log(appData.childTerrIds);
+            return getChildUserIds(appData.childTerrIds);
+        }).then(function(users) {
+            //console.log(users);
+     //       $('#response').append('<div>getChildUserIds - passed </div>');
+            for (var i = 0; i < users.length; i++) {
+                appData.subordinateUserIds[i] = users[i].UserId.value;
+            }
+            //console.log(appData.subordinateUserIds);
+            return getChildUsers(appData.subordinateUserIds);
+        }).then(function(subUsers) {
+            //console.log(subUsers);
+      //      $('#response').append('<div>getChildUsers - passed </div>');
+            for (var i = 0; i < subUsers.length; i++) {
+                var user_to_add = {
+                    Name: subUsers[i].Name.value,
+                    Id: subUsers[i].Id.value
+                };
+                appData.subordinateUsers.push(user_to_add);
+            }
+            //console.log(appData.subordinateUsers);
+            return getRecordTypes();
+        }).then(function(rt) {
+            //console.log(rt);
+      //      $('#response').append('<div>getRecordTypes - passed </div>');
+            //transform returned query data into a single object where DeveloperName is the key, and Id is the value
+            for (var i = 0; i < rt.length; i++) {
+                $.extend(appData.recordtype_map, {
+                    [rt[i].DeveloperName.value]: rt[i].Id.value
+                });
+            } //for the horrified: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names
+            console.log(appData.recordtype_map);
+            return getSuggestions(appData.subordinateUserIds);
+        }).then(function(suggestions) {
+            //console.log(suggestions);
+        //    $('#response').append('<div>getSuggestions - passed </div>');
+            var accountIds = [];
+            for (var i = 0; i < suggestions.length; i++) {
+                var this_suggestion = {
+                    Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
+                    Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
+                    Actioned_vod__c: suggestions[i].Actioned_vod__c.value,
+                    RecordTypeId: suggestions[i].RecordTypeId.value,
+                    Id: suggestions[i].Id.value,
+                    CreatedDate: suggestions[i].CreatedDate.value,
+                    OwnerId: suggestions[i].OwnerId.value,
+                    Title_vod__c: suggestions[i].Title_vod__c.value,
+                    Reason_vod__c: suggestions[i].Reason_vod__c.value,
+                    Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
+					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
+					Account_vod__c: suggestions[i].Account_vod__c.value,
+					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value
+				};
+					
+                appData.suggestionIds[i] = suggestions[i].Id.value;
+     //           accountIds[i] = suggestions[i].Account_vod__c.value;
+                //console.log(this_suggestion);
+                appData.suggestions[i] = this_suggestion;
+            }
+     //       $('#response').append('<div>accountIds - before filter </div>');
+     //       $('#response').append('<div>' + JSON.stringify(accountIds, null, "\t") + '</div>');
+     //       appData.accountIds = accountIds.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+     //       $('#response').append('<div>accountIds - after filter </div>');
+     //       $('#response').append('<div>' + JSON.stringify(appData.accountIds, null, "\t") + '</div>');
+            //console.log(appData.suggestionIds);
+            //console.log(appData.accountIds);
+            return getSuggestionTags(appData.suggestions);
+        }).then(function(tags) {
+            //there's a potential for tags not existing
+            //console.log("processing tags");
+     //       $('#response').append('<div>getSuggestionTags - passed </div>');
+            //for each Suggestion, we compare the list of suggestion tags, then add that suggestion tag as an attribute to the overall suggestion.
+            console.log(tags);
+            if (tags.length > 0) {
+                var product_tags_missing = true;
+                var driver_tags_missing = true;
+                //console.log(appData.suggestions);
+                for (var i = 0; i < appData.suggestions.length; i++) {
+                    var tag_count = 0;
+                    for (var j = 0; j < tags.length; j++) {
+                        //check if this tag parentid matches this suggestion id
+                        if (tags[j].Suggestion_vod__c.value === appData.suggestions[i].Id) {
+                            //console.log("it's a match!");
+                            var newTag = {
+                                Driver_vod__c: tags[j].Driver_vod__c.value,
+                                Product_Name__c: tags[j].Product_Name__c.value
+                            };
+                            //console.log(newTag);
+                            //console.log(appData.suggestions[i]);
+                            if (tag_count === 0) {
+                                appData.suggestions[i]["tags"] = [];
+                            }
+                            appData.suggestions[i].tags[tag_count] = newTag;
+                            tag_count++;
+                            //console.log(appData.suggestions[i].tags);
+                            if (newTag.Driver_vod__c) {
+                                drivers_master_set.add(newTag.Driver_vod__c);
+                                driver_tags_missing = false;
+                            }
+                            if (newTag.Product_Name__c) {
+                                products_master_set.add(newTag.Product_Name__c);
+                                product_tags_missing = false;
+                            }
+                        }
+                    }
+                }
+                console.log("Driver tags missing? " + driver_tags_missing);
+                console.log(drivers_master_set);
+                console.log("Product tags missing? " + product_tags_missing);
+                console.log(products_master_set);
+                if (product_tags_missing) {
+                    disableProductFilter();
+                } else { //now that all the tags are built out, time to compose the select pickers
+                    var product_options = '';
+                    for (let product of products_master_set) {
+                        product_options += '<option value="' + product + '">' + product + '</option>';
+                    }
+                    $("#product_filter").append(product_options);
+                    $('.product-filter').selectpicker('refresh');
+
+                }
+                if (driver_tags_missing) {
+                    disableDriverFilter();
+                } else { //now that all the tags are built out, time to compose the driver  pickers
+                    var driver_options = '';
+                    for (let driver of drivers_master_set) {
+                        driver_options += '<option value="' + driver + '">' + driver + '</option>';
+                    }
+                    $("#driver_filter").append(driver_options);
+                    $('.driver-filter').selectpicker('refresh');
+                }
+            } else { //no tags!!
+                //disable the filters that don't apply
+                //console.log("There are zero Suggestion Tags")
+                disableDriverFilter();
+                disableProductFilter();
+            }
+
+            return getAllSuggestionFeedback();
+        }).then(function(feedback) {
+            //console.log(feedback);
+     //       $('#response').append('<div>getAllSuggestionFeedback - passed </div>');
+             //we only care if a suggestion has feedback, use a set to dedupe
+            var suggestions_with_feedback_set = new Set();
+            for (var i = 0; i < feedback.length; i++) {
+                suggestions_with_feedback_set.add(feedback[i].Suggestion_vod__c.value);
+            }
+            //console.log(suggestions_with_feedback_set);
+
+            //now compare that set to our list of suggestions and tag them appropraitely.
+            for (var i = 0; i < appData.suggestions.length; i++) {
+                //console.log(appData.suggestions[i]);
+
+                //not accounting for senarios if these Values contain the number Zero. Will need to be changed if this is going to production-ready
+                if (!(appData.suggestions[i].Actioned_vod__c) &&
+                    !(appData.suggestions[i].Marked_As_Complete_vod__c) &&
+                    !(appData.suggestions[i].Dismissed_vod__c) && !suggestions_with_feedback_set.has(appData.suggestions[i].Id)) {
+                    //console.log("this suggestion is pending");
+                    //this suggestion is definiely pending
+                    appData.suggestions[i]["IsPending"] = 1;
+                }
+            }
+			/* return getAccountNames(appData.accountIds);
+        }).then(function(accounts) {
+        	//$('#response').append('<div>getAccountNames - passed </div>');
+            //$('#response').append('<div>' + JSON.stringify(accounts, null, "\t") + ' accounts.length:'+accounts.length+'</div>');
+        	for (var i = 0; i < appData.suggestions.length; i++) {
+                //console.log(appData.suggestions[i]);
+				for(var j = 0; j < accounts.length; j++) {
+                //not accounting for senarios if these Values contain the number Zero. Will need to be changed if this is going to production-ready
+	                if (appData.suggestions[i].Account_vod__c == accounts[j].Id.value) {
+	                	appData.suggestions[i].AccountName = accounts[j].Name.value;
+	                }
+				}
+            }    */    	
+            //for the first pass, the filters will be null, but something HAS to be selected the next time things go around, so default behavior for Null would be to count everything
+            return countSuggestionsByType(null, null, null, appData.recordtype_map, appData.suggestions);
+        }).then(function(my_suggestions_by_type_data) {
+            //console.log(my_suggestions_by_type_data);
+            appData.suggestions_by_type_data = my_suggestions_by_type_data;
+
+            return createSuggestionsByTypeChart(appData.suggestions_by_type_data);
+        }).then(function() {
+            return countSuggestionsByMonth(null, null, null, appData.suggestions);
+        }).then(function(monthly_count) {
+            console.log(monthly_count);
+            $.extend(appData.monthly_suggestions, monthly_count);
+            //appData.monthly_suggestions.total
+            //appData.monthly_suggestions.complete
+
+            //make sure we're only displaying the YTD labels and values:
+            var this_month_remove = ((new Date().getMonth()) + 1);
+            appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
+            appData.monthly_suggestions.total = appData.monthly_suggestions.total.slice(0, this_month_remove);
+            appData.monthly_suggestions.complete = appData.monthly_suggestions.complete.slice(0, this_month_remove);
+            //console.log(appData.monthly_suggestions);
+            //console.log(appData.months_to_date);
+
+            return createTrendsChart(appData.months_to_date, appData.monthly_suggestions.total, appData.monthly_suggestions.complete);
+        }).then(function() {
+            return countSuggestionsByUserByStatus(null, null, appData.suggestions, appData.subordinateUsers);
+        }).then(function(children_with_counts) {
+            appData.subordinateUsers = children_with_counts.slice(0);
+            console.log(appData.subordinateUsers);
+
+            //get the overall average for the team
+            var pendingSum = 0;
+            var dismissedSum = 0;
+            var completedSum = 0;
+            var actionedSum = 0;
+            var len = appData.subordinateUsers.length;
+            for (var i = 0; i < len; i++) {
+                pendingSum += appData.subordinateUsers[i].pending;
+                dismissedSum += appData.subordinateUsers[i].dismissed;
+                completedSum += appData.subordinateUsers[i].completed;
+                actionedSum += appData.subordinateUsers[i].actioned;
+            }
+            appData.average_data.pending = (pendingSum / len);
+            appData.average_data.dismissed = (dismissedSum / len);
+            appData.average_data.completed = (completedSum / len);
+            appData.average_data.actioned = (actionedSum / len);
+
+            //console.log(appData.average_data);
+            //display the overal average for the team
+            return createAverageChart(appData.average_data);
+        }).then(function() {
+            return createTeamChart(appData.subordinateUsers);
+        }).then(function() {
+            return createTeamPicker(appData.subordinateUsers);
+        }).then(function() {
+            //console.log(appData);
+            return aggregateSuggestionsForTable(appData);
+        }).then(function(table_data) {
+            appData.table_data = table_data;
+            buildTable(table_data);
+
+            //event listener for team picker
+            $("#team_picker").on("hidden.bs.select", function(e) {
+                selected_users = $("#team_picker").val();
+                refreshCharts(selected_users,selected_drivers,selected_products);
+            });
+
+            //event listener for driver filter
+            $("#driver_filter").on("hidden.bs.select", function(e) {
+                selected_drivers = $("#driver_filter").val();
+                refreshCharts(selected_users,selected_drivers,selected_products);
+            });
+
+            //event listener for product filter
+            $("#product_filter").on("hidden.bs.select", function(e) {
+                selected_products = $("#product_filter").val();
+                refreshCharts(selected_users,selected_drivers,selected_products);
+            });
+
+        })
+    }
+
+    mainController();
+
+
+});
+</script>
+
+</html>

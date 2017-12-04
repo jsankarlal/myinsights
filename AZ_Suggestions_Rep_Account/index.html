@@ -1,0 +1,1279 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="assets/img/favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>AZ Suggestion Rep View Territory Mockup</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <!-- Bootstrap core CSS     -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <!--  Light Bootstrap Dashboard core CSS    -->
+    <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
+    <!--     Fonts and icons     -->
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href='assets/css/roboto.css' rel='stylesheet' type='text/css'>
+    <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+</head>
+
+<body class="sidebar-mini">
+    <div class="wrapper">
+        <div class="main-panel">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand"></a>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a id="driver_filter_label">Driver:</a>
+                            </li>
+                            <li style="min-width: 320px;max-width: 350px;">
+                                <select multiple name="driver" id="driver_filter" class="selectpicker driver-filter" data-title="Select Driver(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
+                                </select>
+                            </li>
+                            <li>
+                                <a id="product_filter_label">Product:</a>
+                            </li>
+                            <li style="min-width: 320px;max-width: 350px;">
+                                <select multiple name="product" id="product_filter" class="selectpicker product-filter" data-title="Select Product(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
+                                </select>
+                            </li>
+                    </div>
+                    </ul>
+                </div>
+        </div>
+        </nav>
+        <div class="content" style="background-color: #f2f2f2">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card text-center" id="suggestions_card">
+                            <div class="header" >
+                                My Suggestions
+                            </div>
+                            <div class="chart-container" id="team_chart_container" style="position: relative; height:300px; width:100%; margin: 5px; padding:0px 5px">
+                                <canvas id="suggestions"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card text-center">
+                            <div class="header" >
+                                Suggestions by Type
+                            </div>
+                            <div class="chart-container" id="suggestions_by_type_container" style="position: relative; height:300px; width:100%;">
+                                <canvas id="suggestions_by_type"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="header">
+                                # of Suggestions YTD
+                            </div>
+                            <div class="chart-container" id="trends_container" style="position: relative; height:250px; width:100%;">
+                                <canvas id="chart1"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="toolbar">
+                                </div>
+                                <table id="bootstrap-table" class="table-bordered">
+                                    <thead>
+                                    <!--    <th data-field="title" data-sortable="true">Title</th> -->
+                                    	<th data-field="name" data-sortable="true">Assigned To</th>
+										<th data-field="accountName" data-sortable="true">Account Name</th>
+                                        <th data-field="type" data-sortable="true">Type</th>
+                                        <th data-field="status" data-sortable="true">Status</th>
+                                        <th data-field="postedDate" data-sortable="true">Posted Date</th>
+										<th data-field="expirationDate" data-sortable="true">Expiration Date</th>
+										<th data-field="reason" data-sortable="true">Reason</th>
+                                    </thead>
+                                    <tbody id="tablebody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!--   Core JS Files and PerfectScrollbar library inside jquery.ui   -->
+<script src="assets/js/jquery.min.js" type="text/javascript"></script>
+<script src="assets/js/jquery-ui.min.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap-table.js"></script>
+<!-- time library -->
+<script src="assets/js/moment.min.js"></script>
+<!-- Q.js Promise Library. Required for Veeva MyInsights Library -->
+<script src="assets/js/q.js"></script>
+<!-- Veeva MyInsights Library -->
+<script src="assets/js/MyInsightsLibrary.js"></script>
+<!--  Select Picker Plugin -->
+<script src="assets/js/bootstrap-selectpicker.js"></script>
+<!--  Chart.js 2.6.0 -->
+<script src="assets/js/Chart.min.js"></script>
+<!-- Light Bootstrap Dashboard Core javascript and methods -->
+<script src="assets/js/light-bootstrap-dashboard.js"></script>
+<script>
+//proper color scheme for data visualizations
+//5DA5DA (blue), rgb(93,165,218)
+//FAA43A (orange), rgb(250,164,58)
+//60BD68 (green), rgb(96,189,104)
+//F17CB0 (pink), rgb(241,124,176)
+//DECF3F (yellow), rgb(222,207,63)
+//B276B2 (purple), rgb(178,118,178)
+//4D4D4D (gray), rgb(77,77,77)
+//F15854 (red), rgb(241,88,84)
+//B2912F (brown), rgb(178,145,47)
+
+let pendingColor = ['rgba(250,164,58, 1)'];
+let dismissedColor = ['rgba(242,227,83, 1)'];
+let completedColor = ['rgba(169,208,94, 1)'];
+let actionedColor = ['rgba(96,189,104, 1)'];
+
+var pendingColorDisplay = ['rgba(250,164,58, 1)'];
+var dismissedColorDisplay = ['rgba(242,227,83, 1)'];
+var completedColorDisplay = ['rgba(169,208,94, 1)'];
+var actionedColorDisplay = ['rgba(96,189,104, 1)'];
+
+var appData = {
+            product_map: [{
+                Id: '',
+                Name: ''
+            }],
+            currentUser: {
+                Id: '',
+                territoryId: ''
+            },
+            my_count: {
+
+            },
+            recordtype_map: { //best practice is to actually store this in a unique object per SFDC object
+                Call_vod: '',
+                Call_Objective_vod: '',
+                Email_vod: '',
+                Insight_vod: '',
+                Driver_vod: '', //for Suggestion tag
+                Product_vod: '' //for Suggestion tag
+            },
+            suggestionIds: [],
+            suggestions: [{
+                Id: '',
+                OwnerId: '',
+                Dismissed_vod__c: 0,
+                Marked_As_Complete_vod__c: 0,
+                Actioned_vod__c: 0,
+                CreatedDate: '',
+                RecordTypeId: '',
+                tags: [{
+                    RecordTypeId: '',
+                    Driver_vod__c: '',
+                    Product_Name__c: ''
+                }],
+                IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
+            }],
+            monthly_suggestions: {
+                complete: [],
+                total: []
+            },
+            months_to_date: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            average_data: {
+                pending: 0,
+                dismissed: 0,
+                actioned: 0,
+                completed: 0
+            },
+            suggestions_by_type_data: [],
+        };
+var products_master_set = new Set();
+var drivers_master_set = new Set();
+
+var selected_drivers = null;
+var selected_products = null;
+
+
+var first_run = true;
+
+function createTeamChart(myData) {
+    console.log('inside chart')
+
+    $('#team_chart_container').empty();
+    $('#team_chart_container').append('<canvas id="suggestions"></canvas>');
+    if (myChart) {
+        myChart.destroy();
+    }
+
+    //suggestions chart
+    var ctx = document.getElementById("suggestions");
+    var myChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: [''],
+            datasets: [{
+                label: 'Pending',
+                data: [myData.pending],
+                backgroundColor: pendingColorDisplay,
+                borderColor: pendingColorDisplay
+            }, {
+                label: 'Dismissed',
+                data: [myData.dismissed],
+                backgroundColor: dismissedColorDisplay,
+                borderColor: dismissedColorDisplay
+            }, {
+                label: 'Marked Complete',
+                data: [myData.completed],
+                backgroundColor: completedColorDisplay,
+                borderColor: completedColorDisplay
+            }, {
+                label: 'Actioned',
+                data: [myData.actioned],
+                backgroundColor: actionedColorDisplay,
+                borderColor: actionedColorDisplay
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            title: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    display: true,
+                    stacked: true,
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    display: true,
+                    stacked: true,
+                    stepSize: 1,    
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Total Number of Suggestions'
+                    }
+                }]
+            },
+            legend: {
+                display: true,
+                labels: {
+                        filter: function (legendItem, chartData) {
+                            console.log(legendItem);
+                            console.log(chartData);
+                            
+                            for (var i = 0; i < chartData.datasets.length; i++) {
+                                if (legendItem.text === chartData.datasets[i].label) {
+                                    var hasValue = false;
+                                    for (var j = 0; j < chartData.datasets[i].data.length; j++) {
+                                        if (chartData.datasets[i].data[j] > 0) {
+                                            hasValue = true;
+                                        }
+                                    }
+                                    return hasValue;
+                                }
+                            }
+                            
+                        }
+                    }
+            },
+            tooltips: {
+                enabled: false
+            },
+            onClick: handleClick,
+            animation: {
+                    onComplete: function() {
+                        var chartInstance = this.chart,
+                            preset = 0,
+                        ctx = chartInstance.ctx;
+
+                        ctx.font = Chart.helpers.fontString(10, "bold", Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'center';
+                        
+                        this.data.datasets.forEach(function(dataset, i) {
+                            var meta = chartInstance.controller.getDatasetMeta(i);
+                                
+                            meta.data.forEach(function(bar, index) {
+                                var data = dataset.data[index];
+                                //console.log(bar._model.x);
+                                if (data > 0) {
+                                    ctx.fillText(data, bar._model.base+(bar._model.x - bar._model.base)/2, bar._model.y-6);
+                              //      preset = bar._model.x;
+                                }   
+                            });
+                        });
+                    }
+                }
+        }
+    });
+
+    function handleClick(e) {
+        console.log(myChart.getElementAtEvent(e));
+        var chartData = myChart.getElementAtEvent(e)[0]._view;
+        console.log(chartData);
+        buildTable(appData.table_data,chartData.datasetLabel,null);
+        document.location.href = 'index.html#bootstrap-table';
+    }
+}
+
+//0 = calls
+//1 = email
+//2 = insight
+//3 = call objective
+function createSuggestionsByTypeChart(type_data) {
+
+    $('#suggestions_by_type_container').empty();
+    $('#suggestions_by_type_container').append('<canvas id="suggestions_by_type"></canvas>');
+    if (myChart1) {
+        myChart1.destroy();
+    }
+
+    var labels = ["Call", "Email", "Insight", "Call Objective"];
+    var labels_to_display = [];
+    var data_to_display = [];
+
+    for (var i = 0; i < labels.length; i++) {
+        if (type_data[i] !== 0) {
+            labels_to_display.push(labels[i]);
+            data_to_display.push(type_data[i]);
+        }
+    }
+
+    var ctx1 = document.getElementById("suggestions_by_type");
+    var myChart1 = new Chart(ctx1, {
+        type: 'horizontalBar',
+        data: {
+            labels: labels_to_display,
+            datasets: [{
+                label: 'Sugestions by Type',
+                data: data_to_display,
+                backgroundColor: [
+                    'rgba(93,165,218, 1)', 'rgba(93,165,218, 1)', 'rgba(93,165,218, 1)', 'rgba(93,165,218, 1)', 'rgba(93,165,218, 1)'
+                ],
+                borderColor: [
+                    'rgba(93,165,218, 1)'
+                ]
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            title: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    display: true,
+                    stacked: false,
+                    ticks: {
+                        beginAtZero: true,
+                    },
+                }],
+                xAxes: [{
+                    display: true,
+                    stacked: false,
+                    barPercentage: 0.7,
+                    ticks: {
+                        beginAtZero: true
+                    //  stepSize: 1
+                    },
+					scaleLabel: {
+                        display: true,
+                        labelString: 'Total Number of Suggestions'
+                    }
+                }]
+            },
+            legend: {
+                display: false,
+                labels: {
+                    display: true
+                }
+            },
+            tooltips: {
+                enabled: false
+            },
+            onClick: handleClick,
+            animation: {
+				onComplete: function() {
+					var chartInstance = this.chart,
+					    ctx = chartInstance.ctx;
+
+					ctx.font = Chart.helpers.fontString(10, "bold", Chart.defaults.global.defaultFontFamily);
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'center';
+
+					this.data.datasets.forEach(function(dataset, i) {
+						var meta = chartInstance.controller.getDatasetMeta(i);
+						meta.data.forEach(function(bar, index) {
+							var data = dataset.data[index];
+							//console.log(bar._model.x);
+							if (data > 0) {
+								ctx.fillText(data, bar._model.base+(bar._model.x - bar._model.base)/2, bar._model.y);
+							}   
+						});
+					});
+				}
+			}
+        }
+    });
+
+    function handleClick(e) {
+        var chartData = myChart1.getElementAtEvent(e)[0]._view;
+        console.log(chartData);
+        buildTable(appData.table_data, null, chartData.label);
+        document.location.href = 'index.html#bootstrap-table';
+    }
+}
+//createSuggestionsByTypeChart();
+
+function createTrendsChart(months, totals, completes) {
+
+    $('#trends_container').empty();
+    $('#trends_container').append('<canvas id="chart1"></canvas>');
+    if (myChart3) {
+        myChart3.destroy();
+    }
+
+    var ctx3 = document.getElementById("chart1");
+    var myChart3 = new Chart(ctx3, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                type: 'line',
+                label: 'Total',
+                data: totals,
+                backgroundColor: 'rgba(93,165,218, 0.5)',
+                borderColor: 'rgba(93,165,218, 1)',
+                borderWidth: 1
+            }, {
+                type: 'line',
+                label: 'Completed/Actioned',
+                data: completes,
+                backgroundColor: 'rgba(96,189,104, 0.9)',
+                borderColor: 'rgba(96,189,104,1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        beginAtZero: true,
+                        fontStyle: 'bold'
+                    }
+                }],
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: false,
+                        stepSize: 1
+                    }
+                }],
+            },
+            legend: {
+                labels: {
+                    fontColor: '#777',
+                    fontFamily: 'Arial'
+                }
+            },
+            animation: {
+				onComplete: function() {
+					var chartInstance = this.chart,
+						ctx = chartInstance.ctx;
+
+					ctx.font = Chart.helpers.fontString(9, "bold", Chart.defaults.global.defaultFontFamily);
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'center';
+					ctx.fillStyle = 'rgba(0, 0, 0,.7)';
+
+					this.data.datasets.forEach(function(dataset, i) {
+						var meta = chartInstance.controller.getDatasetMeta(i);
+						meta.data.forEach(function(bar, index) {
+							var data = dataset.data[index];
+							//console.log(bar._model.x);
+							if (data > 0) {
+								ctx.fillText(data, bar._model.x, bar._model.y-15);
+							}   
+						});
+					});
+				}
+			}
+        }
+    });
+
+}
+
+function buildTable(data, statusFilter, typeFilter) {
+
+        var $table = $('#bootstrap-table');
+
+        var rows = [];
+
+        var markup = '';
+        for (var i = 0; i < data.length; i++) {
+
+            var row = {
+            //    title: data[i].title,
+           		accountName: data[i].accountName,
+                reason: data[i].reason,
+                type: data[i].type,
+                status: data[i].status,
+                postedDate: data[i].postedDate,
+   				expirationDate: data[i].expirationDate
+            }
+            //console.log(row.status);
+
+            if (statusFilter) {
+                if (statusFilter === row.status) {
+                    rows.push(row);
+                }
+            } else if (typeFilter) {
+                if (typeFilter === row.type) {
+                    rows.push(row);
+                }
+            } else {
+                rows.push(row);
+            }
+        }
+        $table.bootstrapTable({
+            toolbar: ".toolbar",
+            clickToSelect: true,
+            showRefresh: false,
+            search: true,
+            showToggle: false,
+            showColumns: false,
+            pagination: true,
+            searchAlign: 'left',
+            pageSize: 5,
+            clickToSelect: false,
+            pageList: [5, 10, 15, 20],
+            multipleSearch: true,
+            delimeter: '&',
+            showFilter: true,
+            filterControl: true,
+
+
+            formatShowingRows: function(pageFrom, pageTo, totalRows) {
+                //do nothing here, we don't want to show the text "showing x of y from..."
+            },
+            formatRecordsPerPage: function(pageNumber) {
+                return pageNumber + " rows visible";
+            },
+            icons: {
+                refresh: 'fa fa-refresh',
+                toggle: 'fa fa-th-list',
+                columns: 'fa fa-columns',
+                detailOpen: 'fa fa-plus-circle',
+                detailClose: 'ti-close'
+            }
+        });
+
+        $table.bootstrapTable('load', rows);
+
+        //activate the tooltips after the data table is initialized
+        $('[rel="tooltip"]').tooltip();
+
+        $(window).resize(function() {
+            $table.bootstrapTable('resetView');
+        });
+
+    }
+
+$(document).ready(function() {
+
+    //initialize the promise library
+    $q = window.Q;
+    //console.log("q.js initialized");
+
+    function getAccountId() {
+        //console.log("getting userId");
+        var deferred = $q.defer();
+
+        ds.getDataForCurrentObject('Account', 'Id')
+            .then(function(result) {
+                //console.log(result);
+                deferred.resolve(result.Account.Id);
+            })
+
+        return deferred.promise;
+    }
+
+    function getCurrentUserName() {
+        //console.log("getting userId");
+        var deferred = $q.defer();
+
+        ds.getDataForCurrentObject('User', 'Name')
+            .then(function(result) {
+                //console.log(result);
+                deferred.resolve(result.User.Name);
+            })
+
+        return deferred.promise;
+    }
+
+    function getRecordTypes() {
+        //console.log('getting recordtypes');
+
+        var inObject = ds.getInStatement(['Suggestion_vod__c', 'Suggestion_Tag_vod__c']);
+
+        var queryConfig = {
+            recordTypes: {
+                object: 'RecordType',
+                fields: ['Id', 'DeveloperName'],
+                where: 'SobjectType IN ' + inObject
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.recordTypes)
+            .then(function(result) {
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+
+    function getSuggestions(accountId) {
+        //console.log("getting Suggestion header records");
+        //Sharing rules ensure that only your suggestions will sync down.
+
+        var queryConfig = {
+            suggestions: {
+                object: 'Suggestion_vod__c',
+                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c','Title_vod__c','Reason_vod__c','Posted_Date_vod__c', 'Expiration_Date_vod__c']
+          //      where: 'Account_vod__c = \'' + accountId +'\''
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.suggestions)
+            .then(function(result) {
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+
+    function getSuggestionTags(suggestions) {
+
+        var suggestionIds = [];
+        for (var i = 0; i < suggestions.length; i++) {
+            suggestionIds.push(suggestions[i].Id);
+        }
+        //console.log("getting tags");
+        var inSuggest = ds.getInStatement(suggestionIds);
+
+        var queryConfig = {
+            suggestionTags: {
+                object: 'Suggestion_Tag_vod__c',
+                fields: ['Product_Name__c', 'Suggestion_vod__c', 'Driver_vod__c'],
+                where: 'Suggestion_vod__c IN ' + inSuggest
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.suggestionTags)
+            .then(function(result) {
+                //console.log(result);
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+
+
+    function disableProductFilter() {
+        $('.product-filter').remove();
+        $('#product_filter_label').remove();
+        //$('.product-filter').children().css({color: "#9A9A9A"; border-color: "#9A9A9A"});
+        //$('.product-filter').selectPicker('setStyle','btn-default','add');
+        //$('.product-filter').prop('disabled', true);
+        //$('.product-filter').selectpicker('refresh');
+    }
+
+    function disableDriverFilter() {
+        $('.driver-filter').remove();
+        $('#driver_filter_label').remove();
+    }
+
+    function getAllSuggestionFeedback() {
+        console.log("getting feedback");
+
+        var queryConfig = {
+            suggestionFeedback: {
+                object: 'Suggestion_Feedback_vod__c',
+                fields: ['Suggestion_vod__c'],
+                where: ''
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.suggestionFeedback)
+            .then(function(result) {
+                //console.log(result);
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+
+    //returns true if a match is found
+    function countAgainstTagFilters(applyProductFilter, applyDriverFilter, productFilter, driverFilter, suggestionTags) {
+        //console.log(suggestionTags);
+        var product_match = false;
+        var driver_match = false;
+
+        if (applyProductFilter) {
+            if (suggestionTags !== undefined) {
+                for (var i = 0; i < suggestionTags.length; i++) {
+                    if (productFilter.has(suggestionTags[i].Product_Name__c)) {
+                        product_match = true;
+                    }
+                }
+            }
+        }
+        if (applyDriverFilter) {
+            if (suggestionTags !== undefined) {
+                //console.log("checking driver filter");
+                for (var i = 0; i < suggestionTags.length; i++) {
+                    if (driverFilter.has(suggestionTags[i].Driver_vod__c)) {
+                        driver_match = true;
+                        //console.log("passed!");
+                    }
+                }
+            }
+
+        }
+        return (product_match || driver_match);
+    }
+
+    //only supporting one value per filter, not a multi-select
+    function countSuggestionsByType(productFilter, driverFilter, recordTypeMap, suggestions) {
+        //console.log(suggestions);
+        //console.log(recordTypeMap);
+        var calls = 0;
+        var email = 0;
+        var insight = 0;
+        var objective = 0;
+
+        var applyProductFilter = !(productFilter === null);
+        var applyDriverFilter = !(driverFilter === null);
+
+        for (var i = 0; i < suggestions.length; i++) {
+
+            var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));
+            switch (suggestions[i].RecordTypeId) {
+                case recordTypeMap.Call_vod:
+                    if (applyProductFilter || applyDriverFilter) {
+                        if (!hasTags) { // no tags get filtered out, not counting them
+                            break;
+                        } else { //check tags
+                            if (countAgainstTagFilters(applyProductFilter,
+                                    applyDriverFilter,
+                                    productFilter,
+                                    driverFilter,
+                                    suggestions[i].tags)) {
+                                calls++
+                            }
+                        }
+                    } else {
+                        calls++;
+                    }
+                    break;
+                case recordTypeMap.Email_vod:
+                    if (applyProductFilter || applyDriverFilter) {
+                        if (!hasTags) { // no tags get filtered out, not counting them
+                            break;
+                        } else { //check tags
+                            if (countAgainstTagFilters(applyProductFilter,
+                                    applyDriverFilter,
+                                    productFilter,
+                                    driverFilter,
+                                    suggestions[i].tags)) {
+                                email++
+                            }
+                        }
+                    } else {
+                        email++;
+                    }
+                    break;
+                case recordTypeMap.Insight_vod:
+                    if (applyProductFilter || applyDriverFilter) {
+                        if (!hasTags) { // no tags get filtered out, not counting them
+                            break;
+                        } else { //check tags
+                            if (countAgainstTagFilters(applyProductFilter,
+                                    applyDriverFilter,
+                                    productFilter,
+                                    driverFilter,
+                                    suggestions[i].tags)) {
+                                insight++
+                            }
+                        }
+                    } else {
+                        insight++;
+                    }
+                    break;
+                case recordTypeMap.Call_Objective_vod:
+                    if (applyProductFilter || applyDriverFilter) {
+                        if (!hasTags) { // no tags get filtered out, not counting them
+                            break;
+                        } else { //check tags
+                            if (countAgainstTagFilters(applyProductFilter,
+                                    applyDriverFilter,
+                                    productFilter,
+                                    driverFilter,
+                                    suggestions[i].tags)) {
+                                objective++
+                            }
+                        }
+                    } else {
+                        objective++;
+                    }
+                    break;
+            }
+        }
+        return [calls, email, insight, objective];
+    }
+
+    //returns two arrays of counts, one for total suggestions, one for completed/actioned suggestions
+    //0 = january, 11 = december.
+    //array must be truncated to only show YTD 
+    //disregarding any suggestions that are older than 1 year old
+    //use product/driver filters if applicable
+    function countSuggestionsByMonth(productFilter, driverFilter, suggestions) {
+
+        var count = {
+            total: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            complete: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        };
+
+        var applyProductFilter = !(productFilter === null);
+        var applyDriverFilter = !(driverFilter === null);
+
+        outerloop:
+            for (var i = 0; i < suggestions.length; i++) {
+
+                //don't count any tags older than a year old
+                if (moment().diff(suggestions[i].CreatedDate, 'years') > 0) {
+                    continue;
+                }
+
+                if (applyProductFilter || applyDriverFilter) {
+                    var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));
+
+                    if (!hasTags) { // no tags get filtered out, not counting them
+                        continue;
+                    } else { //check tags
+                        if (countAgainstTagFilters(applyProductFilter,
+                                applyDriverFilter,
+                                productFilter,
+                                driverFilter,
+                                suggestions[i].tags)) {
+
+                            var month = new Date(suggestions[i].CreatedDate).getMonth();
+                            count.total[month]++;
+                            if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
+                                count.complete[month]++;
+                            }
+                        } else {
+                            continue;
+                        }
+                    }
+                } else {
+                    var month = new Date(suggestions[i].CreatedDate).getMonth();
+                    count.total[month]++;
+                    if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
+                        count.complete[month]++;
+                    }
+                }
+            }
+
+        return count;
+    }
+
+    function countSuggestionsByStatus(productFilter, driverFilter, suggestions) {
+        //console.log(suggestions);
+        //console.log(childUsers);
+        /** this is the going to be the shape of our output 
+        var my_count = {
+            pending: 0,
+            dismissed: 0,
+            actioned: 0,
+            completed: 0
+        };
+        **/
+        var my_count = {};
+        //initialize the object shape
+        my_count["pending"] = 0;
+        my_count["dismissed"] = 0;
+        my_count["actioned"] = 0;
+        my_count["completed"] = 0;
+        //console.log(my_count);
+
+        var applyProductFilter = !(productFilter === null);
+        var applyDriverFilter = !(driverFilter === null);
+
+        for (var i = 0; i < suggestions.length; i++) {
+            if (applyProductFilter || applyDriverFilter) { //if we're respecting the filters
+                var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));
+                if (!hasTags) { // no tags get filtered out, not counting them
+                    continue;
+                } else { //check tags
+                    if (countAgainstTagFilters(applyProductFilter,
+                            applyDriverFilter,
+                            productFilter,
+                            driverFilter,
+                            suggestions[i].tags)) {
+
+
+                        //console.log("it's a match");
+                        var flag = false;
+		            	 if (suggestions[i].Marked_As_Complete_vod__c) {
+		                     //console.log("Complete!");
+			                 my_count["completed"]++;
+			                 flag = true;
+			             } else if (suggestions[i].Actioned_vod__c) {
+			                     //console.log("Actioned!");
+			                     my_count["actioned"]++;
+			                     flag = true;
+			             } else if (suggestions[i].Dismissed_vod__c) {
+			                     //console.log("Dismissed!");
+			                     my_count["dismissed"]++;
+			                     flag = true;
+			             } else if (suggestions[i].IsPending === 1 || !flag) {
+			                         //console.log("Pending!!");
+			                     my_count["pending"]++;
+			                     flag = true;
+			             }
+                    } else {
+                        continue;
+                    }
+                }
+            } else { //no need to respect the filters
+                    //console.log("it's a match");
+            	var flag = false;
+           	 	if (suggestions[i].Marked_As_Complete_vod__c) {
+                    //console.log("Complete!");
+	                 my_count["completed"]++;
+	                 flag = true;
+	             } else if (suggestions[i].Actioned_vod__c) {
+	                     //console.log("Actioned!");
+	                     my_count["actioned"]++;
+	                     flag = true;
+	             } else if (suggestions[i].Dismissed_vod__c) {
+	                     //console.log("Dismissed!");
+	                     my_count["dismissed"]++;
+	                     flag = true;
+	             } else if (suggestions[i].IsPending === 1 || !flag) {
+	                         //console.log("Pending!!");
+	                     my_count["pending"]++;
+	                     flag = true;
+	             }
+                
+            }
+        }
+
+        //console.log(my_count);
+        return my_count;
+    }
+
+
+    function aggregateSuggestionsForTable(data) {
+        /**Title, Reason, Type, Status, Posted Date**/
+        console.log(data);
+        var table_data = [];
+
+        for (var i = 0; i < data.suggestions.length; i++) {
+            var row = {};
+            
+            row.title = data.suggestions[i].Title_vod__c;
+            row.reason = data.suggestions[i].Reason_vod__c;
+
+            //match type
+            console.log('checking the type');
+            switch (data.suggestions[i].RecordTypeId) {
+                case data.recordtype_map.Call_vod:
+                    row.type = 'Call';
+                    break;
+                case data.recordtype_map.Call_Objective_vod:
+                    row.type = 'Call Objective';
+                    break;
+                case data.recordtype_map.Email_vod:
+                    row.type = 'Email';
+                    break;
+                case data.recordtype_map.Insight_vod:
+                    row.type = 'Insight';
+                    break;
+            }
+            //match status
+            console.log('checking status');
+            if (data.suggestions[i].Marked_As_Complete_vod__c) {
+                row.status = 'Marked Complete';
+            } else if (data.suggestions[i].Actioned_vod__c) {
+                row.status = 'Actioned';
+            } else if (data.suggestions[i].Dismissed_vod__c) {
+                row.status = 'Dismissed';
+            } else {
+                row.status = 'Pending';
+            }
+            //stamp date
+            //console.log('checking date');
+            row.postedDate = moment(data.suggestions[i].Posted_Date_vod__c).format('LL');
+            //console.log(row.postedDate);
+			row.expirationDate = moment(data.suggestions[i].Expiration_Date_vod__c).format('LL');
+
+            table_data.push(row);
+        }
+        console.log(table_data);
+        return table_data;
+    }
+
+    function refreshCharts(drivers, products) {
+        
+        var selected_drivers_set = null;
+        if (drivers) {
+            selected_drivers_set = new Set(selected_drivers);
+        }
+        var selected_products_set = null;
+        if (products) {
+            selected_products_set = new Set(selected_products);
+        }   
+
+        createTeamChart(countSuggestionsByStatus(selected_products_set, selected_drivers_set, appData.suggestions))
+
+        var new_monthly_count = countSuggestionsByMonth(selected_products_set, selected_drivers_set, appData.suggestions);
+                //console.log(new_monthly_count);
+        var this_month_remove = ((new Date().getMonth()) + 1);
+        
+        new_monthly_count.total = new_monthly_count.total.slice(0, this_month_remove);
+        new_monthly_count.complete = new_monthly_count.complete.slice(0, this_month_remove);
+        createTrendsChart(appData.months_to_date, new_monthly_count.total, new_monthly_count.complete);
+                //udpate the type chart
+        createSuggestionsByTypeChart(countSuggestionsByType(selected_products_set, selected_drivers_set, appData.recordtype_map, appData.suggestions));
+    }
+
+    function mainController() {
+
+        getAccountId().then(function(accountId) {
+            //console.log(userId);
+            appData.accountId = accountId;
+            //console.log(appData.currentUser.Id);
+            return getCurrentUserName();
+        }).then (function(username) {
+            appData.currentUser.Name = username;
+            //console.log(products_master_set);
+            return getRecordTypes();
+        }).then(function(rt) {
+            //console.log(rt);
+            for (var i = 0; i < rt.length; i++) { //transform returned query data into a single object where DeveloperName is the key, and Id is the value
+                $.extend(appData.recordtype_map, {
+                    [rt[i].DeveloperName.value]: rt[i].Id.value
+                });
+            } //for the horrified: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names
+            //console.log(appData.recordtype_map);
+            return getSuggestions(appData.accountId);
+        }).then(function(suggestions) {
+            //console.log(suggestions);
+            for (var i = 0; i < suggestions.length; i++) {
+                var this_suggestion = {
+                    Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
+                    Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
+                    Actioned_vod__c: suggestions[i].Actioned_vod__c.value,
+                    RecordTypeId: suggestions[i].RecordTypeId.value,
+                    Id: suggestions[i].Id.value,
+                    CreatedDate: suggestions[i].CreatedDate.value,
+                    OwnerId: suggestions[i].OwnerId.value,
+                    Title_vod__c: suggestions[i].Title_vod__c.value,
+                    Reason_vod__c: suggestions[i].Reason_vod__c.value,
+                    Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
+					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
+					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value
+                };
+
+                appData.suggestionIds[i] = suggestions[i].Id.value;
+                //console.log(this_suggestion);
+                appData.suggestions[i] = this_suggestion;
+            }
+            //console.log(appData.suggestionIds);
+            return getSuggestionTags(appData.suggestions);
+        }).then(function(tags) {
+            //there's a potential for tags not existing
+            //console.log("processing tags");
+            //for each Suggestion, we compare the list of suggestion tags, then add that suggestion tag as an attribute to the overall suggestion.
+            console.log(tags);
+            if (tags.length > 0) {
+                var product_tags_missing = true;
+                var driver_tags_missing = true;
+                //console.log(appData.suggestions);
+                for (var i = 0; i < appData.suggestions.length; i++) {
+                    var tag_count = 0;
+                    for (var j = 0; j < tags.length; j++) {
+                        //check if this tag parentid matches this suggestion id
+                        if (tags[j].Suggestion_vod__c.value === appData.suggestions[i].Id) {
+                            //console.log("it's a match!");
+                            var newTag = {
+                                Driver_vod__c: tags[j].Driver_vod__c.value,
+                                Product_Name__c: tags[j].Product_Name__c.value
+                            };
+                            //console.log(newTag);
+                            //console.log(appData.suggestions[i]);
+                            if (tag_count === 0) {
+                                appData.suggestions[i]["tags"] = [];
+                            }
+                            appData.suggestions[i].tags[tag_count] = newTag;
+                            tag_count++;
+                            //console.log(appData.suggestions[i].tags);
+                            if (newTag.Driver_vod__c) {
+                                drivers_master_set.add(newTag.Driver_vod__c);
+                                driver_tags_missing = false;
+                            }
+                            if (newTag.Product_Name__c) {
+                                products_master_set.add(newTag.Product_Name__c);
+                                product_tags_missing = false;
+                            }
+                        }
+                    }
+                }
+                console.log("Driver tags missing? " + driver_tags_missing);
+                console.log(drivers_master_set);
+                console.log("Product tags missing? " + product_tags_missing);
+                console.log(products_master_set);
+                if (product_tags_missing) {
+                    disableProductFilter();
+                } else { //now that all the tags are built out, time to compose the select pickers
+                    var product_options = '';
+                    for (let product of products_master_set) {
+                        product_options += '<option value="' + product + '">' + product + '</option>';
+                    }
+                    $("#product_filter").append(product_options);
+                    $('.product-filter').selectpicker('refresh');
+
+                }
+                if (driver_tags_missing) {
+                    disableDriverFilter();
+                } else { //now that all the tags are built out, time to compose the driver  pickers
+                    var driver_options = '';
+                    for (let driver of drivers_master_set) {
+                        driver_options += '<option value="' + driver + '">' + driver + '</option>';
+                    }
+                    $("#driver_filter").append(driver_options);
+                    $('.driver-filter').selectpicker('refresh');
+                }
+            } else { //no tags!!
+                //disable the filters that don't apply
+                //console.log("There are zero Suggestion Tags")
+                disableDriverFilter();
+                disableProductFilter();
+            }
+
+            return getAllSuggestionFeedback();
+        }).then(function(feedback) {
+            //console.log(feedback);
+            //we only care if a suggestion has feedback, use a set to dedupe
+            var suggestions_with_feedback_set = new Set();
+            for (var i = 0; i < feedback.length; i++) {
+                suggestions_with_feedback_set.add(feedback[i].Suggestion_vod__c.value);
+            }
+            //console.log(suggestions_with_feedback_set);
+
+            //now compare that set to our list of suggestions and tag them appropraitely.
+            for (var i = 0; i < appData.suggestions.length; i++) {
+                //console.log(appData.suggestions[i]);
+
+                //not accounting for senarios if these Values contain the number Zero. Will need to be changed if this is going to production-ready
+                if (!(appData.suggestions[i].Actioned_vod__c) &&
+                    !(appData.suggestions[i].Marked_As_Complete_vod__c) &&
+                    !(appData.suggestions[i].Dismissed_vod__c) && !suggestions_with_feedback_set.has(appData.suggestions[i].Id)) {
+                    //console.log("this suggestion is pending");
+                    //this suggestion is definiely pending
+                    appData.suggestions[i]["IsPending"] = 1;
+                }
+            }
+
+            //for the first pass, the filters will be null, but something HAS to be selected the next time things go around, so default behavior for Null would be to count everything
+            console.log("about to call countbytype");
+            return countSuggestionsByType(null, null, appData.recordtype_map, appData.suggestions);
+        }).then(function(my_suggestions_by_type_data) {
+            //console.log(my_suggestions_by_type_data);
+            appData.suggestions_by_type_data = my_suggestions_by_type_data;
+
+            return createSuggestionsByTypeChart(appData.suggestions_by_type_data);
+        }).then(function() {
+            return countSuggestionsByMonth(null, null, appData.suggestions);
+        }).then(function(monthly_count) {
+            console.log(monthly_count);
+            $.extend(appData.monthly_suggestions, monthly_count);
+            //appData.monthly_suggestions.total
+            //appData.monthly_suggestions.complete
+
+            //make sure we're only displaying the YTD labels and values:
+            var this_month_remove = ((new Date().getMonth()) + 1);
+            appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
+            appData.monthly_suggestions.total = appData.monthly_suggestions.total.slice(0, this_month_remove);
+            appData.monthly_suggestions.complete = appData.monthly_suggestions.complete.slice(0, this_month_remove);
+            //console.log(appData.monthly_suggestions);
+            //console.log(appData.months_to_date);
+
+            return createTrendsChart(appData.months_to_date, appData.monthly_suggestions.total, appData.monthly_suggestions.complete);
+        }).then(function() {
+            return countSuggestionsByStatus(null, null, appData.suggestions);
+        }).then(function(currentCount) {
+            //console.log(currentCount);
+            $.extend(true, appData.my_count, currentCount);
+            //console.log(appData.my_count);
+
+            return createTeamChart(appData.my_count);
+        }).then(function() {
+            return aggregateSuggestionsForTable(appData);
+        }).then(function(table_data) {
+
+            appData.table_data = table_data;
+
+            buildTable(table_data);
+
+            //event listener for driver filter
+            $("#driver_filter").on("hidden.bs.select", function(e) {
+                selected_drivers = $("#driver_filter").val();
+                refreshCharts(selected_drivers,selected_products);
+            });
+
+            //event listener for product filter
+            $("#product_filter").on("hidden.bs.select", function(e) {
+                selected_products = $("#product_filter").val();
+                refreshCharts(selected_drivers,selected_products);
+            });
+
+        })
+    }
+
+    mainController();
+
+
+});
+</script>
+
+</html>
