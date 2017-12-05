@@ -93,11 +93,12 @@
                                 </div>
                                 <table id="bootstrap-table" class="table-bordered">
                                     <thead>
-                                        <!--<th data-field="title" data-sortable="true">Title</th>-->
-									    <th data-field="name" data-sortable="true">Assigned To</th>
+                                        <!--<th data-field="title" data-sortable="true">Title</th>
+									    <th data-field="name" data-sortable="true">Assigned To</th>-->
 										<th data-field="accountName" data-sortable="true">Account Name</th>
                                         <th data-field="type" data-sortable="true">Type</th>
                                         <th data-field="status" data-sortable="true">Status</th>
+                                        <th data-field="lastStatusBy" data-sortable="true">Last Status By</th>
                                         <th data-field="postedDate" data-sortable="true">Posted Date</th>
 										<th data-field="expirationDate" data-sortable="true">Expiration Date</th>
 										<th data-field="reason" data-sortable="true">Reason</th>
@@ -954,14 +955,14 @@ $(document).ready(function() {
 
 
                     	var flag = false;
-	                   	 if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
-	                            //console.log("Complete!");
-	       	                 /* my_count["completed"]++;
-	       	                 flag = true;
-	       	             } else if (suggestions[i].Actioned_vod__c) { */
+	                   	 if (suggestions[i].Actioned_vod__c) { 
 	       	                     //console.log("Actioned!");
 	       	                     my_count["actioned"]++;
 	       	                     flag = true;
+	       	             } else if (suggestions[i].Marked_As_Complete_vod__c) {
+	                            //console.log("Complete!");
+	       	                  my_count["completed"]++;
+	       	                 flag = true;
 	       	             } else if (suggestions[i].Dismissed_vod__c) {
 	       	                     //console.log("Dismissed!");
 	       	                     my_count["dismissed"]++;
@@ -982,14 +983,14 @@ $(document).ready(function() {
             } else { //no need to respect the filters
                     //console.log("it's a match");
             	var flag = false;
-            	 if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
-                     //console.log("Complete!");
-	                 /* my_count["completed"]++;
-	                 flag = true;
-	             } else if (suggestions[i].Actioned_vod__c) { */
+            	if (suggestions[i].Actioned_vod__c) { 
 	                     //console.log("Actioned!");
 	                     my_count["actioned"]++;
 	                     flag = true;
+	             } else if (suggestions[i].Marked_As_Complete_vod__c) {
+                   //console.log("Complete!");
+	                  my_count["completed"]++;
+	                 flag = true;
 	             } else if (suggestions[i].Dismissed_vod__c) {
 	                     //console.log("Dismissed!");
 	                     my_count["dismissed"]++;
@@ -1042,10 +1043,10 @@ $(document).ready(function() {
             }
             //match status
             console.log('checking status');
-            if (data.suggestions[i].Marked_As_Complete_vod__c || data.suggestions[i].Actioned_vod__c) {
-              /*   row.status = 'Marked Complete';
-            } else if (data.suggestions[i].Actioned_vod__c) { */
+             if (data.suggestions[i].Actioned_vod__c) {
                 row.status = 'Actioned';
+            } else if (data.suggestions[i].Marked_As_Complete_vod__c) {
+                   row.status = 'Marked Complete';
             } else if (data.suggestions[i].Dismissed_vod__c) {
                 row.status = 'Dismissed';
             } else {
