@@ -97,8 +97,8 @@
 									    <th data-field="name" data-sortable="true">Assigned To</th>-->
 										<th data-field="accountName" data-sortable="true">Account Name</th>
                                         <th data-field="type" data-sortable="true">Type</th>
-                                        <th data-field="status" data-sortable="true">Status</th>
-                                        <th data-field="lastStatusBy" data-sortable="true">Last Status By</th>
+                                        <th data-field="statusAzUs" data-sortable="true">Status</th>
+                                        <th data-field="LastStatusUpdatedBy" data-sortable="true">Last Status Updated By</th>
                                         <th data-field="postedDate" data-sortable="true">Posted Date</th>
 										<th data-field="expirationDate" data-sortable="true">Expiration Date</th>
 										<th data-field="reason" data-sortable="true">Reason</th>
@@ -664,7 +664,7 @@ $(document).ready(function() {
         var queryConfig = {
             suggestions: {
                 object: 'Suggestion_vod__c',
-                fields: ['OwnerId','Account_Name_Stamp_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c','Title_vod__c','Reason_vod__c','Posted_Date_vod__c', 'Expiration_Date_vod__c']
+                fields: ['OwnerId','Account_Name_Stamp_AZ_US__c','Last_Status_Updated_By_AZ_US__c','Status_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c','Title_vod__c','Reason_vod__c','Posted_Date_vod__c', 'Expiration_Date_vod__c']
               //  where: 'OwnerId = \'' + userId +'\''
             }
         };
@@ -1052,6 +1052,8 @@ $(document).ready(function() {
             } else {
                 row.status = 'Pending';
             }
+            row.statusAzUs = data.suggestions[i].StatusAzUs;
+            row.lastStatusUpdatedBy = data.suggestions[i].LastStatusUpdatedBy;
             //stamp date
             //console.log('checking date');
             row.postedDate = moment(data.suggestions[i].Posted_Date_vod__c).format('LL');
@@ -1126,7 +1128,9 @@ $(document).ready(function() {
                     Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
 					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
 					Account_vod__c: suggestions[i].Account_vod__c.value,
-					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value
+					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
+					LastStatusUpdatedBy: suggestions[i].Last_Status_Updated_By_AZ_US__c.value,
+					StatusAzUs: suggestions[i].Status_AZ_US__c.value
                 };
                 /* var obj = {'AccountName':this_suggestion.AccountName, 'Id':this_suggestion.Id, 'OwnerId':this_suggestion.OwnerId, 'Account_vod__c':this_suggestion.Account_vod__c};
                 $('#response').append('<pre>' + JSON.stringify(obj, null, "\t") + '</pre>'); */
