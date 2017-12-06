@@ -542,7 +542,9 @@ function buildTable(data, statusFilter, typeFilter) {
                 type: data[i].type,
                 status: data[i].status,
                 postedDate: data[i].postedDate,
-				expirationDate: data[i].expirationDate
+				expirationDate: data[i].expirationDate,
+				statusAzUs: data[i].statusAzUs,
+				lastStatusUpdatedBy: data[i].lastStatusUpdatedBy
             }
             //console.log(row.status);
 
