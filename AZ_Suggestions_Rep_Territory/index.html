@@ -671,6 +671,7 @@ $(document).ready(function() {
     function getUserName(userId) {
         //console.log('getting recordtypes');
         $('#response').append('<pre>userId' + userId + '</pre>');
+        userId = 'a6J3F0000009Ai9UAE';
 
         var queryConfig = {
             recordTypes: {
@@ -1135,7 +1136,7 @@ $(document).ready(function() {
             $('#response').append('<pre>before: getUserName</pre>');
             	return getUserName(suggestions[0].OwnerId.value);
         }).then(function(userName) {
-        	$('#response').append('<pre>First User Name: ' +  JSON.stringify(userName[0].Name.value, null, "\t") + '</pre>');
+        	$('#response').append('<pre>User Name: ' +  JSON.stringify(userName[0].Name.value, null, "\t") + '</pre>');
         	appData.suggestions[0].name = userName[0].Name.value;
             return getSuggestionTags(appData.suggestions);
         }).then(function(tags) {
