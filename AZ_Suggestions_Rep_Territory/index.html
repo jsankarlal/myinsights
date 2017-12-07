@@ -675,7 +675,7 @@ $(document).ready(function() {
         var queryConfig = {
             suggestions: {
                 object: 'Suggestion_vod__c',
-                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c']
+                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Last_Status_Updated_By_AZ_US__c', 'Status_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c']
               //  where: 'OwnerId = \'' + userId +'\''
             }
         };
@@ -1065,7 +1065,7 @@ $(document).ready(function() {
 
         }).then(function(suggestions) {
             //console.log(suggestions);
-            $('#response').append('<pre>suggestions: ' +  JSON.stringify(suggestions, null, "\t") + '</pre>');
+            $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions.length + 1, null, "\t") + '</pre>');
             for (var i = 0; i < suggestions.length; i++) {
                 var this_suggestion = {
                     Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
