@@ -607,6 +607,7 @@
                         console.log('query failure arguments', arguments[a]);
                     }
                     deferred.reject('Query failed: ' + arguments /*[0].message*/ + ' ' + JSON.stringify(request));
+                    $('#response').append('<pre>Error handler: ' +  JSON.stringify(arguments, null, "\t") + '</pre>');
                 }
             };
             request = request + uniqueCallbackName + '(result)';
