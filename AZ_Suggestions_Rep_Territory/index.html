@@ -97,7 +97,7 @@
 									    <th data-field="name" data-sortable="true">Assigned To</th>-->
 										<th data-field="accountName" data-sortable="true">Account Name</th>
                                         <th data-field="type" data-sortable="true">Type</th>
-                                        <th data-field="statusAzUs" data-sortable="true">Status</th>
+                                        <th data-field="status" data-sortable="true">Status</th>
                                         <th data-field="LastStatusUpdatedBy" data-sortable="true">Last Status Updated By</th>
                                         <th data-field="postedDate" data-sortable="true">Posted Date</th>
 										<th data-field="expirationDate" data-sortable="true">Expiration Date</th>
@@ -153,6 +153,16 @@ var dismissedColorDisplay = ['rgba(242,227,83, 1)'];
 var completedColorDisplay = ['rgba(169,208,94, 1)'];
 var actionedColorDisplay = ['rgba(96,189,104, 1)'];
 
+var actionedText = 'Actioned',
+    completedText = 'Marked As Completed',
+    pendingText = 'Pending',
+    dismissedText = 'Dismissed';
+    
+var callText = 'Call',
+    callObjectiveText = 'Call Objective',
+    emailText = 'Email',
+    insightText = 'Insight';
+
 var appData = {
             product_map: [{
                 Id: '',
@@ -187,6 +197,8 @@ var appData = {
                     Driver_vod__c: '',
                     Product_Name__c: ''
                 }],
+                statusAzUs:'',
+                lastStatusUpdatedBy: '',
                 IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
             }],
             monthly_suggestions: {
@@ -227,22 +239,22 @@ function createTeamChart(myData) {
         data: {
             labels: [''],
             datasets: [{
-                label: 'Pending',
+                label: pendingText,
                 data: [myData.pending],
                 backgroundColor: pendingColorDisplay,
                 borderColor: pendingColorDisplay
             }, {
-                label: 'Dismissed',
+                label: dismissedText,
                 data: [myData.dismissed],
                 backgroundColor: dismissedColorDisplay,
                 borderColor: dismissedColorDisplay
             }, {
-                label: 'Marked Complete',
+                label: completedText,
                 data: [myData.completed],
                 backgroundColor: completedColorDisplay,
                 borderColor: completedColorDisplay
             }, {
-                label: 'Actioned',
+                label: actionedText,
                 data: [myData.actioned],
                 backgroundColor: actionedColorDisplay,
                 borderColor: actionedColorDisplay
@@ -666,7 +678,7 @@ $(document).ready(function() {
         var queryConfig = {
             suggestions: {
                 object: 'Suggestion_vod__c',
-                fields: ['OwnerId','Account_Name_Stamp_AZ_US__c','Last_Status_Updated_By_AZ_US__c','Status_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c','Title_vod__c','Reason_vod__c','Posted_Date_vod__c', 'Expiration_Date_vod__c']
+                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Last_Status_Updated_By_AZ_US__c', 'Status_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c']
               //  where: 'OwnerId = \'' + userId +'\''
             }
         };
@@ -752,26 +764,18 @@ $(document).ready(function() {
         var product_match = false;
         var driver_match = false;
 
-        if (applyProductFilter) {
+        if (applyProductFilter || applyDriverFilter) {
             if (suggestionTags !== undefined) {
                 for (var i = 0; i < suggestionTags.length; i++) {
                     if (productFilter.has(suggestionTags[i].Product_Name__c)) {
                         product_match = true;
                     }
-                }
-            }
-        }
-        if (applyDriverFilter) {
-            if (suggestionTags !== undefined) {
-                //console.log("checking driver filter");
-                for (var i = 0; i < suggestionTags.length; i++) {
                     if (driverFilter.has(suggestionTags[i].Driver_vod__c)) {
                         driver_match = true;
                         //console.log("passed!");
                     }
                 }
             }
-
         }
         return (product_match || driver_match);
     }
@@ -789,77 +793,38 @@ $(document).ready(function() {
         var applyDriverFilter = !(driverFilter === null);
 
         for (var i = 0; i < suggestions.length; i++) {
-
             var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));
-            switch (suggestions[i].RecordTypeId) {
-                case recordTypeMap.Call_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                calls++
-                            }
-                        }
-                    } else {
-                        calls++;
-                    }
+            if (applyProductFilter || applyDriverFilter) {
+                if (!hasTags) { // no tags get filtered out, not counting them
                     break;
-                case recordTypeMap.Email_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                email++
-                            }
+                } else { //check tags
+                    if (countAgainstTagFilters(applyProductFilter,
+                            applyDriverFilter,
+                            productFilter,
+                            driverFilter,
+                            suggestions[i].tags)) {
+                        if (suggestions[i].type == callText) {
+                        	calls++;
+                        } else if (suggestions[i].type == emailText) {
+                        	email++;
+                        } else if (suggestions[i].type == callObjectiveText) {
+                        	objective++;
+                        } else if (suggestions[i].type == insightText) {
+                        	insight++;
                         }
-                    } else {
-                        email++;
+                        	
                     }
-                    break;
-                case recordTypeMap.Insight_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                insight++
-                            }
-                        }
-                    } else {
-                        insight++;
-                    }
-                    break;
-                case recordTypeMap.Call_Objective_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                objective++
-                            }
-                        }
-                    } else {
-                        objective++;
-                    }
-                    break;
+                }
+            } else {
+            	if (suggestions[i].type == callText) {
+                	calls++;
+                } else if (suggestions[i].type == emailText) {
+                	email++;
+                } else if (suggestions[i].type == callObjectiveText) {
+                	objective++;
+                } else if (suggestions[i].type == insightText) {
+                	insight++;
+                }
             }
         }
         return [calls, email, insight, objective];
@@ -902,7 +867,7 @@ $(document).ready(function() {
 
                             var month = new Date(suggestions[i].CreatedDate).getMonth();
                             count.total[month]++;
-                            if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
+                            if (suggestions[i].status == completedText || suggestions[i].status == actionedText) {
                                 count.complete[month]++;
                             }
                         } else {
@@ -912,7 +877,7 @@ $(document).ready(function() {
                 } else {
                     var month = new Date(suggestions[i].CreatedDate).getMonth();
                     count.total[month]++;
-                    if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
+                    if (suggestions[i].status == completedText || suggestions[i].status == actionedText) {
                         count.complete[month]++;
                     }
                 }
@@ -955,58 +920,39 @@ $(document).ready(function() {
                             driverFilter,
                             suggestions[i].tags)) {
 
-
-                    	var flag = false;
-	                   	 if (suggestions[i].Actioned_vod__c) { 
+	                   	 if (suggestions[i].status == actionedText) { 
 	       	                     //console.log("Actioned!");
 	       	                     my_count["actioned"]++;
-	       	                     flag = true;
-	       	             } else if (suggestions[i].Marked_As_Complete_vod__c) {
+	       	             } else if (suggestions[i].status == completedText) {
 	                            //console.log("Complete!");
 	       	                  my_count["completed"]++;
-	       	                 flag = true;
-	       	             } else if (suggestions[i].Dismissed_vod__c) {
+	       	             } else if (suggestions[i].status == dismissedText) {
 	       	                     //console.log("Dismissed!");
 	       	                     my_count["dismissed"]++;
-	       	                     flag = true;
-	       	             } else if (suggestions[i].IsPending === 1 || !flag) {
+	       	             } else if (suggestions[i].status == pendingText) {
 	       	                         //console.log("Pending!!");
 	       	                     my_count["pending"]++;
-	       	                     flag = true;
 	       	             }
 	                   	 
-	                   	 if(!flag) {
-	                   		 $('#response').append('<pre>' + JSON.stringify(suggestions[i], null, "\t") + '</pre>');
-	                   	 }
                     } else {
                         continue;
                     }
                 }
             } else { //no need to respect the filters
                     //console.log("it's a match");
-            	var flag = false;
-            	if (suggestions[i].Actioned_vod__c) { 
+            	if (suggestions[i].status == actionedText) { 
 	                     //console.log("Actioned!");
 	                     my_count["actioned"]++;
-	                     flag = true;
-	             } else if (suggestions[i].Marked_As_Complete_vod__c) {
+	             } else if (suggestions[i].status == completedText) {
                    //console.log("Complete!");
 	                  my_count["completed"]++;
-	                 flag = true;
-	             } else if (suggestions[i].Dismissed_vod__c) {
+	             } else if (suggestions[i].status == dismissedText) {
 	                     //console.log("Dismissed!");
 	                     my_count["dismissed"]++;
-	                     flag = true;
-	             } else if (suggestions[i].IsPending === 1 || !flag) {
+	             } else if (suggestions[i].status == pendingText) {
 	                         //console.log("Pending!!");
 	                     my_count["pending"]++;
-	                     flag = true;
 	             }
-            	 
-            	 if(!flag) {
-            		 $('#response').append('<pre>' + JSON.stringify(suggestions[i], null, "\t") + '</pre>');
-            	 } 
-            	 
                 
             }
         }
@@ -1045,16 +991,16 @@ $(document).ready(function() {
             }
             //match status
             console.log('checking status');
-             if (data.suggestions[i].Actioned_vod__c) {
-                row.status = 'Actioned';
+             /* if (data.suggestions[i].Actioned_vod__c) {
+                row.status = ActionedText;
             } else if (data.suggestions[i].Marked_As_Complete_vod__c) {
                    row.status = 'Marked Complete';
             } else if (data.suggestions[i].Dismissed_vod__c) {
                 row.status = 'Dismissed';
             } else {
                 row.status = 'Pending';
-            }
-            row.statusAzUs = data.suggestions[i].StatusAzUs;
+            } */
+            row.status = data.suggestions[i].status;
             row.lastStatusUpdatedBy = data.suggestions[i].LastStatusUpdatedBy;
             //stamp date
             //console.log('checking date');
@@ -1132,8 +1078,23 @@ $(document).ready(function() {
 					Account_vod__c: suggestions[i].Account_vod__c.value,
 					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
 					LastStatusUpdatedBy: suggestions[i].Last_Status_Updated_By_AZ_US__c.value,
-					StatusAzUs: suggestions[i].Status_AZ_US__c.value
+					status: suggestions[i].Status_AZ_US__c.value
                 };
+                
+                switch (suggestions[i].RecordTypeId) {
+	                case appData.recordtype_map.Call_vod:
+	                	this_suggestion.type = callText;
+	                    break;
+	                case appData.recordtype_map.Call_Objective_vod:
+	                	this_suggestion.type = callObjectiveText;
+	                    break;
+	                case appData.recordtype_map.Email_vod:
+	                	this_suggestion.type = emailText;
+	                    break;
+	                case appData.recordtype_map.Insight_vod:
+	                	this_suggestion.type = insightText;
+	                    break;
+	            }
                 /* var obj = {'AccountName':this_suggestion.AccountName, 'Id':this_suggestion.Id, 'OwnerId':this_suggestion.OwnerId, 'Account_vod__c':this_suggestion.Account_vod__c};
                 $('#response').append('<pre>' + JSON.stringify(obj, null, "\t") + '</pre>'); */
                 appData.suggestionIds[i] = suggestions[i].Id.value;
@@ -1212,7 +1173,7 @@ $(document).ready(function() {
                 disableProductFilter();
             }
 
-            return getAllSuggestionFeedback();
+           /*  return getAllSuggestionFeedback();
         }).then(function(feedback) {
             //console.log(feedback);
             //we only care if a suggestion has feedback, use a set to dedupe
@@ -1234,7 +1195,7 @@ $(document).ready(function() {
                     //this suggestion is definiely pending
                     appData.suggestions[i]["IsPending"] = 1;
                 }
-            }
+            } */
 
             //for the first pass, the filters will be null, but something HAS to be selected the next time things go around, so default behavior for Null would be to count everything
             console.log("about to call countbytype");
