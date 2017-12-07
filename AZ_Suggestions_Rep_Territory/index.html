@@ -670,7 +670,7 @@ $(document).ready(function() {
     
     function getUserName(userId) {
         //console.log('getting recordtypes');
-        
+        $('#response').append('<pre>userId' + userId + '</pre>');
 
         var queryConfig = {
             recordTypes: {
@@ -680,6 +680,8 @@ $(document).ready(function() {
             }
         };
 
+        $('#response').append('<pre>queryConfig:' + JSON.stringify(queryConfig.recordTypes, null, "\t")  + '</pre>');
+        
         $('#response').append('<pre>inside: getUserName</pre>');
         var deferred = $q.defer();
 
