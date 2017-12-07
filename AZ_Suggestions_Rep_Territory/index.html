@@ -1133,7 +1133,7 @@ $(document).ready(function() {
           //  } */
             //console.log(appData.suggestionIds);
             $('#response').append('<pre>before: getUserName</pre>');
-            	return getUserName(suggestions[0].OwnerId);
+            	return getUserName(suggestions[0].OwnerId.value);
         }).then(function(userName) {
         	$('#response').append('<pre>First User Name: ' +  JSON.stringify(userName, null, "\t") + '</pre>');
         	appData.suggestions[0].name = userName;
