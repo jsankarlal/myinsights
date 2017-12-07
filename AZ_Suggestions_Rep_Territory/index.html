@@ -670,6 +670,7 @@ $(document).ready(function() {
     
     function getUserName(userId) {
         //console.log('getting recordtypes');
+        
 
         var queryConfig = {
             recordTypes: {
@@ -679,11 +680,12 @@ $(document).ready(function() {
             }
         };
 
+        $('#response').append('<pre>inside: getUserName</pre>');
         var deferred = $q.defer();
 
         ds.runQuery(queryConfig.recordTypes)
             .then(function(result) {
-                deferred.resolve(result.data.name);
+                deferred.resolve(result.data);
             });
 
         return deferred.promise;
@@ -1128,8 +1130,10 @@ $(document).ready(function() {
                 appData.suggestions[i] = this_suggestion;
             }
             //console.log(appData.suggestionIds);
+            $('#response').append('<pre>before: getUserName</pre>');
             	return getUserName(appData.suggestions[0].OwnerId);
         }).then(function(userName) {
+        	$('#response').append('<pre>First User Name: ' +  JSON.stringify(userName, null, "\t") + '</pre>');
         	appData.suggestions[0].name = userName;
         	 $('#response').append('<pre>First User Name: ' +  JSON.stringify(appData.suggestions[0].name, null, "\t") + '</pre>');
             return getSuggestionTags(appData.suggestions);
