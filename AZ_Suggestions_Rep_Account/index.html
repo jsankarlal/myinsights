@@ -1098,6 +1098,7 @@ $(document).ready(function() {
             return getSuggestions(appData.accountId);
         }).then(function(suggestions) {
             //console.log(suggestions);
+            $('#response').append('<pre>suggestions: ' +  JSON.stringify(suggestions, null, "\t") + '</pre>');
             for (var i = 0; i < suggestions.length; i++) {
                 var this_suggestion = {
                     Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
