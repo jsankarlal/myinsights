@@ -1135,8 +1135,8 @@ $(document).ready(function() {
             $('#response').append('<pre>before: getUserName</pre>');
             	return getUserName(suggestions[0].OwnerId.value);
         }).then(function(userName) {
-        	$('#response').append('<pre>First User Name: ' +  JSON.stringify(userName, null, "\t") + '</pre>');
-        	appData.suggestions[0].name = userName;
+        	$('#response').append('<pre>First User Name: ' +  JSON.stringify(userName.Name.value, null, "\t") + '</pre>');
+        	appData.suggestions[0].name = userName.Name.value;
             return getSuggestionTags(appData.suggestions);
         }).then(function(tags) {
             //there's a potential for tags not existing
