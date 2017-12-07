@@ -1066,6 +1066,7 @@ $(document).ready(function() {
         }).then(function(suggestions) {
             //console.log(suggestions);
             $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions.length + 1, null, "\t") + '</pre>');
+            $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions[0], null, "\t") + '</pre>');
             for (var i = 0; i < suggestions.length; i++) {
                 var this_suggestion = {
                     Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
