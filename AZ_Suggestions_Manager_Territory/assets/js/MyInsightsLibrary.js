@@ -597,6 +597,7 @@
                     }
                     catch (e) {
                         console.warn('query result returned as non-parseable string', e, result);
+                        $('#response').append('<pre>Error handler: ' +  JSON.stringify(arguments, null, "\t") + '</pre>');
                     }
                 }
                 if (result.success) {
