@@ -168,6 +168,7 @@
                 };
             }
             console.log(e);
+            $('#response').append('<pre>appData.recordtype_map: ' +  JSON.stringify(e, null, "\t") + '</pre>');
         };
 
         olAPI.queryRecord = function (queryObject) {
