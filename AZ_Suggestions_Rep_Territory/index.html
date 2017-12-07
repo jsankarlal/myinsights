@@ -547,15 +547,12 @@ function buildTable(data, statusFilter, typeFilter) {
         for (var i = 0; i < data.length; i++) {
 
             var row = {
-                name: data[i].name,
-        //        title: data[i].title,
                 accountName: data[i].accountName,
                 reason: data[i].reason,
                 type: data[i].type,
                 status: data[i].status,
                 postedDate: data[i].postedDate,
 				expirationDate: data[i].expirationDate,
-				statusAzUs: data[i].statusAzUs,
 				lastStatusUpdatedBy: data[i].lastStatusUpdatedBy
             }
             //console.log(row.status);
@@ -621,7 +618,7 @@ $(document).ready(function() {
     //initialize the promise library
     $q = window.Q;
     //console.log("q.js initialized");
-
+	$('#response').append('<pre> q.js initialized </pre>');
     function getUserId() {
         //console.log("getting userId");
         var deferred = $q.defer();
@@ -972,10 +969,12 @@ $(document).ready(function() {
             
             row.title = data.suggestions[i].Title_vod__c;
             row.reason = data.suggestions[i].Reason_vod__c;
-
+			row.type = data.suggestions[i].type;
             //match type
-            console.log('checking the type');
-            switch (data.suggestions[i].RecordTypeId) {
+           console.log('checking the type');
+            
+           /*
+           switch (data.suggestions[i].RecordTypeId) {
                 case data.recordtype_map.Call_vod:
                     row.type = 'Call';
                     break;
@@ -989,6 +988,7 @@ $(document).ready(function() {
                     row.type = 'Insight';
                     break;
             }
+            */
             //match status
             console.log('checking status');
              /* if (data.suggestions[i].Actioned_vod__c) {
@@ -1040,13 +1040,15 @@ $(document).ready(function() {
     }
 
     function mainController() {
-
+    	$('#response').append('<pre> Main controller </pre>');
         getUserId().then(function(userId) {
             //console.log(userId);
+            $('#response').append('<pre>user ID: ' +  userId + '</pre>');
             appData.currentUser.Id = userId;
             //console.log(appData.currentUser.Id);
             return getCurrentUserName();
         }).then (function(username) {
+        	$('#response').append('<pre>username: ' +  username + '</pre>');
             appData.currentUser.Name = username;
             //console.log(products_master_set);
             return getRecordTypes();
@@ -1058,10 +1060,12 @@ $(document).ready(function() {
                 });
             } //for the horrified: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names
             //console.log(appData.recordtype_map);
+            $('#response').append('<pre>appData.recordtype_map: ' +  JSON.stringify(appData.recordtype_map, null, "\t") + '</pre>');
             return getSuggestions(appData.currentUser.Id);
 
         }).then(function(suggestions) {
             //console.log(suggestions);
+            $('#response').append('<pre>suggestions: ' +  JSON.stringify(suggestions, null, "\t") + '</pre>');
             for (var i = 0; i < suggestions.length; i++) {
                 var this_suggestion = {
                     Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
