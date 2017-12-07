@@ -1090,7 +1090,7 @@ $(document).ready(function() {
             //console.log(suggestions);
             $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions.length + 1, null, "\t") + '</pre>');
             $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions[0], null, "\t") + '</pre>');
-            for (var i = 0; i < suggestions.length; i++) {
+           /*  for (var i = 0; i < suggestions.length; i++) {
                 var this_suggestion = {
                     Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
                     Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
@@ -1125,13 +1125,13 @@ $(document).ready(function() {
 	            }
                 /* var obj = {'AccountName':this_suggestion.AccountName, 'Id':this_suggestion.Id, 'OwnerId':this_suggestion.OwnerId, 'Account_vod__c':this_suggestion.Account_vod__c};
                 $('#response').append('<pre>' + JSON.stringify(obj, null, "\t") + '</pre>'); */
-                appData.suggestionIds[i] = suggestions[i].Id.value;
+         //       appData.suggestionIds[i] = suggestions[i].Id.value;
                 //console.log(this_suggestion);
-                appData.suggestions[i] = this_suggestion;
-            }
+           //     appData.suggestions[i] = this_suggestion;
+          //  } */
             //console.log(appData.suggestionIds);
             $('#response').append('<pre>before: getUserName</pre>');
-            	return getUserName(appData.suggestions[0].OwnerId);
+            	return getUserName(suggestions[0].OwnerId);
         }).then(function(userName) {
         	$('#response').append('<pre>First User Name: ' +  JSON.stringify(userName, null, "\t") + '</pre>');
         	appData.suggestions[0].name = userName;
