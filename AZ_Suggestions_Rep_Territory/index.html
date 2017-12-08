@@ -175,7 +175,7 @@ var completedColorDisplay = ['rgba(169,208,94, 1)'];
 var actionedColorDisplay = ['rgba(96,189,104, 1)'];
 
 var actionedText = 'Actioned',
-    completedText = 'Marked As Completed',
+    completedText = 'Marked as Completed',
     pendingText = 'Pending',
     dismissedText = 'Dismissed';
     
@@ -913,7 +913,7 @@ $(document).ready(function() {
 
                             var month = new Date(suggestions[i].CreatedDate).getMonth();
                             count.total[month]++;
-                            if (suggestions[i].status == completedText || suggestions[i].status == actionedText) {
+                            if (suggestions[i].Status == completedText || suggestions[i].Status == actionedText) {
                                 count.complete[month]++;
                             }
                         } else {
@@ -923,7 +923,7 @@ $(document).ready(function() {
                 } else {
                     var month = new Date(suggestions[i].CreatedDate).getMonth();
                     count.total[month]++;
-                    if (suggestions[i].status == completedText || suggestions[i].status == actionedText) {
+                    if (suggestions[i].Status == completedText || suggestions[i].Status == actionedText) {
                         count.complete[month]++;
                     }
                 }
