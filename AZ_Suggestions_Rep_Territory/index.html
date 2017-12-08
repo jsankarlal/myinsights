@@ -1168,7 +1168,7 @@ $(document).ready(function() {
            	return getUserNames(ownerIdList);
         }).then(function(userNames) {
         	var ownerIdLookup = {};
-        	for (var i = 0, i < userNames.length; i++) {
+        	for (var i = 0;i < userNames.length; i++) {
         		ownerIdLookup[userName[i].Id.value] = array[i].Name.value;
         	}
         	appData.ownerIdLookup = ownerIdLookup;
