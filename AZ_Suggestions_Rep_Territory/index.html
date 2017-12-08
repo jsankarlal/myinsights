@@ -694,7 +694,8 @@ $(document).ready(function() {
     function getUserNames(ownerIds) {
         //console.log('getting userNames');
         $('#response').append('<pre>userId : ' + JSON.stringify(ownerIds, null, "\t") + '</pre>');
-        var inObject = ds.getInStatement(['005U0000002MmZfIAK','0050P000007E7I1QAK','005U0000002MmeTIAS','0050P000006hwvxQAA','0050P000007E8omQAC','0050P000007E8oZQAS']);
+        var inObject = ds.getInStatement(['005U0000002MmZfIAK']);
+        //['005U0000002MmZfIAK','0050P000007E7I1QAK','005U0000002MmeTIAS','0050P000006hwvxQAA','0050P000007E8omQAC','0050P000007E8oZQAS']
 
         var queryConfig = {
             userNames: {
