@@ -1052,11 +1052,12 @@ $(document).ready(function() {
         if (drivers) {
             selected_drivers_set = new Set(drivers);
         }
+        $('#response').append('<pre> refreshCharts - selected_drivers_set:' + JSON.stringify(selected_drivers_set, '\t', null) + ' </pre>');
         var selected_products_set = null;
         if (products) {
             selected_products_set = new Set(products);
         }   
-        
+        $('#response').append('<pre> refreshCharts - selected_products_set:' + JSON.stringify(selected_products_set, '\t', null) + ' </pre>');
         createTeamChart(countSuggestionsByStatus(selected_products_set, selected_drivers_set, appData.suggestions))
 
         var new_monthly_count = countSuggestionsByMonth(selected_products_set, selected_drivers_set, appData.suggestions);
