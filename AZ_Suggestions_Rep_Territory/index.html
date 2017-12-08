@@ -622,6 +622,14 @@ function buildTable(data, statusFilter, typeFilter) {
                 columns: 'fa fa-columns',
                 detailOpen: 'fa fa-plus-circle',
                 detailClose: 'ti-close'
+            },
+            detailview: "true",
+            detailFormatter: detailFormatter(index, row) {
+                var html = [];
+                $.each(row, function (key, value) {
+                    html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+                });
+                return html.join('');
             }
         });
 
@@ -1130,7 +1138,7 @@ try{
             } 
             //console.log(appData.suggestionIds);
             appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-            $('#response').append('<pre>appData suggestions[0]: ' +  JSON.stringify(appData.suggestions[0], null, "\t") + '</pre>');
+     //       $('#response').append('<pre>appData suggestions[0]: ' +  JSON.stringify(appData.suggestions[0], null, "\t") + '</pre>');
             return getSuggestionTags(appData.suggestions);
         }).then(function(tags) {
             //there's a potential for tags not existing
@@ -1273,11 +1281,12 @@ try{
 	        	for (var i = 0;i < userNames.length; i++) {
 	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
 	        	}
-	        	
-	        	appData.ownerIdLookup = ownerIdLookup;
+	        	$.extend(appData.ownerIdLookup, ownerIdLookup);
+	        //	appData.ownerIdLookup = ownerIdLookup;
+	        	$('#response').append('<pre>After: ownerIdLookup : ' + JSON.stringify(appData.ownerIdLookup, null, "\t") +'</pre>');
 	        	for (var i = 0; i < appData.suggestions.length; i++) {
-	        		var temp = appData.ownerIdLookup[appData.suggestions[i].ownerId];
-	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ? temp : '';
+	        		var temp = appData.ownerIdLookup[appData.suggestions[i].ownerId] ? temp : '';
+	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
 	        	}
         	} catch(e){
         		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
