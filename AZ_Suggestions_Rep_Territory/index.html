@@ -1047,6 +1047,8 @@ $(document).ready(function() {
     function refreshCharts(drivers, products) {
     	
     	$('#response').append('<pre> refreshCharts - entered </pre>');
+    	$('#response').append('<pre> refreshCharts - drivers:' + JSON.stringify(drivers, '\t', null) + ' </pre>');
+    	$('#response').append('<pre> refreshCharts - products:' + JSON.stringify(products, '\t', null) + ' </pre>');
         
         var selected_drivers_set = null;
         if (drivers) {
@@ -1287,14 +1289,14 @@ $(document).ready(function() {
             $("#driver_filter").on("hidden.bs.select", function(e) {
                 selected_drivers = $("#driver_filter").val();
                 $('#response').append('<pre> driver_filter - clicked : selected_drivers :' + JSON.stringify(selected_drivers, null, "\t") + '</pre>');
-                refreshCharts(selected_drivers,selected_products);
+                refreshCharts(selected_drivers, selected_products);
             });
 
             //event listener for product filter
             $("#product_filter").on("hidden.bs.select", function(e) {
                 selected_products = $("#product_filter").val();
                 $('#response').append('<pre> product_filter - clicked : selected_products :' + JSON.stringify(selected_products, null, "\t") + '</pre>');
-                refreshCharts(selected_drivers,selected_products);
+                refreshCharts(selected_drivers, selected_products);
             });
 
         })
