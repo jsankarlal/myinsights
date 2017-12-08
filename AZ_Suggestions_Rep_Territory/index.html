@@ -623,8 +623,8 @@ function buildTable(data, statusFilter, typeFilter) {
                 detailOpen: 'fa fa-plus-circle',
                 detailClose: 'ti-close'
             },
-            detailview: "true",
-            detailFormatter: detailFormatter(index, row) {
+            detailview: true,
+            detailFormatter: function(index, row) {
                 var html = [];
                 $.each(row, function (key, value) {
                     html.push('<p><b>' + key + ':</b> ' + value + '</p>');
