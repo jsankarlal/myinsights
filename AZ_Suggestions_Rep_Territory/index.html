@@ -1115,7 +1115,6 @@ try{
         }).then(function(suggestions) {
             //console.log(suggestions);
             $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions.length + 1, null, "\t") + '</pre>');
-            $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions[0], null, "\t") + '</pre>');
             appData.ownerIdList = [];
              for (var i = 0; i < suggestions.length; i++) {
                 var this_suggestion = {
@@ -1140,7 +1139,7 @@ try{
                 };
                 appData.ownerIdList.push(suggestions[i].OwnerId.value);
                 
-                switch (suggestions[i].RecordTypeId) {
+                switch (suggestions[i].RecordTypeId.value) {
 	                case appData.recordtype_map.Call_vod:
 	                	this_suggestion.type = callText;
 	                    break;
@@ -1162,6 +1161,7 @@ try{
             } 
             //console.log(appData.suggestionIds);
             appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+            $('#response').append('<pre>appData suggestions[0]: ' +  JSON.stringify(appData.suggestions[0], null, "\t") + '</pre>');
             /* 
             //Derive LastStatusUpdatedBy value from ownerId            
             $('#response').append('<pre>before: getUserName</pre>');
@@ -1273,13 +1273,15 @@ try{
 
             //for the first pass, the filters will be null, but something HAS to be selected the next time things go around, so default behavior for Null would be to count everything
             console.log("about to call countbytype");
+            $('#response').append('<pre>countSuggestionsByType-- Before : </pre>');
             return countSuggestionsByType(null, null, appData.recordtype_map, appData.suggestions);
         }).then(function(my_suggestions_by_type_data) {
             //console.log(my_suggestions_by_type_data);
             appData.suggestions_by_type_data = my_suggestions_by_type_data;
-
+            $('#response').append('<pre>createSuggestionsByTypeChart-- Before : </pre>');
             return createSuggestionsByTypeChart(appData.suggestions_by_type_data);
         }).then(function() {
+        	 $('#response').append('<pre>createSuggestionsByTypeChart-- Before : </pre>');
             return countSuggestionsByMonth(null, null, appData.suggestions);
         }).then(function(monthly_count) {
             console.log(monthly_count);
