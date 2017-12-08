@@ -701,7 +701,8 @@ $(document).ready(function() {
             userNames: {
                 object: 'User',
                 fields: ['Id', 'Name'],
-                where: 'Id IN ' + inObject
+   //             where: 'Id IN ' + inObject
+   				where : 'Id = \'' + ownerIds[0] +'\''
             }
         };
 
@@ -1272,7 +1273,8 @@ try{
         	}
         	appData.ownerIdLookup = ownerIdLookup;
         	for (var i = 0; i < appData.suggestions.length; i++) {
-        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || appData.ownerIdLookup[appData.suggestions[i].ownerId];
+        		var temp = appData.ownerIdLookup[appData.suggestions[i].ownerId];
+        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ? temp : '';
         	}
         	$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
             return aggregateSuggestionsForTable(appData);
