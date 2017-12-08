@@ -1129,20 +1129,6 @@ try{
             //console.log(appData.suggestionIds);
             appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
             $('#response').append('<pre>appData suggestions[0]: ' +  JSON.stringify(appData.suggestions[0], null, "\t") + '</pre>');
-            /* 
-            //Derive LastStatusUpdatedBy value from ownerId            
-            $('#response').append('<pre>before: getUserName</pre>');
-           	return getUserNames(appData.ownerIdList);
-        }).then(function(userNames) {
-        	var ownerIdLookup = {};
-        	for (var i = 0;i < userNames.length; i++) {
-        		ownerIdLookup[userName[i].Id.value] = array[i].Name.value;
-        	}
-        	appData.ownerIdLookup = ownerIdLookup;
-        	for (var i = 0; i < appData.suggestions.length; i++) {
-        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || appData.ownerIdLookup[appData.suggestions[i].ownerId];
-        	}
-        	$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>'); */
             return getSuggestionTags(appData.suggestions);
         }).then(function(tags) {
             //there's a potential for tags not existing
@@ -1274,6 +1260,20 @@ try{
 
             return createTeamChart(appData.my_count);
         }).then(function() {
+        	 
+            //Derive LastStatusUpdatedBy value from ownerId            
+            $('#response').append('<pre>before: getUserName</pre>');
+           	return getUserNames(appData.ownerIdList);
+        }).then(function(userNames) {
+        	var ownerIdLookup = {};
+        	for (var i = 0;i < userNames.length; i++) {
+        		ownerIdLookup[userName[i].Id.value] = array[i].Name.value;
+        	}
+        	appData.ownerIdLookup = ownerIdLookup;
+        	for (var i = 0; i < appData.suggestions.length; i++) {
+        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || appData.ownerIdLookup[appData.suggestions[i].ownerId];
+        	}
+        	$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
             return aggregateSuggestionsForTable(appData);
         }).then(function(table_data) {
 
