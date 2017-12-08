@@ -1285,14 +1285,14 @@ $(document).ready(function() {
             //event listener for driver filter
             $("#driver_filter").on("hidden.bs.select", function(e) {
                 selected_drivers = $("#driver_filter").val();
-                $('#response').append('<pre> driver_filter - clicked : selected_drivers :' + JSON.stringify(selected_drivers, null, "\t") + ''</pre>');
+                $('#response').append('<pre> driver_filter - clicked : selected_drivers :' + JSON.stringify(selected_drivers, null, "\t") + '</pre>');
                 refreshCharts(selected_drivers,selected_products);
             });
 
             //event listener for product filter
             $("#product_filter").on("hidden.bs.select", function(e) {
                 selected_products = $("#product_filter").val();
-                $('#response').append('<pre> product_filter - clicked : selected_products :' + JSON.stringify(selected_products, null, "\t") + ''</pre>');
+                $('#response').append('<pre> product_filter - clicked : selected_products :' + JSON.stringify(selected_products, null, "\t") + '</pre>');
                 refreshCharts(selected_drivers,selected_products);
             });
 
