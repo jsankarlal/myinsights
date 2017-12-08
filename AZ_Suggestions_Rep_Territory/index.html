@@ -682,7 +682,7 @@ $(document).ready(function() {
         };
 
         var deferred = $q.defer();
-
+        $('#response').append('<pre>getRecordTypes : ' + JSON.stringify(queryConfig.recordTypes, null, "\t") + '</pre>');
         ds.runQuery(queryConfig.recordTypes)
             .then(function(result) {
                 deferred.resolve(result.data);
@@ -697,7 +697,7 @@ $(document).ready(function() {
         var inObject = ds.getInStatement(ownerIds);
 
         var queryConfig = {
-            recordTypes: {
+            userNames: {
                 object: 'User',
                 fields: ['Id', 'Name'],
                 where: 'Id IN ' + inObject
@@ -706,7 +706,7 @@ $(document).ready(function() {
 
         
         $('#response').append('<pre>inside: getUserName</pre>');
-        $('#response').append('<pre>queryConfig : ' + JSON.stringify(queryConfig.recordTypes, null, "\t") + '</pre>');
+        $('#response').append('<pre>queryConfig : ' + JSON.stringify(queryConfig.userNames, null, "\t") + '</pre>');
         var deferred = $q.defer();
 
         ds.runQuery(queryConfig.recordTypes)
