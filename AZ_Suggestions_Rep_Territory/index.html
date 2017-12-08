@@ -873,6 +873,7 @@ $(document).ready(function() {
                 }
             }
         }
+        $('#response').append('<pre>countSuggestionsByType - [calls, email, insight, objective]: ' +  JSON.stringify([calls, email, insight, objective], null, "\t") + '</pre>');
         return [calls, email, insight, objective];
     }
 
@@ -928,7 +929,7 @@ $(document).ready(function() {
                     }
                 }
             }
-
+        $('#response').append('<pre>countSuggestionsByMonth - count: ' +  JSON.stringify(count, null, "\t") + '</pre>');
         return count;
     }
 
@@ -1004,57 +1005,23 @@ $(document).ready(function() {
         }
 
         //console.log(my_count);
+        $('#response').append('<pre>countSuggestionsByStatus - my_count: ' +  JSON.stringify(my_count, null, "\t") + '</pre>');
         return my_count;
     }
 
 
     function aggregateSuggestionsForTable(data) {
         /**Title, Reason, Type, Status, Posted Date**/
-        console.log(data);
         var table_data = [];
-
         for (var i = 0; i < data.suggestions.length; i++) {
             var row = {};
             
             row.title = data.suggestions[i].Title_vod__c;
             row.reason = data.suggestions[i].Reason_vod__c;
 			row.type = data.suggestions[i].type;
-            //match type
-           console.log('checking the type');
-            
-           /*
-           switch (data.suggestions[i].RecordTypeId) {
-                case data.recordtype_map.Call_vod:
-                    row.type = 'Call';
-                    break;
-                case data.recordtype_map.Call_Objective_vod:
-                    row.type = 'Call Objective';
-                    break;
-                case data.recordtype_map.Email_vod:
-                    row.type = 'Email';
-                    break;
-                case data.recordtype_map.Insight_vod:
-                    row.type = 'Insight';
-                    break;
-            }
-            */
-            //match status
-            console.log('checking status');
-             /* if (data.suggestions[i].Actioned_vod__c) {
-                row.status = ActionedText;
-            } else if (data.suggestions[i].Marked_As_Complete_vod__c) {
-                   row.status = 'Marked Complete';
-            } else if (data.suggestions[i].Dismissed_vod__c) {
-                row.status = 'Dismissed';
-            } else {
-                row.status = 'Pending';
-            } */
             row.status = data.suggestions[i].Status;
             row.lastStatusUpdatedBy = data.suggestions[i].LastStatusUpdatedBy;
-            //stamp date
-            //console.log('checking date');
             row.postedDate = moment(data.suggestions[i].Posted_Date_vod__c).format('LL');
-            //console.log(row.postedDate);
 			row.expirationDate = moment(data.suggestions[i].Expiration_Date_vod__c).format('LL');
 			row.accountName = data.suggestions[i].AccountName;	
 
