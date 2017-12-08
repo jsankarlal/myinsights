@@ -694,7 +694,7 @@ $(document).ready(function() {
     function getUserNames(ownerIds) {
         //console.log('getting userNames');
         $('#response').append('<pre>userId : ' + JSON.stringify(ownerIds, null, "\t") + '</pre>');
-        var inObject = ds.getInStatement(ownerIds);
+        var inObject = ds.getInStatement(ownerIds[0]);
 
         var queryConfig = {
             userNames: {
