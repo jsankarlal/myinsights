@@ -820,6 +820,7 @@ $(document).ready(function() {
     //returns true if a match is found
     function countAgainstTagFilters(applyProductFilter, applyDriverFilter, productFilter, driverFilter, suggestionTags) {
         //console.log(suggestionTags);
+        $('#response').append('<pre>countAgainstTagFilters - entered: ' +  JSON.stringify(driverFilter, null, "\t") + '</pre>');
         var product_match = false;
         var driver_match = false;
 
@@ -832,6 +833,7 @@ $(document).ready(function() {
                     if (driverFilter.has(suggestionTags[i].Driver_vod__c)) {
                         driver_match = true;
                         //console.log("passed!");
+                        $('#response').append('<pre>countAgainstTagFilters - entered: driverFilter.has(suggestionTags[i].Driver_vod__c)' +  JSON.stringify(driverFilter.has(suggestionTags[i].Driver_vod__c), null, "\t") + '</pre>');
                     }
                 }
             }
@@ -957,6 +959,7 @@ $(document).ready(function() {
             completed: 0
         };
         **/
+        $('#response').append('<pre>countSuggestionsByStatus - entered: driverFilter ' +  JSON.stringify(driverFilter, null, "\t") + '</pre>');
         var my_count = {};
         //initialize the object shape
         my_count["pending"] = 0;
@@ -979,7 +982,7 @@ $(document).ready(function() {
                             productFilter,
                             driverFilter,
                             suggestions[i].tags)) {
-
+                    	$('#response').append('<pre>countSuggestionsByStatus - entered-back: countAgainstTagFilters ' +  JSON.stringify(suggestions[i].Status, null, "\t") + '</pre>');
 	                   	 if (suggestions[i].Status == actionedText) { 
 	       	                     //console.log("Actioned!");
 	       	                     my_count["actioned"]++;
@@ -1055,6 +1058,8 @@ $(document).ready(function() {
             selected_drivers_set = new Set(drivers);
         }
         $('#response').append('<pre> refreshCharts - selected_drivers_set:' + JSON.stringify(selected_drivers_set, '\t', null) + ' </pre>');
+        $('#response').append('<pre> refreshCharts - selected_drivers_set:' + JSON.stringify(selected_drivers_set[drivers[0]], '\t', null) + ' </pre>');
+        $('#response').append('<pre> refreshCharts - selected_drivers_set:' + JSON.stringify(selected_drivers_set[drivers[1]], '\t', null) + ' </pre>');
         var selected_products_set = null;
         if (products) {
             selected_products_set = new Set(products);
