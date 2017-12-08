@@ -1260,9 +1260,9 @@ try{
 	        	$.extend(appData.ownerIdLookup, ownerIdLookup);
 	        	$('#response').append('<pre>After: ownerIdLookup : ' + JSON.stringify(appData.ownerIdLookup, null, "\t") +'</pre>');
 	        	for (var i = 0; i < appData.suggestions.length; i++) {
-	        		$('#response').append('<pre>appData.suggestions[i].ownerId : ' + JSON.stringify(appData.suggestions[i].ownerId, null, "\t") +'</pre>');
-	        		$('#response').append('<pre>appData.ownerIdLookup[appData.suggestions[i].ownerId] : ' + appData.ownerIdLookup[appData.suggestions[i].ownerId] +'</pre>');
-	        		var temp = appData.ownerIdLookup[appData.suggestions[i].ownerId] ? appData.ownerIdLookup[appData.suggestions[i].ownerId] : '';
+	        //		$('#response').append('<pre>appData.suggestions[i].ownerId : ' + JSON.stringify(appData.suggestions[i].OwnerId, null, "\t") +'</pre>');
+	        //		$('#response').append('<pre>appData.ownerIdLookup[appData.suggestions[i].ownerId] : ' + appData.ownerIdLookup[appData.suggestions[i].OwnerId] +'</pre>');
+	        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
 	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
 	        	}
         	
