@@ -1111,7 +1111,7 @@ try{
 
         }).then(function(suggestions) {
             //console.log(suggestions);
-            $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions.length + 1, null, "\t") + '</pre>');
+            $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions.length, null, "\t") + '</pre>');
             appData.ownerIdList = [];
              for (var i = 0; i < suggestions.length; i++) {
                 var this_suggestion = {
