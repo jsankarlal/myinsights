@@ -20,13 +20,16 @@
 
 <body class="sidebar-mini">
     <div class="wrapper">
-    	<div id="response">
-    	</div>
         <div class="main-panel">
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand"></a>
+						<button type="button" class="navbar-toggle collapsed pull-left" data-toggle="modal" data-target="#exampleModal" aria-expanded="false">
+					        <span class="sr-only">Toggle navigation</span>
+					        <span class="icon-bar"></span>
+					        <span class="icon-bar"></span>
+					        <span class="icon-bar"></span>
+					    </button>
                     </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
@@ -113,6 +116,27 @@
             </div>
         </div>
     </div>
+    
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Console Logs</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+				<div id="response">
+    			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 </body>
 <!--   Core JS Files and PerfectScrollbar library inside jquery.ui   -->
 <script src="assets/js/jquery.min.js" type="text/javascript"></script>
@@ -201,6 +225,7 @@ var appData = {
                 lastStatusUpdatedBy: '',
                 IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
             }],
+            ownerIdLookup:{},
             monthly_suggestions: {
                 complete: [],
                 total: []
@@ -668,22 +693,22 @@ $(document).ready(function() {
         return deferred.promise;
     }
     
-    function getUserName(userId) {
-        //console.log('getting recordtypes');
-        $('#response').append('<pre>userId : ' + userId + '</pre>');
-        userId = '0050P000007E8oZQAS';
+    function getUserNames(ownerIds) {
+        //console.log('getting userNames');
+        $('#response').append('<pre>userId : ' + JSON.stringify(ownerIds, null, "\t") + '</pre>');
+        var inObject = ds.getInStatement(ownerIds);
 
         var queryConfig = {
             recordTypes: {
                 object: 'User',
-                fields: ['Name'],
-                where: 'Id = \'' + userId +'\''
+                fields: ['Id', 'Name'],
+                where: 'Id IN ' + inObject
             }
         };
 
-        $('#response').append('<pre>queryConfig:' + JSON.stringify(queryConfig.recordTypes, null, "\t")  + '</pre>');
         
         $('#response').append('<pre>inside: getUserName</pre>');
+        $('#response').append('<pre>queryConfig : ' + JSON.stringify(queryConfig.recordTypes, null, "\t") + '</pre>');
         var deferred = $q.defer();
 
         ds.runQuery(queryConfig.recordTypes)
@@ -1093,7 +1118,8 @@ $(document).ready(function() {
             //console.log(suggestions);
             $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions.length + 1, null, "\t") + '</pre>');
             $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions[0], null, "\t") + '</pre>');
-           /*  for (var i = 0; i < suggestions.length; i++) {
+            var ownerIdList = [];
+             for (var i = 0; i < suggestions.length; i++) {
                 var this_suggestion = {
                     Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
                     Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
@@ -1108,9 +1134,13 @@ $(document).ready(function() {
 					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
 					Account_vod__c: suggestions[i].Account_vod__c.value,
 					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
-					LastStatusUpdatedBy: suggestions[i].Last_Status_Updated_By_AZ_US__c.value,
-					status: suggestions[i].Status_AZ_US__c.value
+					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
+					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
+					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,
+					LastStatusUpdatedBy: '',
+					Status: suggestions[i].Status_AZ_US__c.value
                 };
+                ownerIdList.push(suggestions[i].OwnerId.value);
                 
                 switch (suggestions[i].RecordTypeId) {
 	                case appData.recordtype_map.Call_vod:
@@ -1125,19 +1155,27 @@ $(document).ready(function() {
 	                case appData.recordtype_map.Insight_vod:
 	                	this_suggestion.type = insightText;
 	                    break;
-	            }
-                /* var obj = {'AccountName':this_suggestion.AccountName, 'Id':this_suggestion.Id, 'OwnerId':this_suggestion.OwnerId, 'Account_vod__c':this_suggestion.Account_vod__c};
-                $('#response').append('<pre>' + JSON.stringify(obj, null, "\t") + '</pre>'); */
-         //       appData.suggestionIds[i] = suggestions[i].Id.value;
+            	}
+                this_suggestion.LastStatusUpdatedBy = this_suggestion.Actioned_By_AZ_US__c || this_suggestion.Completed_By_AZ_US__c || this_suggestion.Dismissed_By_AZ_US__c || '';
+               
+                appData.suggestionIds[i] = suggestions[i].Id.value;
                 //console.log(this_suggestion);
-           //     appData.suggestions[i] = this_suggestion;
-          //  } */
+                appData.suggestions[i] = this_suggestion;
+            } 
             //console.log(appData.suggestionIds);
+            ownerIdList = ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
             $('#response').append('<pre>before: getUserName</pre>');
-            	return getUserName(suggestions[0].OwnerId.value);
-        }).then(function(userName) {
-        	$('#response').append('<pre>User Name: ' +  JSON.stringify(userName[0].Name.value, null, "\t") + '</pre>');
-        	appData.suggestions[0].name = userName[0].Name.value;
+           	return getUserNames(ownerIdList);
+        }).then(function(userNames) {
+        	var ownerIdLookup = {};
+        	for (var i = 0, i < userNames.length; i++) {
+        		ownerIdLookup[userName[i].Id.value] = array[i].Name.value;
+        	}
+        	appData.ownerIdLookup = ownerIdLookup;
+        	for (var i = 0, i < appData.suggestions.length; i++) {
+        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || appData.ownerIdLookup[appData.suggestions[i].ownerId];
+        	}
+        	$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
             return getSuggestionTags(appData.suggestions);
         }).then(function(tags) {
             //there's a potential for tags not existing
