@@ -364,6 +364,9 @@ function createTeamChart(myData) {
         console.log(myChart.getElementAtEvent(e));
         var chartData = myChart.getElementAtEvent(e)[0]._view;
         console.log(chartData);
+        if(chartData.datasetLabel == 'Completed') {
+        	chartData.datasetLabel = 'Marked as Complete';
+        }
         buildTable(appData.table_data,chartData.datasetLabel,null);
         document.location.href = 'index.html#bootstrap-table';
     }
