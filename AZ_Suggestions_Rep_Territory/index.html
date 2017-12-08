@@ -1087,7 +1087,7 @@ $(document).ready(function() {
                 //udpate the type chart
         createSuggestionsByTypeChart(countSuggestionsByType(selected_products_set, selected_drivers_set, appData.recordtype_map, appData.suggestions));
     }
-
+try{ 
     function mainController() {
     	$('#response').append('<pre> Main controller </pre>');
         getUserId().then(function(userId) {
@@ -1326,7 +1326,9 @@ $(document).ready(function() {
 
         })
     }
-
+} catch(e){
+	$('#response').append('<pre>Syntax error : ' + JSON.stringify(e, null, "\t") + '</pre>');	
+}
     mainController();
 
 
