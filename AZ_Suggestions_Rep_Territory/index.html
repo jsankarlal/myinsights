@@ -1268,14 +1268,19 @@ try{
            	return getUserNames(appData.ownerIdList);
         }).then(function(userNames) {
         	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
-        	var ownerIdLookup = {};
-        	for (var i = 0;i < userNames.length; i++) {
-        		ownerIdLookup[userNames[i].Id.value] = userNames.Name.value;
-        	}
-        	appData.ownerIdLookup = ownerIdLookup;
-        	for (var i = 0; i < appData.suggestions.length; i++) {
-        		var temp = appData.ownerIdLookup[appData.suggestions[i].ownerId];
-        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ? temp : '';
+        	try {
+	        	var ownerIdLookup = {};
+	        	for (var i = 0;i < userNames.length; i++) {
+	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
+	        	}
+	        	
+	        	appData.ownerIdLookup = ownerIdLookup;
+	        	for (var i = 0; i < appData.suggestions.length; i++) {
+	        		var temp = appData.ownerIdLookup[appData.suggestions[i].ownerId];
+	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ? temp : '';
+	        	}
+        	} catch(e){
+        		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
         	}
         	$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
             return aggregateSuggestionsForTable(appData);
