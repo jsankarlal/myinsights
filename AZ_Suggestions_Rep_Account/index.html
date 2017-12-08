@@ -20,15 +20,18 @@
 
 <body class="sidebar-mini">
     <div class="wrapper">
-    	<div id="response">
-    	</div>
         <div class="main-panel">
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand"></a>
                     </div>
                     <div class="collapse navbar-collapse">
+                    	<button type="button" style="display:block!important;margint-top:0px;"class="navbar-toggle collapsed pull-left" data-toggle="modal" data-target="#exampleModal" aria-expanded="false">
+					        <span class="sr-only">Toggle navigation</span>
+					        <span class="icon-bar"></span>
+					        <span class="icon-bar"></span>
+					        <span class="icon-bar"></span>
+					    </button>
                         <ul class="nav navbar-nav navbar-right">
                             <li>
                                 <a id="driver_filter_label">Driver:</a>
@@ -43,7 +46,7 @@
                             <li style="min-width: 320px;max-width: 350px;">
                                 <select multiple name="product" id="product_filter" class="selectpicker product-filter" data-title="Select Product(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
                                 </select>
-                            </li>
+							</li>
                     </div>
                     </ul>
                 </div>
@@ -93,11 +96,12 @@
                                 </div>
                                 <table id="bootstrap-table" class="table-bordered">
                                     <thead>
-                                    <!--    <th data-field="title" data-sortable="true">Title</th> -->
-                                    	<th data-field="name" data-sortable="true">Assigned To</th>
+                                        <!--<th data-field="title" data-sortable="true">Title</th>
+									    <th data-field="name" data-sortable="true">Assigned To</th>-->
 										<th data-field="accountName" data-sortable="true">Account Name</th>
                                         <th data-field="type" data-sortable="true">Type</th>
                                         <th data-field="status" data-sortable="true">Status</th>
+                                        <th data-field="lastStatusUpdatedBy" data-sortable="true">Last Status Updated By</th>
                                         <th data-field="postedDate" data-sortable="true">Posted Date</th>
 										<th data-field="expirationDate" data-sortable="true">Expiration Date</th>
 										<th data-field="reason" data-sortable="true">Reason</th>
@@ -112,6 +116,24 @@
             </div>
         </div>
     </div>
+    
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Console Logs</h5>
+	      </div>
+	      <div class="modal-body">
+				<div id="response">
+    			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 </body>
 <!--   Core JS Files and PerfectScrollbar library inside jquery.ui   -->
 <script src="assets/js/jquery.min.js" type="text/javascript"></script>
@@ -152,6 +174,16 @@ var dismissedColorDisplay = ['rgba(242,227,83, 1)'];
 var completedColorDisplay = ['rgba(169,208,94, 1)'];
 var actionedColorDisplay = ['rgba(96,189,104, 1)'];
 
+var actionedText = 'Actioned',
+    completedText = 'Marked as Complete',
+    pendingText = 'Pending',
+    dismissedText = 'Dismissed';
+    
+var callText = 'Call',
+    callObjectiveText = 'Call Objective',
+    emailText = 'Email',
+    insightText = 'Insight';
+
 var appData = {
             product_map: [{
                 Id: '',
@@ -186,8 +218,12 @@ var appData = {
                     Driver_vod__c: '',
                     Product_Name__c: ''
                 }],
+                statusAzUs:'',
+                lastStatusUpdatedBy: '',
                 IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
             }],
+            ownerIdLookup:{},
+            ownerIdList:[],
             monthly_suggestions: {
                 complete: [],
                 total: []
@@ -226,22 +262,22 @@ function createTeamChart(myData) {
         data: {
             labels: [''],
             datasets: [{
-                label: 'Pending',
+                label: pendingText,
                 data: [myData.pending],
                 backgroundColor: pendingColorDisplay,
                 borderColor: pendingColorDisplay
             }, {
-                label: 'Dismissed',
+                label: dismissedText,
                 data: [myData.dismissed],
                 backgroundColor: dismissedColorDisplay,
                 borderColor: dismissedColorDisplay
             }, {
-                label: 'Marked Complete',
+                label: 'Completed',
                 data: [myData.completed],
                 backgroundColor: completedColorDisplay,
                 borderColor: completedColorDisplay
             }, {
-                label: 'Actioned',
+                label: actionedText,
                 data: [myData.actioned],
                 backgroundColor: actionedColorDisplay,
                 borderColor: actionedColorDisplay
@@ -315,7 +351,7 @@ function createTeamChart(myData) {
                                 //console.log(bar._model.x);
                                 if (data > 0) {
                                     ctx.fillText(data, bar._model.base+(bar._model.x - bar._model.base)/2, bar._model.y-6);
-                              //      preset = bar._model.x;
+                                    preset = bar._model.x;
                                 }   
                             });
                         });
@@ -328,6 +364,9 @@ function createTeamChart(myData) {
         console.log(myChart.getElementAtEvent(e));
         var chartData = myChart.getElementAtEvent(e)[0]._view;
         console.log(chartData);
+        if(chartData.datasetLabel == 'Completed') {
+        	chartData.datasetLabel = 'Marked as Complete';
+        }
         buildTable(appData.table_data,chartData.datasetLabel,null);
         document.location.href = 'index.html#bootstrap-table';
     }
@@ -392,7 +431,7 @@ function createSuggestionsByTypeChart(type_data) {
                     barPercentage: 0.7,
                     ticks: {
                         beginAtZero: true
-                    //  stepSize: 1
+//                        stepSize: 1
                     },
 					scaleLabel: {
                         display: true,
@@ -534,13 +573,13 @@ function buildTable(data, statusFilter, typeFilter) {
         for (var i = 0; i < data.length; i++) {
 
             var row = {
-            //    title: data[i].title,
-           		accountName: data[i].accountName,
+                accountName: data[i].accountName,
                 reason: data[i].reason,
                 type: data[i].type,
                 status: data[i].status,
                 postedDate: data[i].postedDate,
-   				expirationDate: data[i].expirationDate
+				expirationDate: data[i].expirationDate,
+				lastStatusUpdatedBy: data[i].lastStatusUpdatedBy
             }
             //console.log(row.status);
 
@@ -586,6 +625,14 @@ function buildTable(data, statusFilter, typeFilter) {
                 columns: 'fa fa-columns',
                 detailOpen: 'fa fa-plus-circle',
                 detailClose: 'ti-close'
+            },
+            detailview: true,
+            detailFormatter: function(index, row) {
+                var html = [];
+                $.each(row, function (key, value) {
+                    html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+                });
+                return html.join('');
             }
         });
 
@@ -605,15 +652,15 @@ $(document).ready(function() {
     //initialize the promise library
     $q = window.Q;
     //console.log("q.js initialized");
-
-    function getAccountId() {
+	$('#response').append('<pre> q.js initialized </pre>');
+    function getUserId() {
         //console.log("getting userId");
         var deferred = $q.defer();
 
-        ds.getDataForCurrentObject('Account', 'Id')
+        ds.getDataForCurrentObject('User', 'Id')
             .then(function(result) {
                 //console.log(result);
-                deferred.resolve(result.Account.Id);
+                deferred.resolve(result.User.Id);
             })
 
         return deferred.promise;
@@ -646,7 +693,7 @@ $(document).ready(function() {
         };
 
         var deferred = $q.defer();
-
+ //       $('#response').append('<pre>getRecordTypes : ' + JSON.stringify(queryConfig.recordTypes, null, "\t") + '</pre>');
         ds.runQuery(queryConfig.recordTypes)
             .then(function(result) {
                 deferred.resolve(result.data);
@@ -654,29 +701,69 @@ $(document).ready(function() {
 
         return deferred.promise;
     }
-
-    function getSuggestions(accountId) {
-        //console.log("getting Suggestion header records");
-        //Sharing rules ensure that only your suggestions will sync down.
+    
+    function getUserNames(ownerIds) {
+        //console.log('getting userNames');
+ //       $('#response').append('<pre>userId : ' + JSON.stringify(ownerIds, null, "\t") + '</pre>');
+        var inObject = ds.getInStatement(ownerIds);
+        //['005U0000002MmZfIAK','0050P000007E7I1QAK','005U0000002MmeTIAS','0050P000006hwvxQAA','0050P000007E8omQAC','0050P000007E8oZQAS']
 
         var queryConfig = {
-            suggestions: {
-                object: 'Suggestion_vod__c',
-                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Status_AZ_US__c', 'CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c','Title_vod__c','Reason_vod__c','Posted_Date_vod__c', 'Expiration_Date_vod__c'],
-                where: 'Account_vod__c = \'' + accountId +'\''
+            userNames: {
+                object: 'User',
+                fields: ['Id', 'Name'],
+                where: 'Id IN ' + inObject
+   	//			where : 'Id = \'' + ownerIds[0] +'\''
             }
         };
 
+        
+ //       $('#response').append('<pre>inside: getUserName</pre>');
+ //       $('#response').append('<pre>queryConfig : ' + JSON.stringify(queryConfig.userNames, null, "\t") + '</pre>');
         var deferred = $q.defer();
 
-        ds.runQuery(queryConfig.suggestions)
+        ds.runQuery(queryConfig.userNames)
             .then(function(result) {
                 deferred.resolve(result.data);
             });
 
         return deferred.promise;
     }
+    function getAccountId() {
+    	//console.log("getting userId");
+    	var deferred = $q.defer();
 
+    	ds.getDataForCurrentObject('Account', 'Id')
+    		.then(function(result) {
+    			//console.log(result);
+    			deferred.resolve(result.Account.Id);
+    		})
+
+    	return deferred.promise;
+    }
+
+    function getSuggestions(accountId) {
+    	//console.log("getting Suggestion header records");
+    	//Sharing rules ensure that only your suggestions will sync down.
+
+    	var queryConfig = {
+    		suggestions: {
+    			object: 'Suggestion_vod__c',
+    			fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Status_AZ_US__c', 'Owner_District_AZ_US__c', 'Actioned_By_AZ_US__c', 'Completed_By_AZ_US__c', 'Dismissed_By_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c']
+    			where: 'Account_vod__c = \'' + accountId +'\''
+    		}
+    	};
+
+    	var deferred = $q.defer();
+
+    	ds.runQuery(queryConfig.suggestions)
+    		.then(function(result) {
+    			deferred.resolve(result.data);
+    		});
+
+    	return deferred.promise;
+    }
+    
     function getSuggestionTags(suggestions) {
 
         var suggestionIds = [];
@@ -748,26 +835,18 @@ $(document).ready(function() {
         var product_match = false;
         var driver_match = false;
 
-        if (applyProductFilter) {
+        if (applyProductFilter || applyDriverFilter) {
             if (suggestionTags !== undefined) {
                 for (var i = 0; i < suggestionTags.length; i++) {
                     if (productFilter.has(suggestionTags[i].Product_Name__c)) {
                         product_match = true;
                     }
-                }
-            }
-        }
-        if (applyDriverFilter) {
-            if (suggestionTags !== undefined) {
-                //console.log("checking driver filter");
-                for (var i = 0; i < suggestionTags.length; i++) {
                     if (driverFilter.has(suggestionTags[i].Driver_vod__c)) {
                         driver_match = true;
                         //console.log("passed!");
                     }
                 }
             }
-
         }
         return (product_match || driver_match);
     }
@@ -785,79 +864,41 @@ $(document).ready(function() {
         var applyDriverFilter = !(driverFilter === null);
 
         for (var i = 0; i < suggestions.length; i++) {
-
             var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));
-            switch (suggestions[i].RecordTypeId) {
-                case recordTypeMap.Call_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                calls++
-                            }
-                        }
-                    } else {
-                        calls++;
-                    }
+            if (applyProductFilter || applyDriverFilter) {
+                if (!hasTags) { // no tags get filtered out, not counting them
                     break;
-                case recordTypeMap.Email_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                email++
-                            }
+                } else { //check tags
+                    if (countAgainstTagFilters(applyProductFilter,
+                            applyDriverFilter,
+                            productFilter,
+                            driverFilter,
+                            suggestions[i].tags)) {
+                        if (suggestions[i].type == callText) {
+                        	calls++;
+                        } else if (suggestions[i].type == emailText) {
+                        	email++;
+                        } else if (suggestions[i].type == callObjectiveText) {
+                        	objective++;
+                        } else if (suggestions[i].type == insightText) {
+                        	insight++;
                         }
-                    } else {
-                        email++;
+                        	
                     }
-                    break;
-                case recordTypeMap.Insight_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                insight++
-                            }
-                        }
-                    } else {
-                        insight++;
-                    }
-                    break;
-                case recordTypeMap.Call_Objective_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                objective++
-                            }
-                        }
-                    } else {
-                        objective++;
-                    }
-                    break;
+                }
+            } else {
+            	if (suggestions[i].type == callText) {
+                	calls++;
+                } else if (suggestions[i].type == emailText) {
+                	email++;
+                } else if (suggestions[i].type == callObjectiveText) {
+                	objective++;
+                } else if (suggestions[i].type == insightText) {
+                	insight++;
+                }
             }
         }
+        $('#response').append('<pre>countSuggestionsByType - [calls, email, insight, objective]: ' +  JSON.stringify([calls, email, insight, objective], null, "\t") + '</pre>');
         return [calls, email, insight, objective];
     }
 
@@ -898,7 +939,7 @@ $(document).ready(function() {
 
                             var month = new Date(suggestions[i].CreatedDate).getMonth();
                             count.total[month]++;
-                            if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
+                            if (suggestions[i].Status == completedText || suggestions[i].Status == actionedText) {
                                 count.complete[month]++;
                             }
                         } else {
@@ -908,12 +949,12 @@ $(document).ready(function() {
                 } else {
                     var month = new Date(suggestions[i].CreatedDate).getMonth();
                     count.total[month]++;
-                    if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
+                    if (suggestions[i].Status == completedText || suggestions[i].Status == actionedText) {
                         count.complete[month]++;
                     }
                 }
             }
-
+        $('#response').append('<pre>countSuggestionsByMonth - count: ' +  JSON.stringify(count, null, "\t") + '</pre>');
         return count;
     }
 
@@ -951,102 +992,63 @@ $(document).ready(function() {
                             driverFilter,
                             suggestions[i].tags)) {
 
-
-                        //console.log("it's a match");
-                        var flag = false;
-                        if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
-                            //console.log("Complete!");
-       	                 /* my_count["completed"]++;
-       	                 flag = true;
-	       	             } else if (suggestions[i].Actioned_vod__c) { */
+	                   	 if (suggestions[i].Status == actionedText) { 
 	       	                     //console.log("Actioned!");
 	       	                     my_count["actioned"]++;
-	       	                     flag = true;
-	       	             } else if (suggestions[i].Dismissed_vod__c) {
+	       	             } else if (suggestions[i].Status == completedText) {
+	                            //console.log("Complete!");
+	       	                  my_count["completed"]++;
+	       	             } else if (suggestions[i].Status == dismissedText) {
 	       	                     //console.log("Dismissed!");
 	       	                     my_count["dismissed"]++;
-	       	                     flag = true;
-	       	             } else if (suggestions[i].IsPending === 1 || !flag) {
+	       	             } else if (suggestions[i].Status == pendingText) {
 	       	                         //console.log("Pending!!");
 	       	                     my_count["pending"]++;
-	       	                     flag = true;
 	       	             }
+	                   	 
                     } else {
                         continue;
                     }
                 }
             } else { //no need to respect the filters
                     //console.log("it's a match");
-            	var flag = false;
-            	if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
-                    //console.log("Complete!");
-	                 /* my_count["completed"]++;
-	                 flag = true;
-	             } else if (suggestions[i].Actioned_vod__c) { */
+            	if (suggestions[i].Status == actionedText) { 
 	                     //console.log("Actioned!");
 	                     my_count["actioned"]++;
-	                     flag = true;
-	             } else if (suggestions[i].Dismissed_vod__c) {
+	             } else if (suggestions[i].Status == completedText) {
+                   //console.log("Complete!");
+	                  my_count["completed"]++;
+	             } else if (suggestions[i].Status == dismissedText) {
 	                     //console.log("Dismissed!");
 	                     my_count["dismissed"]++;
-	                     flag = true;
-	             } else if (suggestions[i].IsPending === 1 || !flag) {
+	             } else if (suggestions[i].Status == pendingText) {
 	                         //console.log("Pending!!");
 	                     my_count["pending"]++;
-	                     flag = true;
 	             }
                 
             }
         }
 
         //console.log(my_count);
+        $('#response').append('<pre>countSuggestionsByStatus - my_count: ' +  JSON.stringify(my_count, null, "\t") + '</pre>');
         return my_count;
     }
 
 
     function aggregateSuggestionsForTable(data) {
         /**Title, Reason, Type, Status, Posted Date**/
-        console.log(data);
         var table_data = [];
-
         for (var i = 0; i < data.suggestions.length; i++) {
             var row = {};
             
             row.title = data.suggestions[i].Title_vod__c;
             row.reason = data.suggestions[i].Reason_vod__c;
-
-            //match type
-            console.log('checking the type');
-            switch (data.suggestions[i].RecordTypeId) {
-                case data.recordtype_map.Call_vod:
-                    row.type = 'Call';
-                    break;
-                case data.recordtype_map.Call_Objective_vod:
-                    row.type = 'Call Objective';
-                    break;
-                case data.recordtype_map.Email_vod:
-                    row.type = 'Email';
-                    break;
-                case data.recordtype_map.Insight_vod:
-                    row.type = 'Insight';
-                    break;
-            }
-            //match status
-            console.log('checking status');
-            if (data.suggestions[i].Marked_As_Complete_vod__c || data.suggestions[i].Actioned_vod__c) {
-              /*   row.status = 'Marked Complete';
-            } else if (data.suggestions[i].Actioned_vod__c) { */
-                row.status = 'Actioned';
-            } else if (data.suggestions[i].Dismissed_vod__c) {
-                row.status = 'Dismissed';
-            } else {
-                row.status = 'Pending';
-            }
-            //stamp date
-            //console.log('checking date');
+			row.type = data.suggestions[i].type;
+            row.status = data.suggestions[i].Status;
+            row.lastStatusUpdatedBy = data.suggestions[i].LastStatusUpdatedBy;
             row.postedDate = moment(data.suggestions[i].Posted_Date_vod__c).format('LL');
-            //console.log(row.postedDate);
 			row.expirationDate = moment(data.suggestions[i].Expiration_Date_vod__c).format('LL');
+			row.accountName = data.suggestions[i].AccountName;	
 
             table_data.push(row);
         }
@@ -1077,15 +1079,22 @@ $(document).ready(function() {
                 //udpate the type chart
         createSuggestionsByTypeChart(countSuggestionsByType(selected_products_set, selected_drivers_set, appData.recordtype_map, appData.suggestions));
     }
-
+try{ 
     function mainController() {
-
-        getAccountId().then(function(accountId) {
+    	$('#response').append('<pre> Main controller </pre>');
+    	getAccountId().then(function(accountId) {
             //console.log(userId);
             appData.accountId = accountId;
             //console.log(appData.currentUser.Id);
+            return getUserId();
+        }).then(function(userId) {
+            //console.log(userId);
+            $('#response').append('<pre>user ID: ' +  userId + '</pre>');
+            appData.currentUser.Id = userId;
+            //console.log(appData.currentUser.Id);
             return getCurrentUserName();
         }).then (function(username) {
+        	$('#response').append('<pre>username: ' +  username + '</pre>');
             appData.currentUser.Name = username;
             //console.log(products_master_set);
             return getRecordTypes();
@@ -1097,11 +1106,14 @@ $(document).ready(function() {
                 });
             } //for the horrified: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names
             //console.log(appData.recordtype_map);
+            $('#response').append('<pre>appData.recordtype_map: ' +  JSON.stringify(appData.recordtype_map, null, "\t") + '</pre>');
             return getSuggestions(appData.accountId);
+
         }).then(function(suggestions) {
             //console.log(suggestions);
-            $('#response').append('<pre>suggestions: ' +  JSON.stringify(suggestions, null, "\t") + '</pre>');
-            for (var i = 0; i < suggestions.length; i++) {
+            $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions.length + 1, null, "\t") + '</pre>');
+            appData.ownerIdList = [];
+             for (var i = 0; i < suggestions.length; i++) {
                 var this_suggestion = {
                     Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
                     Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
@@ -1114,14 +1126,39 @@ $(document).ready(function() {
                     Reason_vod__c: suggestions[i].Reason_vod__c.value,
                     Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
 					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
-					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value
+					Account_vod__c: suggestions[i].Account_vod__c.value,
+					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
+					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
+					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
+					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,
+					LastStatusUpdatedBy: '',
+					Status: suggestions[i].Status_AZ_US__c.value
                 };
-
+                appData.ownerIdList.push(suggestions[i].OwnerId.value);
+                
+                switch (suggestions[i].RecordTypeId.value) {
+	                case appData.recordtype_map.Call_vod:
+	                	this_suggestion.type = callText;
+	                    break;
+	                case appData.recordtype_map.Call_Objective_vod:
+	                	this_suggestion.type = callObjectiveText;
+	                    break;
+	                case appData.recordtype_map.Email_vod:
+	                	this_suggestion.type = emailText;
+	                    break;
+	                case appData.recordtype_map.Insight_vod:
+	                	this_suggestion.type = insightText;
+	                    break;
+            	}
+                this_suggestion.LastStatusUpdatedBy = this_suggestion.Actioned_By_AZ_US__c || this_suggestion.Completed_By_AZ_US__c || this_suggestion.Dismissed_By_AZ_US__c || '';
+               
                 appData.suggestionIds[i] = suggestions[i].Id.value;
                 //console.log(this_suggestion);
                 appData.suggestions[i] = this_suggestion;
-            }
+            } 
             //console.log(appData.suggestionIds);
+            appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+     //       $('#response').append('<pre>appData suggestions[0]: ' +  JSON.stringify(appData.suggestions[0], null, "\t") + '</pre>');
             return getSuggestionTags(appData.suggestions);
         }).then(function(tags) {
             //there's a potential for tags not existing
@@ -1193,39 +1230,17 @@ $(document).ready(function() {
                 disableProductFilter();
             }
 
-            return getAllSuggestionFeedback();
-        }).then(function(feedback) {
-            //console.log(feedback);
-            //we only care if a suggestion has feedback, use a set to dedupe
-            var suggestions_with_feedback_set = new Set();
-            for (var i = 0; i < feedback.length; i++) {
-                suggestions_with_feedback_set.add(feedback[i].Suggestion_vod__c.value);
-            }
-            //console.log(suggestions_with_feedback_set);
-
-            //now compare that set to our list of suggestions and tag them appropraitely.
-            for (var i = 0; i < appData.suggestions.length; i++) {
-                //console.log(appData.suggestions[i]);
-
-                //not accounting for senarios if these Values contain the number Zero. Will need to be changed if this is going to production-ready
-                if (!(appData.suggestions[i].Actioned_vod__c) &&
-                    !(appData.suggestions[i].Marked_As_Complete_vod__c) &&
-                    !(appData.suggestions[i].Dismissed_vod__c) && !suggestions_with_feedback_set.has(appData.suggestions[i].Id)) {
-                    //console.log("this suggestion is pending");
-                    //this suggestion is definiely pending
-                    appData.suggestions[i]["IsPending"] = 1;
-                }
-            }
-
             //for the first pass, the filters will be null, but something HAS to be selected the next time things go around, so default behavior for Null would be to count everything
             console.log("about to call countbytype");
+            $('#response').append('<pre>countSuggestionsByType-- Before : </pre>');
             return countSuggestionsByType(null, null, appData.recordtype_map, appData.suggestions);
         }).then(function(my_suggestions_by_type_data) {
             //console.log(my_suggestions_by_type_data);
             appData.suggestions_by_type_data = my_suggestions_by_type_data;
-
+            $('#response').append('<pre>createSuggestionsByTypeChart-- Before : </pre>');
             return createSuggestionsByTypeChart(appData.suggestions_by_type_data);
         }).then(function() {
+        	 $('#response').append('<pre>createSuggestionsByTypeChart-- Before : </pre>');
             return countSuggestionsByMonth(null, null, appData.suggestions);
         }).then(function(monthly_count) {
             console.log(monthly_count);
@@ -1251,6 +1266,30 @@ $(document).ready(function() {
 
             return createTeamChart(appData.my_count);
         }).then(function() {
+        	 
+            //Derive LastStatusUpdatedBy value from ownerId            
+            $('#response').append('<pre>before: getUserNames</pre>');
+           	return getUserNames(appData.ownerIdList);
+        }).then(function(userNames) {
+  //      	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
+        	try {
+	        	var ownerIdLookup = {};
+	        	for (var i = 0;i < userNames.length; i++) {
+	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
+	        	}
+	        	$.extend(appData.ownerIdLookup, ownerIdLookup);
+	        	$('#response').append('<pre>After: ownerIdLookup : ' + JSON.stringify(appData.ownerIdLookup, null, "\t") +'</pre>');
+	        	for (var i = 0; i < appData.suggestions.length; i++) {
+	        //		$('#response').append('<pre>appData.suggestions[i].ownerId : ' + JSON.stringify(appData.suggestions[i].OwnerId, null, "\t") +'</pre>');
+	        //		$('#response').append('<pre>appData.ownerIdLookup[appData.suggestions[i].ownerId] : ' + appData.ownerIdLookup[appData.suggestions[i].OwnerId] +'</pre>');
+	        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
+	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
+	        	}
+        	
+        		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
+        	} catch(e){
+        		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
+        	}
             return aggregateSuggestionsForTable(appData);
         }).then(function(table_data) {
 
@@ -1272,7 +1311,9 @@ $(document).ready(function() {
 
         })
     }
-
+} catch(e){
+	$('#response').append('<pre>Syntax error : ' + JSON.stringify(e, null, "\t") + '</pre>');	
+}
     mainController();
 
 
