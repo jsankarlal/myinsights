@@ -701,8 +701,8 @@ $(document).ready(function() {
             userNames: {
                 object: 'User',
                 fields: ['Id', 'Name'],
-   //             where: 'Id IN ' + inObject
-   				where : 'Id = \'' + ownerIds[0] +'\''
+                where: 'Id IN ' + inObject
+   	//			where : 'Id = \'' + ownerIds[0] +'\''
             }
         };
 
@@ -1264,12 +1264,13 @@ try{
         }).then(function() {
         	 
             //Derive LastStatusUpdatedBy value from ownerId            
-            $('#response').append('<pre>before: getUserName</pre>');
+            $('#response').append('<pre>before: getUserNames</pre>');
            	return getUserNames(appData.ownerIdList);
         }).then(function(userNames) {
+        	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
         	var ownerIdLookup = {};
         	for (var i = 0;i < userNames.length; i++) {
-        		ownerIdLookup[userName[i].Id.value] = array[i].Name.value;
+        		ownerIdLookup[userNames[i].Id.value] = userNames.Name.value;
         	}
         	appData.ownerIdLookup = ownerIdLookup;
         	for (var i = 0; i < appData.suggestions.length; i++) {
