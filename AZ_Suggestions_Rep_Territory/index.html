@@ -966,16 +966,16 @@ $(document).ready(function() {
                             driverFilter,
                             suggestions[i].tags)) {
 
-	                   	 if (suggestions[i].status == actionedText) { 
+	                   	 if (suggestions[i].Status == actionedText) { 
 	       	                     //console.log("Actioned!");
 	       	                     my_count["actioned"]++;
-	       	             } else if (suggestions[i].status == completedText) {
+	       	             } else if (suggestions[i].Status == completedText) {
 	                            //console.log("Complete!");
 	       	                  my_count["completed"]++;
-	       	             } else if (suggestions[i].status == dismissedText) {
+	       	             } else if (suggestions[i].Status == dismissedText) {
 	       	                     //console.log("Dismissed!");
 	       	                     my_count["dismissed"]++;
-	       	             } else if (suggestions[i].status == pendingText) {
+	       	             } else if (suggestions[i].Status == pendingText) {
 	       	                         //console.log("Pending!!");
 	       	                     my_count["pending"]++;
 	       	             }
@@ -986,16 +986,16 @@ $(document).ready(function() {
                 }
             } else { //no need to respect the filters
                     //console.log("it's a match");
-            	if (suggestions[i].status == actionedText) { 
+            	if (suggestions[i].Status == actionedText) { 
 	                     //console.log("Actioned!");
 	                     my_count["actioned"]++;
-	             } else if (suggestions[i].status == completedText) {
+	             } else if (suggestions[i].Status == completedText) {
                    //console.log("Complete!");
 	                  my_count["completed"]++;
-	             } else if (suggestions[i].status == dismissedText) {
+	             } else if (suggestions[i].Status == dismissedText) {
 	                     //console.log("Dismissed!");
 	                     my_count["dismissed"]++;
-	             } else if (suggestions[i].status == pendingText) {
+	             } else if (suggestions[i].Status == pendingText) {
 	                         //console.log("Pending!!");
 	                     my_count["pending"]++;
 	             }
@@ -1049,7 +1049,7 @@ $(document).ready(function() {
             } else {
                 row.status = 'Pending';
             } */
-            row.status = data.suggestions[i].status;
+            row.status = data.suggestions[i].Status;
             row.lastStatusUpdatedBy = data.suggestions[i].LastStatusUpdatedBy;
             //stamp date
             //console.log('checking date');
