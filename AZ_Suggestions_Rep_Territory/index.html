@@ -1172,7 +1172,7 @@ $(document).ready(function() {
         		ownerIdLookup[userName[i].Id.value] = array[i].Name.value;
         	}
         	appData.ownerIdLookup = ownerIdLookup;
-        	for (var i = 0, i < appData.suggestions.length; i++) {
+        	for (var i = 0; i < appData.suggestions.length; i++) {
         	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || appData.ownerIdLookup[appData.suggestions[i].ownerId];
         	}
         	$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
