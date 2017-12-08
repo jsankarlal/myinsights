@@ -123,9 +123,6 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">Console Logs</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
 	      </div>
 	      <div class="modal-body">
 				<div id="response">
@@ -226,6 +223,7 @@ var appData = {
                 IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
             }],
             ownerIdLookup:{},
+            ownerIdList:[],
             monthly_suggestions: {
                 complete: [],
                 total: []
@@ -1118,7 +1116,7 @@ $(document).ready(function() {
             //console.log(suggestions);
             $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions.length + 1, null, "\t") + '</pre>');
             $('#response').append('<pre>Total suggestions: ' +  JSON.stringify(suggestions[0], null, "\t") + '</pre>');
-            var ownerIdList = [];
+            appData.ownerIdList = [];
              for (var i = 0; i < suggestions.length; i++) {
                 var this_suggestion = {
                     Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
@@ -1140,7 +1138,7 @@ $(document).ready(function() {
 					LastStatusUpdatedBy: '',
 					Status: suggestions[i].Status_AZ_US__c.value
                 };
-                ownerIdList.push(suggestions[i].OwnerId.value);
+                appData.ownerIdList.push(suggestions[i].OwnerId.value);
                 
                 switch (suggestions[i].RecordTypeId) {
 	                case appData.recordtype_map.Call_vod:
@@ -1163,9 +1161,11 @@ $(document).ready(function() {
                 appData.suggestions[i] = this_suggestion;
             } 
             //console.log(appData.suggestionIds);
-            ownerIdList = ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+            appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+            /* 
+            //Derive LastStatusUpdatedBy value from ownerId            
             $('#response').append('<pre>before: getUserName</pre>');
-           	return getUserNames(ownerIdList);
+           	return getUserNames(appData.ownerIdList);
         }).then(function(userNames) {
         	var ownerIdLookup = {};
         	for (var i = 0;i < userNames.length; i++) {
@@ -1175,7 +1175,7 @@ $(document).ready(function() {
         	for (var i = 0; i < appData.suggestions.length; i++) {
         	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || appData.ownerIdLookup[appData.suggestions[i].ownerId];
         	}
-        	$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
+        	$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>'); */
             return getSuggestionTags(appData.suggestions);
         }).then(function(tags) {
             //there's a potential for tags not existing
