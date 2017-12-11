@@ -1228,7 +1228,7 @@ function createTrendsChart(months, totals, completes) {
     function createTeamPicker(users) {
         var team_options = '';
         for (var i = 0; i < users.length; i++) {
-            team_options += '<option value="' + users[i] + '">' + users[i] + '</option>';
+            team_options += '<option value="' + users[i].Name + '">' + users[i].Name + '</option>';
         }
 
         $("#team_picker").append(team_options);
