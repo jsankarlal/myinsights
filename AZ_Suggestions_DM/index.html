@@ -20,19 +20,23 @@
 
 <body class="sidebar-mini">
     <div class="wrapper">
-		<div id="response">
-    	</div>
         <div class="main-panel">
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
-                    <!--<div class="navbar-header">
-                        <a class="navbar-brand"></a>
-                    </div>
-					-->
                     <div class="collapse navbar-collapse">
+                    	<button type="button" style="display:block!important;margint-top:0px;"class="navbar-toggle collapsed pull-left" data-toggle="modal" data-target="#exampleModal" aria-expanded="false">
+					        <span class="sr-only">Toggle navigation</span>
+					        <span class="icon-bar"></span>
+					        <span class="icon-bar"></span>
+					        <span class="icon-bar"></span>
+					    </button>
+					    <!-- <div class="btn-group btn-toggle"> 
+				        	<button class="btn btn-xs btn-success">Active</button>
+				    		<button class="btn btn-xs btn-default">All</button>
+				    	</div> -->
                         <ul class="nav navbar-nav navbar-right">
                             <li style="width: 320px;padding-left:5px;">
-                                <select multiple data-title="Please Select District" name="my_team" id="team_picker" class="selectpicker team_picker" data-style="btn-info btn-fill btn-block">
+                                <select multiple data-title="Please Select Team Members" name="my_team" id="team_picker" class="selectpicker team_picker" data-style="btn-info btn-fill btn-block">
                                 </select>
                             </li>
                             <!--
@@ -107,12 +111,15 @@
                                 </div>
                                 <table id="bootstrap-table" class="table-bordered">
                                     <thead>
-                                        <th data-field="district" data-sortable="true">District</th>
-                                    <!--    <th data-field="title" data-sortable="true">Title</th> -->
-										<th data-field="type" data-sortable="true">Type</th>
+                                       <!-- <th data-field="name" data-sortable="true">Assigned To</th>
+										    <th data-field="title" data-sortable="true">Title</th> -->
+										<th data-field="accountName" data-sortable="true">Account Name</th>
+                                        <th data-field="type" data-sortable="true">Type</th>
                                         <th data-field="status" data-sortable="true">Status</th>
+                                        <th data-field="lastStatusUpdatedBy" data-sortable="true">Last Status Updated By</th>
                                         <th data-field="postedDate" data-sortable="true">Posted Date</th>
 										<th data-field="expirationDate" data-sortable="true">Expiration Date</th>
+										<th data-field="reason" data-sortable="true">Reason</th>
                                     </thead>
                                     <tbody id="tablebody">
                                     </tbody>
@@ -124,6 +131,25 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Console Logs</h5>
+	      </div>
+	      <div class="modal-body">
+				<div id="response">
+    			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
 </body>
 <!--   Core JS Files and PerfectScrollbar library inside jquery.ui   -->
 <script src="assets/js/jquery.min.js" type="text/javascript"></script>
@@ -168,194 +194,11 @@ var dismissedColorDisplay = ['rgba(242,227,83, 1)'];
 var completedColorDisplay = ['rgba(169,208,94, 1)'];
 var actionedColorDisplay = ['rgba(96,189,104, 1)'];
 
-var appData = {
-            product_map: [{
-                Id: '',
-                Name: ''
-            }],
-            currentUser: {
-                Id: '',
-                territoryId: ''
-            },
-            childTerrIds: [],
-            subordinateUserIds: [],
-            subordinateUsers: [],
-            recordtype_map: { //best practice is to actually store this in a unique object per SFDC object
-                Call_vod: '',
-                Call_Objective_vod: '',
-                Email_vod: '',
-                Insight_vod: '',
-                Driver_vod: '', //for Suggestion tag
-                Product_vod: '' //for Suggestion tag
-            },
-            suggestionIds: [],
-            suggestions: [{
-                Id: '',
-                OwnerId: '',
-                Dismissed_vod__c: 0,
-                Marked_As_Complete_vod__c: 0,
-                Actioned_vod__c: 0,
-                CreatedDate: '',
-                RecordTypeId: '',
-                tags: [{
-                    RecordTypeId: '',
-                    Driver_vod__c: '',
-                    Product_Name__c: ''
-                }],
-                IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
-            }],
-            monthly_suggestions: {
-                complete: [],
-                total: []
-            },
-            months_to_date: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            average_data: {
-                pending: 0,
-                dismissed: 0,
-                actioned: 0,
-                completed: 0
-            },
-            suggestions_by_type_data: []
-        };
 
-    var products_master_set = new Set();
-    var drivers_master_set = new Set();
 
-    var selected_drivers = null;
-    var selected_products = null;
-    var selected_districts = null;
+$(document).ready(function() {
 
-function aggregateSuggestionsForTable(data) {
-        var table_data = [];
-        for (var i = 0; i < data.suggestions.length; i++) {
-            var row = {};
-            row.district = data.suggestions[i].Owner_District_AZ_US__c;
-            row.title = data.suggestions[i].Title_vod__c;
-            row.reason = data.suggestions[i].Reason_vod__c;
-            //match type
-            //console.log(data.suggestions[i].RecordTypeId);
-            switch (data.suggestions[i].RecordTypeId) {
-                case data.recordtype_map.Call_vod:
-                    row.type = 'Call';
-                    break;
-                case data.recordtype_map.Call_Objective_vod:
-                    row.type = 'Call Objective';
-                    break;
-                case data.recordtype_map.Email_vod:
-                    row.type = 'Email';
-                    break;
-                case data.recordtype_map.Insight_vod:
-                    row.type = 'Insight';
-                    break;
-            }
-            console.log('checking status');
-            if (data.suggestions[i].Marked_As_Complete_vod__c || data.suggestions[i].Actioned_vod__c) {
-              /*   row.status = 'Marked Complete';
-            } else if (data.suggestions[i].Actioned_vod__c) { */
-                row.status = 'Actioned';
-            } else if (data.suggestions[i].Dismissed_vod__c) {
-                row.status = 'Dismissed';
-            } else {
-                row.status = 'Pending';
-            }
-            //console.log(row.status);
-            //stamp date
-            //console.log('checking date');
-            row.postedDate = moment(data.suggestions[i].Posted_Date_vod__c).format('LL');
-            //console.log(row.postedDate);
-			row.expirationDate = moment(data.suggestions[i].Expiration_Date_vod__c).format('LL');
-			row.accountName = data.suggestions[i].AccountName;
-            table_data.push(row);
-        }
-        return table_data;
-    }
-
-    function buildTable(data, districtFilter, statusFilter, typeFilter) {
-
-        var $table = $('#bootstrap-table');
-        var rows = [];
-        var markup = '';
-        for (var i = 0; i < data.length; i++) {
-            var row = {
-                district: data[i].district,
-            //  title: data[i].title,
-                reason: data[i].reason,
-                type: data[i].type,
-                status: data[i].status,
-                postedDate: data[i].postedDate,
-				expirationDate: data[i].expirationDate
-            };
-            if (districtFilter || statusFilter) {
-                if (districtFilter === row.district && statusFilter === row.status) {
-                    rows.push(row);
-                }
-            } else if (typeFilter) {
-                if (typeFilter === row.type) {
-                    rows.push(row);
-                }
-            } else {
-                rows.push(row);
-            }
-        }
-        function operateFormatter(value, row, index) {
-            return [
-                '<div class="table-icons">',
-                '<a rel="tooltip" title="View" class="btn btn-simple btn-info btn-icon table-action view" href="javascript:void(0)">',
-                '<i class="ti-image"></i>',
-                '</a>',
-                '<a rel="tooltip" title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
-                '<i class="ti-pencil-alt"></i>',
-                '</a>',
-                '<a rel="tooltip" title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
-                '<i class="ti-close"></i>',
-                '</a>',
-                '</div>',
-            ].join('');
-        }
-        $table.bootstrapTable({
-            toolbar: ".toolbar",
-            clickToSelect: true,
-            showRefresh: false,
-            search: true,
-            showToggle: false,
-            showColumns: false,
-            pagination: true,
-            searchAlign: 'left',
-            pageSize: 5,
-            clickToSelect: false,
-            pageList: [5, 10, 15, 20],
-            multipleSearch: true,
-            delimeter: '&',
-            showFilter: true,
-            filterControl: true,
-
-            formatShowingRows: function(pageFrom, pageTo, totalRows) {
-                //do nothing here, we don't want to show the text "showing x of y from..."
-            },
-            formatRecordsPerPage: function(pageNumber) {
-                return pageNumber + " rows visible";
-            },
-            icons: {
-                refresh: 'fa fa-refresh',
-                toggle: 'fa fa-th-list',
-                columns: 'fa fa-columns',
-                detailOpen: 'fa fa-plus-circle',
-                detailClose: 'ti-close'
-            }
-        });
-
-        $table.bootstrapTable('load', rows);
-        //activate the tooltips after the data table is initialized
-        $('[rel="tooltip"]').tooltip();
-
-        $(window).resize(function() {
-            $table.bootstrapTable('resetView');
-        });
-    }
-
-function createTeamChart(teamData) {
-
-    //console.log(teamData);
+    function createTeamChart(teamData) {
 
         $('#team_chart_container').empty();
         $('#team_chart_container').append('<canvas id="suggestions"></canvas>');
@@ -363,7 +206,7 @@ function createTeamChart(teamData) {
             myChart.destroy();
         }
 
-        var districts = [];
+        var names = [];
         var pending = [];
         var dismissed = [];
         var completed = [];
@@ -374,7 +217,7 @@ function createTeamChart(teamData) {
             dismissedColorDisplay[i] = 'rgba(242,227,83, 1)';
             completedColorDisplay[i] = 'rgba(169,208,94, 1)';
             actionedColorDisplay[i] = 'rgba(96,189,104, 1)';
-            districts.push(teamData[i].Owner_District_AZ_US__c);
+            names.push(teamData[i].Name);
             pending.push(teamData[i].pending);
             dismissed.push(teamData[i].dismissed);
             completed.push(teamData[i].completed);
@@ -390,7 +233,7 @@ function createTeamChart(teamData) {
         var myChart = new Chart(ctx, {
             type: 'horizontalBar',
             data: {
-                labels: districts,
+                labels: names,
                 datasets: [{
                     label: 'Pending',
                     data: pending,
@@ -436,8 +279,8 @@ function createTeamChart(teamData) {
                     display: true,
                     labels: {
                         filter: function (legendItem, chartData) {
-                            //console.log(legendItem);
-                            //console.log(chartData);
+                            console.log(legendItem);
+                            console.log(chartData);
                             
                             for (var i = 0; i < chartData.datasets.length; i++) {
                                 if (legendItem.text === chartData.datasets[i].label) {
@@ -461,7 +304,8 @@ function createTeamChart(teamData) {
                 animation: {
                     onComplete: function() {
                         var chartInstance = this.chart,
-                        ctx = chartInstance.ctx;
+                        ctx = chartInstance.ctx,
+						preset = 0;
 
                         ctx.font = Chart.helpers.fontString(10, "bold", Chart.defaults.global.defaultFontFamily);
                         ctx.textAlign = 'center';
@@ -473,7 +317,8 @@ function createTeamChart(teamData) {
                                 var data = dataset.data[index];
                                 //console.log(bar._model.x);
                                 if (data > 0) {
-                                    ctx.fillText(data, bar._model.x-5, bar._model.y - 6);
+                                	ctx.fillText(data, bar._model.base+(bar._model.x - bar._model.base)/2, bar._model.y-6);
+    								preset = bar._model.x;
                                 }   
                             });
                         });
@@ -483,10 +328,32 @@ function createTeamChart(teamData) {
         });
 
         function handleClick(e) {
+        /**
+        var currentChart = myChart.getElementAtEvent(e)[0];
+        console.log(currentChart);
+        var currentTeamMember = currentChart._view.label;
+        console.log(currentTeamMember);
+        var currentDataset = currentChart._datasetIndex;
+        var currentData = currentChart._index;
+
+        //var dataset = myChart1.getElementAtEvent(e)[0]._datasetIndex;
+        swal({
+            html: "<h4>" + currentTeamMember + "</h4><br/>Pending: <strong>" + pending[currentData] +
+                "</strong><br/>Dismissed: <strong>" + dismissed[currentData] + "</strong><br/>Marked Complete: <strong>" +
+                completed[currentData] + "</strong><br/>Actioned: <strong>" + actioned[currentData] + "</strong>"
+        });**/
+
+
             console.log(myChart.getElementAtEvent(e));
             var chartData = myChart.getElementAtEvent(e)[0]._view;
             console.log(chartData);
+        /**console.log(currentChart);
+        $(".search").find(".form-control").val(currentChart._view.label + '&' + currentChart._view.datasetLabel);
+        $(".search").find(".form-control").trigger("keyup");**/
+
+
             buildTable(appData.table_data, chartData.label, chartData.datasetLabel);
+
             document.location.href = 'index.html#bootstrap-table';
         }
     }
@@ -500,7 +367,7 @@ function createAverageChart(mydata) {
     var myChartAverage = new Chart(ctxAverage, {
         type: 'horizontalBar',
         data: {
-            labels: ['Overall Average'],
+            labels: ['Overall Team Average'],
             datasets: [{
                 label: 'Pending',
                 data: [mydata.pending],
@@ -547,8 +414,33 @@ function createAverageChart(mydata) {
                 display: false
             },
             tooltips: {
-                enabled: true
-            }
+                enabled: false
+            },
+			animation: {
+				onComplete: function() {
+					var chartInstance = this.chart,
+					    ctx = chartInstance.ctx,
+						preset = 0;
+
+					ctx.font = Chart.helpers.fontString(10, "bold", Chart.defaults.global.defaultFontFamily);
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'center';
+
+					this.data.datasets.forEach(function(dataset, i) {
+						var meta = chartInstance.controller.getDatasetMeta(i);
+						meta.data.forEach(function(bar, index) {
+							//var data = dataset.data[index];
+							var data = Number(dataset.data[index]).toFixed(2);
+							//console.log(bar._model.x);
+							if (data > 0) {
+								//ctx.fillText(data, bar._model.x, bar._model.base - (bar._model.base - bar._model.y)/2-5);								
+								ctx.fillText(data, bar._model.base+(bar._model.x - bar._model.base)/2, bar._model.y+3);
+								preset = bar._model.x;
+							}   
+						});
+					});
+				}
+			}
         }
     });
 }
@@ -658,11 +550,56 @@ function createSuggestionsByTypeChart(type_data) {
         $("#team_continer").removeClass("col-md-6");
         $("#team_continer").addClass("col-md-12");
     }
+
+    
+
     function handleClick(e) {
+        /**var currentChart = myChart1.getElementAtEvent(e)[0];
+        console.log(labels_to_display[currentChart._datasetIndex]);
+        console.log(data_to_display[currentChart._index]);
+        //var dataset = myChart1.getElementAtEvent(e)[0]._datasetIndex;
+        var myhtml = "";
+        for (var i = 0; i < labels_to_display.length; i++) {
+            myhtml += "<strong>" + labels_to_display[i] + ": </strong> " +
+                data_to_display + "<br/>";
+        }
+        swal({
+            html: myhtml
+        });
+        **/
+        //document.location.href = 'index.html#bootstrap-table';
+        //console.log(chart_config.data.datasets[activeElement[0]._datasetIndex].data[activeElement[0]._index]);
+
+
+        /**
+
+        switch (data.suggestions[i].RecordTypeId) {
+                case data.recordtype_map.Call_vod:
+                    row.type = 'Call';
+                    break;
+                case data.recordtype_map.Call_Objective_vod:
+                    row.type = 'Call Objective';
+                    break;
+                case data.recordtype_map.Email_vod:
+                    row.type = 'Email';
+                case data.recordtype_map.Insight_vod:
+                    row.type = 'Insight';
+            }
+
+        **/
+
         var chartData = myChart1.getElementAtEvent(e)[0]._view;
         console.log(chartData);
+        /**console.log(currentChart);
+        $(".search").find(".form-control").val(currentChart._view.label + '&' + currentChart._view.datasetLabel);
+        $(".search").find(".form-control").trigger("keyup");**/
+
+        //function buildTable(data, nameFilter, statusFilter, typeFilter)
         buildTable(appData.table_data, null, null, chartData.label);
+
+
         document.location.href = 'index.html#bootstrap-table';
+
     }
 }
 
@@ -745,36 +682,10 @@ function createTrendsChart(months, totals, completes) {
     });
 }
 
-
-
-$(document).ready(function() {
-
-    function refreshCharts(districts, drivers, products) {
-        
-        var selected_districts_set = null;
-        if (districts) {
-            selected_districts_set = new Set(selected_districts);
-        }
-        var selected_drivers_set = null;
-        if (drivers) {
-            selected_drivers_set = new Set(selected_drivers);
-        }
-        var selected_products_set = null;
-        if (products) {
-            selected_products_set = new Set(selected_products);
-        }
-
-        var new_user_chart_data = countSuggestionsByDistrictByStatus(selected_products_set, selected_drivers_set, appData.suggestions, selected_districts_set);
-        createTeamChart(new_user_chart_data);
-        var new_monthly_count = countSuggestionsByMonth(selected_products_set, selected_drivers_set, selected_districts_set, appData.suggestions);
-                //console.log(new_monthly_count);
-      //  createTrendsChart(appData.months_to_date, new_monthly_count.total, new_monthly_count.complete);
-                //udpate the type chart
-        createSuggestionsByTypeChart(countSuggestionsByType(selected_products_set, selected_drivers_set, selected_districts_set, appData.recordtype_map, appData.suggestions));
-    }
     //initialize the promise library
     $q = window.Q;
     //console.log("q.js initialized");
+
     function getUserId() {
         //console.log("getting userId");
         var deferred = $q.defer();
@@ -925,13 +836,16 @@ $(document).ready(function() {
         return deferred.promise;
     }
 
-    function getSuggestions() {
-        
-        var queryConfig = {
+    function getSuggestions(accountId) {
+        //console.log("getting Suggestion header records");
+        var inOwner = ds.getInStatement(userIds);
+   //     $('#response').append('<div> Owner :' + JSON.stringify(inOwner, null, "\t") + '</div>');
+
+       var queryConfig = {
             suggestions: {
                 object: 'Suggestion_vod__c',
-                fields: ['OwnerId','Account_vod__c', 'CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c','Title_vod__c','Reason_vod__c','Posted_Date_vod__c','Expiration_Date_vod__c','Owner_District_AZ_US__c'],
-                where: ''
+                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Owner_District_AZ_US__c', 'Actioned_By_AZ_US__c', 'Completed_By_AZ_US__c', 'Dismissed_By_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c'],
+                where: 'Account_vod__c =\''+ accountId +'\''
             }
         };
 
@@ -944,7 +858,61 @@ $(document).ready(function() {
 
         return deferred.promise;
     }
+	
+    function getUserNames(ownerIds) {
+        var inObject = ds.getInStatement(ownerIds);
 
+        var queryConfig = {
+            userNames: {
+                object: 'User',
+                fields: ['Id', 'Name'],
+                where: 'Id IN ' + inObject
+            }
+        };
+        
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.userNames)
+            .then(function(result) {
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+    
+    function getAccountId() {
+    	//console.log("getting userId");
+    	var deferred = $q.defer();
+
+    	ds.getDataForCurrentObject('Account', 'Id')
+    		.then(function(result) {
+    			//console.log(result);
+    			deferred.resolve(result.Account.Id);
+    		})
+
+    	return deferred.promise;
+    }
+    
+	function getAccountNames(accountIds) {
+        var accIds = ds.getInStatement(accountIds);
+        var queryConfig = {
+            accounts: {
+                object: 'Account',
+                fields: ['Name', 'Id'],
+                where: 'Id IN ' + accIds
+            }
+        };
+
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.accounts)
+            .then(function(result) {
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+	
     function getSuggestionTags(suggestions) {
 
         var suggestionIds = [];
@@ -1043,7 +1011,7 @@ $(document).ready(function() {
     }
 
     //only supporting one value per filter, not a multi-select
-    function countSuggestionsByType(productFilter, driverFilter, districtFilter, recordTypeMap, suggestions) {
+    function countSuggestionsByType(productFilter, driverFilter, userFilter, recordTypeMap, suggestions) {
         //console.log(suggestions);
         //console.log(recordTypeMap);
         var calls = 0;
@@ -1060,91 +1028,52 @@ $(document).ready(function() {
         if (driverFilter) {
             applyDriverFilter = true;
         }
-        var applyDistrictFilter = false;
-        if(districtFilter) {
-            applyDistrictFilter = true;
+        var applyUserFilter = false;
+        if(userFilter) {
+            applyUserFilter = true;
+
         }
-        var districtSet = new Set(districtFilter);
+        var userSet = new Set(userFilter);
 
 
         for (var i = 0; i < suggestions.length; i++) {
 
-            if (applyDistrictFilter) {
-                if (!districtSet.has(suggestions[i].Owner_District_AZ_US__c)) {
+            if (applyUserFilter) {
+                if (!userSet.has(suggestions[i].OwnerId)) {
                     //console.log("filtering out a suggestion");
                     continue;
                 }
             }
+
             var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));//hacky thing, not good for production
-            switch (suggestions[i].RecordTypeId) {
-                case recordTypeMap.Call_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                calls++
-                            }
-                        }
-                    } else {
-                        calls++;
-                    }
+
+            if (applyProductFilter || applyDriverFilter) {
+                if (!hasTags) { // no tags get filtered out, not counting them
                     break;
-                case recordTypeMap.Email_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                email++
-                            }
+                } else { //check tags
+                    if (countAgainstTagFilters(applyProductFilter, applyDriverFilter, productFilter, driverFilter, suggestions[i].tags)) {
+                        if (suggestions[i].type == callText) {
+                        	calls++;
+                        } else if (suggestions[i].type == emailText) {
+                        	email++;
+                        } else if (suggestions[i].type == callObjectiveText) {
+                        	objective++;
+                        } else if (suggestions[i].type == insightText) {
+                        	insight++;
                         }
-                    } else {
-                        email++;
+                        	
                     }
-                    break;
-                case recordTypeMap.Insight_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                insight++
-                            }
-                        }
-                    } else {
-                        insight++;
-                    }
-                    break;
-                case recordTypeMap.Call_Objective_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                objective++
-                            }
-                        }
-                    } else {
-                        objective++;
-                    }
-                    break;
+                }
+            } else {
+            	if (suggestions[i].type == callText) {
+                	calls++;
+                } else if (suggestions[i].type == emailText) {
+                	email++;
+                } else if (suggestions[i].type == callObjectiveText) {
+                	objective++;
+                } else if (suggestions[i].type == insightText) {
+                	insight++;
+                }
             }
         }
         return [calls, email, insight, objective];
@@ -1155,11 +1084,12 @@ $(document).ready(function() {
     //array must be truncated to only show YTD 
     //disregarding any suggestions that are older than 1 year old
     //use product/driver filters if applicable
-    function countSuggestionsByMonth(productFilter, driverFilter, districtFilter, suggestions) {
+    function countSuggestionsByMonth(productFilter, driverFilter, userFilter, suggestions) {
+
         //userFilter = array of User SFDC Id's
         //console.log(userFilter);
         //transform into a Set
-        var districtSet = new Set(districtFilter);
+        var userSet = new Set(userFilter);
 
         var count = {
             total: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -1168,20 +1098,18 @@ $(document).ready(function() {
 
         var applyProductFilter = !(productFilter === null);
         var applyDriverFilter = !(driverFilter === null);
-        var applyDistrictFilter = !(districtFilter === null);
+        var applyUserFilter = !(userFilter === null);
 
-                console.log("hi");
-
-        for (var i = 0; i < suggestions.length; i++) {
+            for (var i = 0; i < suggestions.length; i++) {
 
                 //don't count any tags older than a year old
                 if (moment().diff(suggestions[i].CreatedDate, 'years') > 0) {
                     continue;
                 }
 
-                if (applyDistrictFilter) { //skip over users that don't match
+                if (applyUserFilter) { //skip over users that don't match
 
-                    if (!districtSet.has(suggestions[i].Owner_District_AZ_US__c)) {
+                    if (!userSet.has(suggestions[i].OwnerId)) {
                         continue;
                     }
                 }
@@ -1200,7 +1128,7 @@ $(document).ready(function() {
 
                             var month = new Date(suggestions[i].CreatedDate).getMonth();
                             count.total[month]++;
-                            if (!(suggestions[i].Marked_As_Complete_vod__c) || !(suggestions[i].Actioned_vod__c)) {
+                            if (suggestions[i].Status == completedText || suggestions[i].Status == actionedText) {
                                 count.complete[month]++;
                             }
                         } else {
@@ -1210,7 +1138,7 @@ $(document).ready(function() {
                 } else {
                     var month = new Date(suggestions[i].CreatedDate).getMonth();
                     count.total[month]++;
-                    if ((suggestions[i].Marked_As_Complete_vod__c) || (suggestions[i].Actioned_vod__c)) {
+                    if (suggestions[i].Status == completedText || suggestions[i].Status == actionedText) {
                         count.complete[month]++;
                     }
                 }
@@ -1219,35 +1147,30 @@ $(document).ready(function() {
         return count;
     }
 
-    function countSuggestionsByDistrictByStatus(productFilter, driverFilter, suggestions, districtFilter) {
-
-        var district_set = new Set();
-        var children_with_counts = [];
-        for (var i = 0; i < suggestions.length; i++) {
-            district_set.add(suggestions[i].Owner_District_AZ_US__c);
-        }
-        if (districtFilter) {
-            district_set.forEach(function(dm) {
-                if (!districtFilter.has(dm)) {
-                    district_set.delete(dm);
-                }
-            });
-        }
-
-        district_set.forEach(function(dm) {
-            var obj = {
-                Owner_District_AZ_US__c: dm
-            };
-            children_with_counts.push(obj);
-        });
+    function countSuggestionsByUserByStatus(productFilter, driverFilter, suggestions, childUsers) {
+        //console.log(suggestions);
+        //console.log(childUsers);
+        /** this is the going to be the shape of our output 
+        var userCount = [{
+            Id: '0934034039403',
+            Name: 'Vincent Vega',
+            pending: 0,
+            dismissed: 0,
+            actioned: 0,
+            completed: 0
+        }];
+        **/
+        var children_with_counts = childUsers.slice(0);
         //initialize the object shape
         for (var i = 0; i < children_with_counts.length; i++) {
+
             children_with_counts[i]["pending"] = 0;
             children_with_counts[i]["dismissed"] = 0;
             children_with_counts[i]["actioned"] = 0;
             children_with_counts[i]["completed"] = 0;
         }
         //console.log(children_with_counts);
+
         var applyProductFilter = !(productFilter === null);
         var applyDriverFilter = !(driverFilter === null);
 
@@ -1265,23 +1188,15 @@ $(document).ready(function() {
                         //we passed! compare this suggestion to our user array
                         for (var j = 0; j < children_with_counts.length; j++) {
                             //console.log(suggestions[i].OwnerId);
-                            if (suggestions[i].Owner_District_AZ_US__c === children_with_counts[j].Owner_District_AZ_US__c) {
+                            if (suggestions[i].OwnerId === children_with_counts[j].Id) {
                                 //console.log("it's a match");
-                                var flag = false;
-                                if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
-                                    //console.log("Complete!");
-                                    //children_with_counts[j].completed++;
+                            	if (suggestions[i].Status == actionedText) { 
                                 	children_with_counts[j].actioned++;
-                                	flag = true;
-                                /* } else if (suggestions[i].Actioned_vod__c) {
-                                    //console.log("Actioned!");
-                                    children_with_counts[j].actioned++; */
-                                } else if (suggestions[i].Dismissed_vod__c) {
-                                    //console.log("Dismissed!");
+                            	} else if (suggestions[i].Status == completedText) {
+                            		children_with_counts[j].completed++;
+                            	} else if (suggestions[i].Status == dismissedText) {
                                     children_with_counts[j].dismissed++;
-                                    flag = true;
-                                } else if (suggestions[i].IsPending === 1 || !flag) {
-                                    //console.log("Pending!!");
+                            	} else if (suggestions[i].Status == pendingText) {
                                     children_with_counts[j].pending++;
                                 }
                             }
@@ -1293,23 +1208,15 @@ $(document).ready(function() {
                 }
             } else { //no need to respect the filters
                 for (var j = 0; j < children_with_counts.length; j++) {
-                    if (suggestions[i].Owner_District_AZ_US__c === children_with_counts[j].Owner_District_AZ_US__c) {
+                    if (suggestions[i].OwnerId === children_with_counts[j].Id) {
                         //console.log("it's a match");
-                        var flag = false;
-                        if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
-                            //console.log("Complete!");
-                            //children_with_counts[j].completed++;
-                        	children_with_counts[j].actioned++;
-                        	flag = true;
-                        /* } else if (suggestions[i].Actioned_vod__c) {
-                            //console.log("Actioned!");
-                            children_with_counts[j].actioned++; */
-                        } else if (suggestions[i].Dismissed_vod__c) {
-                            //console.log("Dismissed!");
+                        if (suggestions[i].Status == actionedText) { 
+                           	children_with_counts[j].actioned++;
+                       	} else if (suggestions[i].Status == completedText) {
+                       		children_with_counts[j].completed++;
+                       	} else if (suggestions[i].Status == dismissedText) {
                             children_with_counts[j].dismissed++;
-                            flag = true;
-                        } else if (suggestions[i].IsPending === 1 || !flag) {
-                            //console.log("Pending!!");
+                       	} else if (suggestions[i].Status == pendingText) {
                             children_with_counts[j].pending++;
                         }
                     }
@@ -1317,6 +1224,7 @@ $(document).ready(function() {
 
             }
         }
+
         //console.log(children_with_counts);
         return children_with_counts;
     }
@@ -1324,17 +1232,335 @@ $(document).ready(function() {
     function createTeamPicker(users) {
         var team_options = '';
         for (var i = 0; i < users.length; i++) {
-            team_options += '<option value="' + users[i].Owner_District_AZ_US__c + '">' + users[i].Owner_District_AZ_US__c + '</option>';
+            team_options += '<option value="' + users[i].Id + '">' + users[i].Name + '</option>';
         }
+
         $("#team_picker").append(team_options);
         $('#team_picker').selectpicker('refresh');
         $('#team_picker').selectpicker('render');
+
     }
 
-    function mainController() {
+    function aggregateSuggestionsForTable(data) {
+        /**<th data-field="name" data-sortable="true">Team Member Name</th>
+        <th data-field="type" data-sortable="true">Type</th>
+        <th data-field="status" data-sortable="true">Quantity Remaining</th>
+        <th data-field="date" data-sortable="true">Date Assigned</th>**/
+        //console.log(data);
+        var table_data = [];
+
+        for (var i = 0; i < data.suggestions.length; i++) {
+            var row = {};
+            //match to team member
+            //console.log('looking for matching team member');
+            /* for (var j = 0; j < data.subordinateUsers.length; j++) {
+                if (data.subordinateUsers[j].Id === data.suggestions[i].OwnerId) {
+                    row.name = data.subordinateUsers[j].Name;
+                }
+            } */
+            row.title = data.suggestions[i].Title_vod__c;
+            row.reason = data.suggestions[i].Reason_vod__c;
+            //match type
+            //console.log(data.suggestions[i].RecordTypeId);
+            row.type = data.suggestions[i].type;
+			row.status = data.suggestions[i].Status;
+			row.lastStatusUpdatedBy = data.suggestions[i].LastStatusUpdatedBy;
+			
+            //console.log(row.status);
+            //stamp date
+            //console.log('checking date');
+            row.postedDate = moment(data.suggestions[i].Posted_Date_vod__c).format('LL');
+            //console.log(row.postedDate);
+			row.expirationDate = moment(data.suggestions[i].Expiration_Date_vod__c).format('LL');
+			row.accountName = data.suggestions[i].AccountName;
+            table_data.push(row);
+        }
+
+        return table_data;
+    }
+
+    function buildTable(data, nameFilter, statusFilter, typeFilter) {
+
+        var $table = $('#bootstrap-table');
+
+        var rows = [];
+
+        var markup = '';
+        for (var i = 0; i < data.length; i++) {
+
+            var row = {
+   //             name: data[i].name,
+  //              title: data[i].title,
+  				accountName: data[i].accountName,
+                type: data[i].type,
+                status: data[i].status,
+                lastStatusUpdatedBy: data[i].lastStatusUpdatedBy,
+                postedDate: data[i].postedDate,
+				expirationDate: data[i].expirationDate,
+				reason: data[i].reason
+            }
+            //console.log(row.status);
+
+            if (nameFilter || statusFilter) {
+                if (nameFilter === row.name && statusFilter === row.status) {
+                    rows.push(row);
+                }
+            } else if (typeFilter) {
+                if (typeFilter === row.type) {
+                    rows.push(row);
+                }
+            } else {
+                rows.push(row);
+            }
+
+            
+
+
+            /**
+            markup += '<tr><td>' + data[i].name + '</td><td>' + data[i].title + '</td><td>' + data[i].reason + '</td><td>' + data[i].type + '</td>' 
+
+            switch (data[i].status) {
+                case 'Actioned':
+                    markup += '<td class="text-success">'
+                    break;
+                case 'Marked Complete':
+                    markup += '<td class="text-warning">'
+                    break;
+                case 'Dismissed':
+                    markup += '<td class="text-warning">'
+                    break;
+                case 'Pending':
+                    markup += '<td class="text-danger">'
+                    break;
+            }
+            markup += data[i].status + '</td><td>' + data[i].date + '</td></tr>'; **/
+
+        }
+        //$("#tablebody").append(markup);
+
+        function operateFormatter(value, row, index) {
+            return [
+                '<div class="table-icons">',
+                '<a rel="tooltip" title="View" class="btn btn-simple btn-info btn-icon table-action view" href="javascript:void(0)">',
+                '<i class="ti-image"></i>',
+                '</a>',
+                '<a rel="tooltip" title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+                '<i class="ti-pencil-alt"></i>',
+                '</a>',
+                '<a rel="tooltip" title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+                '<i class="ti-close"></i>',
+                '</a>',
+                '</div>',
+            ].join('');
+        }
+        $table.bootstrapTable({
+            toolbar: ".toolbar",
+            clickToSelect: true,
+            showRefresh: false,
+            search: true,
+            showToggle: false,
+            showColumns: false,
+            pagination: true,
+            searchAlign: 'left',
+            pageSize: 5,
+            clickToSelect: false,
+            pageList: [5, 10, 15, 20],
+            multipleSearch: true,
+            delimeter: '&',
+            showFilter: true,
+            filterControl: true,
+
+
+            formatShowingRows: function(pageFrom, pageTo, totalRows) {
+                //do nothing here, we don't want to show the text "showing x of y from..."
+            },
+            formatRecordsPerPage: function(pageNumber) {
+                return pageNumber + " rows visible";
+            },
+            icons: {
+                refresh: 'fa fa-refresh',
+                toggle: 'fa fa-th-list',
+                columns: 'fa fa-columns',
+                detailOpen: 'fa fa-plus-circle',
+                detailClose: 'ti-close'
+            }
+        });
+
+        $table.bootstrapTable('load', rows);
+
+        //activate the tooltips after the data table is initialized
+        $('[rel="tooltip"]').tooltip();
+
+        $(window).resize(function() {
+            $table.bootstrapTable('resetView');
+        });
+
+    }
+    var actionedText = 'Actioned',
+	    completedText = 'Marked as Complete',
+	    pendingText = 'Pending',
+	    dismissedText = 'Dismissed';
+	    
+	var callText = 'Call',
+	    callObjectiveText = 'Call Objective',
+	    emailText = 'Email',
+	    insightText = 'Insight';
+    var appData = {
+            product_map: [{
+                Id: '',
+                Name: ''
+            }],
+            currentUser: {
+                Id: '',
+                territoryId: ''
+            },
+            childTerrIds: [],
+            subordinateUserIds: [],
+            subordinateUsers: [],
+            recordtype_map: { //best practice is to actually store this in a unique object per SFDC object
+                Call_vod: '',
+                Call_Objective_vod: '',
+                Email_vod: '',
+                Insight_vod: '',
+                Driver_vod: '', //for Suggestion tag
+                Product_vod: '' //for Suggestion tag
+            },
+            suggestionIds: [],
+            accountIds: [],
+            suggestions: [{
+                Id: '',
+                OwnerId: '',
+                Dismissed_vod__c: 0,
+                Marked_As_Complete_vod__c: 0,
+                Actioned_vod__c: 0,
+                CreatedDate: '',
+                RecordTypeId: '',
+                tags: [{
+                    RecordTypeId: '',
+                    Driver_vod__c: '',
+                    Product_Name__c: ''
+                }],
+                IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
+            }],
+            ownerIdLookup:{},
+            ownerIdList:[],
+            monthly_suggestions: {
+                complete: [],
+                total: []
+            },
+            months_to_date: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            average_data: {
+                pending: 0,
+                dismissed: 0,
+                actioned: 0,
+                completed: 0
+            },
+            suggestions_by_type_data: []
+        };
+
+    var products_master_set = new Set();
+    var drivers_master_set = new Set();
+
+    var selected_drivers = null;
+    var selected_products = null;
+    var selected_users = null;
         
-        getRecordTypes().then(function(rt) {
+    function refreshCharts(users, drivers, products) {
+        
+        var selected_drivers_set = null;
+        if (drivers) {
+            selected_drivers_set = new Set(drivers);
+        }
+        var selected_products_set = null;
+        if (products) {
+            selected_products_set = new Set(products);
+        }
+                //console.log(selected_driver);
+                //console.log(appData.suggestions);
+                //console.log(appData.subordinateUsers);
+        var team_subset = [];
+        var use_team_subset = false;
+                //console.log($("#team_picker").val());
+        if (users) {
+            //pair down subordinate user data set if we're using those filters
+            for (var i = 0; i < appData.subordinateUsers.length; i++) {
+                for (var j = 0; j < selected_users.length; j++) {
+                    if (selected_users[j] === appData.subordinateUsers[i].Id) {
+                        team_subset.push(appData.subordinateUsers[i]);
+                        use_team_subset = true;
+                    }
+                }
+            }
+        }
+        //console.log(appData.suggestions_by_type_data);
+        var new_user_chart_data;
+        if (use_team_subset) {
+            new_user_chart_data = countSuggestionsByUserByStatus(selected_products_set, selected_drivers_set, appData.suggestions, team_subset);
+        } else {
+            new_user_chart_data = countSuggestionsByUserByStatus(selected_products_set, selected_drivers_set, appData.suggestions, appData.subordinateUsers);
+        }
+        //console.log(new_user_chart_data);
+        createTeamChart(new_user_chart_data);
+        var new_monthly_count = countSuggestionsByMonth(selected_products_set, selected_drivers_set, selected_users, appData.suggestions);
+                //console.log(new_monthly_count);
+        var this_month_remove = ((new Date().getMonth()) + 1);
+        
+        new_monthly_count.total = new_monthly_count.total.slice(0, this_month_remove);
+        new_monthly_count.complete = new_monthly_count.complete.slice(0, this_month_remove);
+        createTrendsChart(appData.months_to_date, new_monthly_count.total, new_monthly_count.complete);
+                //udpate the type chart
+        createSuggestionsByTypeChart(countSuggestionsByType(selected_products_set, selected_drivers_set, selected_users, appData.recordtype_map, appData.suggestions));
+    }
+
+
+    function mainController() {
+    	getAccountId().then(function(accountId) {
+            //console.log(userId);
+            appData.accountId = accountId;
+            //console.log(appData.currentUser.Id);
+            return getUserId();
+        }).then(function(userId) {
+            //console.log(userId);
+            appData.currentUser.Id = userId;
+            //console.log(appData.currentUser.Id);
+            return getCurrentUserTerritoryId(appData.currentUser.Id);
+        }).then(function(terrId) {
+            //console.log(terrId);
+   //         $('#response').append('<div>getCurrentUserTerritoryId - passed </div>');
+            appData.currentUser.territoryId = terrId[0].TerritoryId.value; //we assume the manager is only aligned to 1 territory
+            //console.log(appData.currentUser.territoryId);
+            return getChildTerritoryIds(appData.currentUser.territoryId);
+        }).then(function(childTerrIds) {
+            //console.log(childTerrIds);
+    //        $('#response').append('<div>getChildTerritoryIds - passed </div>');
+            for (var i = 0; i < childTerrIds.length; i++) {
+                appData.childTerrIds.push(childTerrIds[i].Id.value);
+            }
+            //console.log(appData.childTerrIds);
+            return getChildUserIds(appData.childTerrIds);
+        }).then(function(users) {
+            //console.log(users);
+     //       $('#response').append('<div>getChildUserIds - passed </div>');
+            for (var i = 0; i < users.length; i++) {
+                appData.subordinateUserIds[i] = users[i].UserId.value;
+            }
+            //console.log(appData.subordinateUserIds);
+            return getChildUsers(appData.subordinateUserIds);
+        }).then(function(subUsers) {
+            //console.log(subUsers);
+      //      $('#response').append('<div>getChildUsers - passed </div>');
+            for (var i = 0; i < subUsers.length; i++) {
+                var user_to_add = {
+                    Name: subUsers[i].Name.value,
+                    Id: subUsers[i].Id.value
+                };
+                appData.subordinateUsers.push(user_to_add);
+            }
+            //console.log(appData.subordinateUsers);
+            return getRecordTypes();
+        }).then(function(rt) {
             //console.log(rt);
+      //      $('#response').append('<div>getRecordTypes - passed </div>');
             //transform returned query data into a single object where DeveloperName is the key, and Id is the value
             for (var i = 0; i < rt.length; i++) {
                 $.extend(appData.recordtype_map, {
@@ -1342,35 +1568,64 @@ $(document).ready(function() {
                 });
             } //for the horrified: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names
             console.log(appData.recordtype_map);
-            return getSuggestions();
+            return getSuggestions(appData.accountId);
         }).then(function(suggestions) {
             //console.log(suggestions);
+        //    $('#response').append('<div>getSuggestions - passed </div>');
+            var accountIds = [];
+            appData.ownerIdList = [];
             for (var i = 0; i < suggestions.length; i++) {
-                var this_suggestion = {
+            	var this_suggestion = {
                     Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
                     Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
                     Actioned_vod__c: suggestions[i].Actioned_vod__c.value,
                     RecordTypeId: suggestions[i].RecordTypeId.value,
                     Id: suggestions[i].Id.value,
                     CreatedDate: suggestions[i].CreatedDate.value,
-                    Owner_District_AZ_US__c: suggestions[i].Owner_District_AZ_US__c.value,
+                    OwnerId: suggestions[i].OwnerId.value,
                     Title_vod__c: suggestions[i].Title_vod__c.value,
                     Reason_vod__c: suggestions[i].Reason_vod__c.value,
                     Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
 					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
 					Account_vod__c: suggestions[i].Account_vod__c.value,
-					AccountName:''
+					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
+					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
+					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
+					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,
+					LastStatusUpdatedBy: '',
+					Status: ''
                 };
-
+            	appData.ownerIdList.push(suggestions[i].OwnerId.value);
+            	
                 appData.suggestionIds[i] = suggestions[i].Id.value;
+                switch (suggestions[i].RecordTypeId.value) {
+	                case appData.recordtype_map.Call_vod:
+	                	this_suggestion.type = callText;
+	                    break;
+	                case appData.recordtype_map.Call_Objective_vod:
+	                	this_suggestion.type = callObjectiveText;
+	                    break;
+	                case appData.recordtype_map.Email_vod:
+	                	this_suggestion.type = emailText;
+	                    break;
+	                case appData.recordtype_map.Insight_vod:
+	                	this_suggestion.type = insightText;
+	                    break;
+	        	}
+                this_suggestion.LastStatusUpdatedBy = this_suggestion.Actioned_By_AZ_US__c || this_suggestion.Completed_By_AZ_US__c || this_suggestion.Dismissed_By_AZ_US__c || '';
+                this_suggestion.Status = this_suggestion.Actioned_vod__c ? 'Actioned' : this_suggestion.Marked_As_Complete_vod__c ? 'Marked as Complete' : this_suggestion.Dismissed_vod__c ? 'Dismissed' : 'Pending';
+     //           accountIds[i] = suggestions[i].Account_vod__c.value;
                 //console.log(this_suggestion);
                 appData.suggestions[i] = this_suggestion;
             }
+            appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
             //console.log(appData.suggestionIds);
+            //console.log(appData.accountIds);
             return getSuggestionTags(appData.suggestions);
         }).then(function(tags) {
             //there's a potential for tags not existing
             //console.log("processing tags");
+     //       $('#response').append('<div>getSuggestionTags - passed </div>');
             //for each Suggestion, we compare the list of suggestion tags, then add that suggestion tag as an attribute to the overall suggestion.
             console.log(tags);
             if (tags.length > 0) {
@@ -1437,10 +1692,12 @@ $(document).ready(function() {
                 disableDriverFilter();
                 disableProductFilter();
             }
-            return getAllSuggestionFeedback();
+
+   /*          return getAllSuggestionFeedback();
         }).then(function(feedback) {
             //console.log(feedback);
-            //we only care if a suggestion has feedback, use a set to dedupe
+     //       $('#response').append('<div>getAllSuggestionFeedback - passed </div>');
+             //we only care if a suggestion has feedback, use a set to dedupe
             var suggestions_with_feedback_set = new Set();
             for (var i = 0; i < feedback.length; i++) {
                 suggestions_with_feedback_set.add(feedback[i].Suggestion_vod__c.value);
@@ -1459,16 +1716,28 @@ $(document).ready(function() {
                     //this suggestion is definiely pending
                     appData.suggestions[i]["IsPending"] = 1;
                 }
-            }
-
+            } */
+			/* return getAccountNames(appData.accountIds);
+        }).then(function(accounts) {
+        	//$('#response').append('<div>getAccountNames - passed </div>');
+            //$('#response').append('<div>' + JSON.stringify(accounts, null, "\t") + ' accounts.length:'+accounts.length+'</div>');
+        	for (var i = 0; i < appData.suggestions.length; i++) {
+                //console.log(appData.suggestions[i]);
+				for(var j = 0; j < accounts.length; j++) {
+                //not accounting for senarios if these Values contain the number Zero. Will need to be changed if this is going to production-ready
+	                if (appData.suggestions[i].Account_vod__c == accounts[j].Id.value) {
+	                	appData.suggestions[i].AccountName = accounts[j].Name.value;
+	                }
+				}
+            }    */    	
             //for the first pass, the filters will be null, but something HAS to be selected the next time things go around, so default behavior for Null would be to count everything
             return countSuggestionsByType(null, null, null, appData.recordtype_map, appData.suggestions);
         }).then(function(my_suggestions_by_type_data) {
             //console.log(my_suggestions_by_type_data);
             appData.suggestions_by_type_data = my_suggestions_by_type_data;
+
             return createSuggestionsByTypeChart(appData.suggestions_by_type_data);
         }).then(function() {
-            console.log("about to call countbymonth");
             return countSuggestionsByMonth(null, null, null, appData.suggestions);
         }).then(function(monthly_count) {
             console.log(monthly_count);
@@ -1486,7 +1755,7 @@ $(document).ready(function() {
 
             return createTrendsChart(appData.months_to_date, appData.monthly_suggestions.total, appData.monthly_suggestions.complete);
         }).then(function() {
-            return countSuggestionsByDistrictByStatus(null, null, appData.suggestions,null);
+            return countSuggestionsByUserByStatus(null, null, appData.suggestions, appData.subordinateUsers);
         }).then(function(children_with_counts) {
             appData.subordinateUsers = children_with_counts.slice(0);
             console.log(appData.subordinateUsers);
@@ -1516,6 +1785,32 @@ $(document).ready(function() {
         }).then(function() {
             return createTeamPicker(appData.subordinateUsers);
         }).then(function() {
+        	
+        }).then(function() {
+       	 
+            //Drive LastStatusUpdatedBy value from ownerId            
+            $('#response').append('<pre>before: getUserNames</pre>');
+           	return getUserNames(appData.ownerIdList);
+        }).then(function(userNames) {
+  //      	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
+        	try {
+	        	var ownerIdLookup = {};
+	        	for (var i = 0;i < userNames.length; i++) {
+	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
+	        	}
+	        	$.extend(appData.ownerIdLookup, ownerIdLookup);
+	        	$('#response').append('<pre>After: ownerIdLookup : ' + JSON.stringify(appData.ownerIdLookup, null, "\t") +'</pre>');
+	        	for (var i = 0; i < appData.suggestions.length; i++) {
+	        //		$('#response').append('<pre>appData.suggestions[i].ownerId : ' + JSON.stringify(appData.suggestions[i].OwnerId, null, "\t") +'</pre>');
+	        //		$('#response').append('<pre>appData.ownerIdLookup[appData.suggestions[i].ownerId] : ' + appData.ownerIdLookup[appData.suggestions[i].OwnerId] +'</pre>');
+	        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
+	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
+	        	}
+        	
+        		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
+        	} catch(e){
+        		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
+        	}
             //console.log(appData);
             return aggregateSuggestionsForTable(appData);
         }).then(function(table_data) {
@@ -1524,20 +1819,20 @@ $(document).ready(function() {
 
             //event listener for team picker
             $("#team_picker").on("hidden.bs.select", function(e) {
-                selected_districts = $("#team_picker").val();
-                refreshCharts(selected_districts,selected_drivers,selected_products);
+                selected_users = $("#team_picker").val();
+                refreshCharts(selected_users,selected_drivers,selected_products);
             });
 
             //event listener for driver filter
             $("#driver_filter").on("hidden.bs.select", function(e) {
                 selected_drivers = $("#driver_filter").val();
-                refreshCharts(selected_districts,selected_drivers,selected_products);
+                refreshCharts(selected_users,selected_drivers,selected_products);
             });
 
             //event listener for product filter
             $("#product_filter").on("hidden.bs.select", function(e) {
                 selected_products = $("#product_filter").val();
-                refreshCharts(selected_districts,selected_drivers,selected_products);
+                refreshCharts(selected_users,selected_drivers,selected_products);
             });
 
         })
