@@ -24,7 +24,7 @@
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="collapse navbar-collapse">
-                    	<button type="button" style="display:block!important;margint-top:0px;"class="navbar-toggle collapsed pull-left" data-toggle="modal" data-target="#exampleModal" aria-expanded="false">
+                    	<button type="button" style="top: 60px;position: fixed; right: 0; display: block!important;margin-top: 0px;z-index: 10;"class="navbar-toggle collapsed pull-left" data-toggle="modal" data-target="#exampleModal" aria-expanded="false">
 					        <span class="sr-only">Toggle navigation</span>
 					        <span class="icon-bar"></span>
 					        <span class="icon-bar"></span>
@@ -35,7 +35,7 @@
 				    		<button class="btn btn-xs btn-default">All</button>
 				    	</div> -->
                         <ul class="nav navbar-nav navbar-right">
-                            <li style="width: 320px;padding-left:5px;">
+                            <li style="width: 280px;padding-left:5px;">
                                 <select multiple data-title="Please Select Team Members" name="my_team" id="team_picker" class="selectpicker team_picker" data-style="btn-info btn-fill btn-block">
                                 </select>
                             </li>
@@ -43,7 +43,7 @@
                             <li>
                                 <a id="driver_filter_label">Driver:</a>
                             </li> -->
-                            <li style="width: 320px;padding-left:5px;">
+                            <li style="width: 280px;padding-left:5px;">
                                 <select multiple name="driver" id="driver_filter" class="selectpicker driver-filter" data-title="Select Driver(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
                                 </select>
                             </li>
@@ -51,7 +51,7 @@
                             <li>
                                 <a id="product_filter_label">Product:</a>
                             </li> -->
-                            <li style="width: 320px;padding-left:5px;">
+                            <li style="width: 280px;padding-left:5px;">
                                 <select multiple name="product" id="product_filter" class="selectpicker product-filter" data-title="Select Product(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
                                 </select>
                             </li>
@@ -972,6 +972,9 @@ function createTrendsChart(months, totals, completes) {
 
     //returns true if a match is found
     function countAgainstTagFilters(applyProductFilter, applyDriverFilter, productFilter, driverFilter, suggestionTags) {
+    	$('#response').append('<pre>countAgainstTagFilters - entering: productFilter ' + JSON.stringify(productFilter, null, "\t") +'</pre>');
+    	$('#response').append('<pre>countAgainstTagFilters - entering: driverFilter ' + JSON.stringify(driverFilter, null, "\t") +'</pre>');
+    	$('#response').append('<pre>countAgainstTagFilters - entering: suggestionTags ' + JSON.stringify(suggestionTags, null, "\t") +'</pre>');
         //console.log(suggestionTags);
         var product_match = false;
         var driver_match = false;
@@ -1150,6 +1153,9 @@ function createTrendsChart(months, totals, completes) {
             completed: 0
         }];
         **/
+        $('#response').append('<pre>countSuggestionsByUserByStatus - entering: childUsers ' + JSON.stringify(childUsers, null, "\t") +'</pre>');
+        $('#response').append('<pre>countSuggestionsByUserByStatus - entering: driverFilter ' + JSON.stringify(driverFilter, null, "\t") +'</pre>');
+        $('#response').append('<pre>countSuggestionsByUserByStatus - entering: productFilter ' + JSON.stringify(productFilter, null, "\t") +'</pre>');
         var children_with_counts = childUsers.slice(0);
         //initialize the object shape
         for (var i = 0; i < children_with_counts.length; i++) {
