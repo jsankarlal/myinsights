@@ -220,8 +220,8 @@ $(document).ready(function() {
             names.push(teamData[i].Name);
             pending.push(teamData[i].pending);
             dismissed.push(teamData[i].dismissed);
-            completed.push(teamData[i].completed);
             actioned.push(teamData[i].actioned);
+            completed.push(teamData[i].completed);
         }
 
         var myDataSets = [];
@@ -244,16 +244,16 @@ $(document).ready(function() {
                     data: dismissed,
                     backgroundColor: dismissedColorDisplay,
                     borderColor: dismissedColorDisplay
-                },{
-                    label: 'Marked Complete',
-                    data: completed,
-                    backgroundColor: completedColorDisplay,
-                    borderColor: completedColorDisplay
                 }, {
                     label: 'Actioned',
                     data: actioned,
                     backgroundColor: actionedColorDisplay,
                     borderColor: actionedColorDisplay
+                },{
+                    label: 'Marked Complete',
+                    data: completed,
+                    backgroundColor: completedColorDisplay,
+                    borderColor: completedColorDisplay
                 }]
             },
             options: {
