@@ -1733,6 +1733,7 @@ function createTrendsChart(months, totals, completes) {
         	}
             return countSuggestionsByUserByStatus(null, null, appData.suggestions, appData.subordinateUsers);
         }).then(function(children_with_counts) {
+        	$('#response').append('<pre>countSuggestionsByUserByStatus - children_with_counts: ' + JSON.stringify(children_with_counts, null, "\t") +'</pre>');
             appData.subordinateUsers = children_with_counts.slice(0);
             console.log(appData.subordinateUsers);
 

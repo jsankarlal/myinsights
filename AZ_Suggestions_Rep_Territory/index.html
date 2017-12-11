@@ -1026,14 +1026,14 @@ $(document).ready(function() {
         
         var selected_drivers_set = null;
         if (drivers) {
-            selected_drivers_set = new Set(drivers);
+            selected_drivers_set = new Set(selected_drivers);
         }
         $('#response').append('<pre> refreshCharts - selected_drivers_set:' + JSON.stringify(selected_drivers_set, '\t', null) + ' </pre>');
         $('#response').append('<pre> refreshCharts - selected_drivers_set:' + JSON.stringify(selected_drivers_set[drivers[0]], '\t', null) + ' </pre>');
         $('#response').append('<pre> refreshCharts - selected_drivers_set:' + JSON.stringify(selected_drivers_set[drivers[1]], '\t', null) + ' </pre>');
         var selected_products_set = null;
         if (products) {
-            selected_products_set = new Set(products);
+            selected_products_set = new Set(selected_products);
         }   
         $('#response').append('<pre> refreshCharts - selected_products_set:' + JSON.stringify(selected_products_set, '\t', null) + ' </pre>');
         createTeamChart(countSuggestionsByStatus(selected_products_set, selected_drivers_set, appData.suggestions))
