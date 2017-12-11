@@ -1758,7 +1758,7 @@ function createTrendsChart(months, totals, completes) {
             //display the overal average for the team
             return createAverageChart(appData.average_data);
         }).then(function() {
-            return createTeamChart(appData.subordinateUsers);
+            return createTeamChart(appData.usersList);
         }).then(function() {
             return createTeamPicker(appData.usersList);
         }).then(function() {
