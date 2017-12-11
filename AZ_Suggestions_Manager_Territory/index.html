@@ -144,6 +144,7 @@
     			</div>
 	      </div>
 	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-secondary" onClick="$('#response').html('');">Clear Logs</button>
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 	      </div>
 	    </div>
@@ -351,8 +352,10 @@ $(document).ready(function() {
         $(".search").find(".form-control").val(currentChart._view.label + '&' + currentChart._view.datasetLabel);
         $(".search").find(".form-control").trigger("keyup");**/
 
-
-            buildTable(appData.table_data, chartData.label, chartData.datasetLabel);
+        	$('#response').append('<div> clicked createTeamChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
+        	$('#response').append('<div> clicked createTeamChart:  chartData.datasetLabel :' + JSON.stringify(chartData.datasetLabel, null, "\t") + '</div>');
+      		//function buildTable(data, nameFilter, statusFilter, typeFilter)
+        	buildTable(appData.table_data, chartData.label, chartData.datasetLabel);
 
             document.location.href = 'index.html#bootstrap-table';
         }
@@ -595,6 +598,7 @@ function createSuggestionsByTypeChart(type_data) {
         $(".search").find(".form-control").trigger("keyup");**/
 
         //function buildTable(data, nameFilter, statusFilter, typeFilter)
+        $('#response').append('<div> clicked createSuggestionsByTypeChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
         buildTable(appData.table_data, null, null, chartData.label);
 
 
@@ -1265,7 +1269,7 @@ function createTrendsChart(months, totals, completes) {
         return table_data;
     }
 
-    function buildTable(data, nameFilter, statusFilter, typeFilter) {
+    function buildTable(data, lastStatusUpdatedByFilter, statusFilter, typeFilter) {
 
         var $table = $('#bootstrap-table');
 
@@ -1287,8 +1291,8 @@ function createTrendsChart(months, totals, completes) {
             }
             //console.log(row.status);
 
-            if (nameFilter || statusFilter) {
-                if (nameFilter === row.name && statusFilter === row.status) {
+            if (lastStatusUpdatedByFilter || statusFilter) {
+                if (lastStatusUpdatedByFilter === row.lastStatusUpdatedBy && statusFilter === row.status) {
                     rows.push(row);
                 }
             } else if (typeFilter) {
@@ -1430,6 +1434,7 @@ function createTrendsChart(months, totals, completes) {
             }],
             ownerIdLookup:{},
             ownerIdList:[],
+            usersList:[],
             monthly_suggestions: {
                 complete: [],
                 total: []
@@ -1675,43 +1680,6 @@ function createTrendsChart(months, totals, completes) {
                 disableProductFilter();
             }
 
-   /*          return getAllSuggestionFeedback();
-        }).then(function(feedback) {
-            //console.log(feedback);
-     //       $('#response').append('<div>getAllSuggestionFeedback - passed </div>');
-             //we only care if a suggestion has feedback, use a set to dedupe
-            var suggestions_with_feedback_set = new Set();
-            for (var i = 0; i < feedback.length; i++) {
-                suggestions_with_feedback_set.add(feedback[i].Suggestion_vod__c.value);
-            }
-            //console.log(suggestions_with_feedback_set);
-
-            //now compare that set to our list of suggestions and tag them appropraitely.
-            for (var i = 0; i < appData.suggestions.length; i++) {
-                //console.log(appData.suggestions[i]);
-
-                //not accounting for senarios if these Values contain the number Zero. Will need to be changed if this is going to production-ready
-                if (!(appData.suggestions[i].Actioned_vod__c) &&
-                    !(appData.suggestions[i].Marked_As_Complete_vod__c) &&
-                    !(appData.suggestions[i].Dismissed_vod__c) && !suggestions_with_feedback_set.has(appData.suggestions[i].Id)) {
-                    //console.log("this suggestion is pending");
-                    //this suggestion is definiely pending
-                    appData.suggestions[i]["IsPending"] = 1;
-                }
-            } */
-			/* return getAccountNames(appData.accountIds);
-        }).then(function(accounts) {
-        	//$('#response').append('<div>getAccountNames - passed </div>');
-            //$('#response').append('<div>' + JSON.stringify(accounts, null, "\t") + ' accounts.length:'+accounts.length+'</div>');
-        	for (var i = 0; i < appData.suggestions.length; i++) {
-                //console.log(appData.suggestions[i]);
-				for(var j = 0; j < accounts.length; j++) {
-                //not accounting for senarios if these Values contain the number Zero. Will need to be changed if this is going to production-ready
-	                if (appData.suggestions[i].Account_vod__c == accounts[j].Id.value) {
-	                	appData.suggestions[i].AccountName = accounts[j].Name.value;
-	                }
-				}
-            }    */    	
             //for the first pass, the filters will be null, but something HAS to be selected the next time things go around, so default behavior for Null would be to count everything
             return countSuggestionsByType(null, null, null, appData.recordtype_map, appData.suggestions);
         }).then(function(my_suggestions_by_type_data) {
@@ -1737,6 +1705,32 @@ function createTrendsChart(months, totals, completes) {
 
             return createTrendsChart(appData.months_to_date, appData.monthly_suggestions.total, appData.monthly_suggestions.complete);
         }).then(function() {
+        	$('#response').append('<pre>before: getUserNames</pre>');
+           	return getUserNames(appData.ownerIdList);
+        }).then(function(userNames) {
+  //      	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
+        	try {
+	        	var ownerIdLookup = {};
+	        	for (var i = 0;i < userNames.length; i++) {
+	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
+	        	}
+	        	$.extend(appData.ownerIdLookup, ownerIdLookup);
+	        	$('#response').append('<pre>After: ownerIdLookup : ' + JSON.stringify(appData.ownerIdLookup, null, "\t") +'</pre>');
+	        	for (var i = 0; i < appData.suggestions.length; i++) {
+	        //		$('#response').append('<pre>appData.suggestions[i].ownerId : ' + JSON.stringify(appData.suggestions[i].OwnerId, null, "\t") +'</pre>');
+	        //		$('#response').append('<pre>appData.ownerIdLookup[appData.suggestions[i].ownerId] : ' + appData.ownerIdLookup[appData.suggestions[i].OwnerId] +'</pre>');
+	        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
+	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
+	        	    appData.usersList.push(appData.suggestions[i].LastStatusUpdatedBy);
+	        	}
+	        	
+	        	//Remove Duplicates
+	        	appData.usersList = appData.usersList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+        	
+        		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
+        	} catch(e){
+        		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
+        	}
             return countSuggestionsByUserByStatus(null, null, appData.suggestions, appData.subordinateUsers);
         }).then(function(children_with_counts) {
             appData.subordinateUsers = children_with_counts.slice(0);
@@ -1767,32 +1761,6 @@ function createTrendsChart(months, totals, completes) {
         }).then(function() {
             return createTeamPicker(appData.subordinateUsers);
         }).then(function() {
-        	
-        }).then(function() {
-       	 
-            //Drive LastStatusUpdatedBy value from ownerId            
-            $('#response').append('<pre>before: getUserNames</pre>');
-           	return getUserNames(appData.ownerIdList);
-        }).then(function(userNames) {
-  //      	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
-        	try {
-	        	var ownerIdLookup = {};
-	        	for (var i = 0;i < userNames.length; i++) {
-	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
-	        	}
-	        	$.extend(appData.ownerIdLookup, ownerIdLookup);
-	        	$('#response').append('<pre>After: ownerIdLookup : ' + JSON.stringify(appData.ownerIdLookup, null, "\t") +'</pre>');
-	        	for (var i = 0; i < appData.suggestions.length; i++) {
-	        //		$('#response').append('<pre>appData.suggestions[i].ownerId : ' + JSON.stringify(appData.suggestions[i].OwnerId, null, "\t") +'</pre>');
-	        //		$('#response').append('<pre>appData.ownerIdLookup[appData.suggestions[i].ownerId] : ' + appData.ownerIdLookup[appData.suggestions[i].OwnerId] +'</pre>');
-	        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
-	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
-	        	}
-        	
-        		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
-        	} catch(e){
-        		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
-        	}
             //console.log(appData);
             return aggregateSuggestionsForTable(appData);
         }).then(function(table_data) {
