@@ -244,16 +244,16 @@ $(document).ready(function() {
                     data: dismissed,
                     backgroundColor: dismissedColorDisplay,
                     borderColor: dismissedColorDisplay
-                },{
-                    label: 'Marked Complete',
-                    data: completed,
-                    backgroundColor: completedColorDisplay,
-                    borderColor: completedColorDisplay
                 }, {
                     label: 'Actioned',
                     data: actioned,
                     backgroundColor: actionedColorDisplay,
                     borderColor: actionedColorDisplay
+                },{
+                    label: 'Marked Complete',
+                    data: completed,
+                    backgroundColor: completedColorDisplay,
+                    borderColor: completedColorDisplay
                 }]
             },
             options: {
@@ -379,15 +379,15 @@ function createAverageChart(mydata) {
                 backgroundColor: dismissedColor,
                 borderColor: dismissedColor
             }, {
-                label: 'Marked Complete',
-                data: [mydata.completed],
-                backgroundColor: completedColor,
-                borderColor: completedColor
-            }, {
                 label: 'Actioned',
                 data: [mydata.actioned],
                 backgroundColor: actionedColor,
                 borderColor: actionedColor
+            }, {
+                label: 'Marked Complete',
+                data: [mydata.completed],
+                backgroundColor: completedColor,
+                borderColor: completedColor
             }]
         },
         options: {
