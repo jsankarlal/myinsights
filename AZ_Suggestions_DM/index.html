@@ -35,7 +35,7 @@
 				    		<button class="btn btn-xs btn-default">All</button>
 				    	</div> -->
                         <ul class="nav navbar-nav navbar-right">
-                            <li style="width: 320px;padding-left:5px;">
+                            <li style="width: 280px;padding-left:5px;">
                                 <select multiple data-title="Please Select Team Members" name="my_team" id="team_picker" class="selectpicker team_picker" data-style="btn-info btn-fill btn-block">
                                 </select>
                             </li>
@@ -43,7 +43,7 @@
                             <li>
                                 <a id="driver_filter_label">Driver:</a>
                             </li> -->
-                            <li style="width: 320px;padding-left:5px;">
+                            <li style="width: 280px;padding-left:5px;">
                                 <select multiple name="driver" id="driver_filter" class="selectpicker driver-filter" data-title="Select Driver(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
                                 </select>
                             </li>
@@ -51,7 +51,7 @@
                             <li>
                                 <a id="product_filter_label">Product:</a>
                             </li> -->
-                            <li style="width: 320px;padding-left:5px;">
+                            <li style="width: 280px;padding-left:5px;">
                                 <select multiple name="product" id="product_filter" class="selectpicker product-filter" data-title="Select Product(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
                                 </select>
                             </li>
@@ -144,6 +144,7 @@
     			</div>
 	      </div>
 	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-secondary" onClick="$('#response').html('');">Clear Logs</button>
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 	      </div>
 	    </div>
@@ -220,8 +221,8 @@ $(document).ready(function() {
             names.push(teamData[i].Name);
             pending.push(teamData[i].pending);
             dismissed.push(teamData[i].dismissed);
-            actioned.push(teamData[i].actioned);
             completed.push(teamData[i].completed);
+            actioned.push(teamData[i].actioned);
         }
 
         var myDataSets = [];
@@ -351,8 +352,10 @@ $(document).ready(function() {
         $(".search").find(".form-control").val(currentChart._view.label + '&' + currentChart._view.datasetLabel);
         $(".search").find(".form-control").trigger("keyup");**/
 
-
-            buildTable(appData.table_data, chartData.label, chartData.datasetLabel);
+        	$('#response').append('<div> clicked createTeamChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
+        	$('#response').append('<div> clicked createTeamChart:  chartData.datasetLabel :' + JSON.stringify(chartData.datasetLabel, null, "\t") + '</div>');
+      		//function buildTable(data, nameFilter, statusFilter, typeFilter)
+        	buildTable(appData.table_data, chartData.label, chartData.datasetLabel);
 
             document.location.href = 'index.html#bootstrap-table';
         }
@@ -595,6 +598,7 @@ function createSuggestionsByTypeChart(type_data) {
         $(".search").find(".form-control").trigger("keyup");**/
 
         //function buildTable(data, nameFilter, statusFilter, typeFilter)
+        $('#response').append('<div> clicked createSuggestionsByTypeChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
         buildTable(appData.table_data, null, null, chartData.label);
 
 
@@ -859,6 +863,20 @@ function createTrendsChart(months, totals, completes) {
         return deferred.promise;
     }
 	
+	
+	function getAccountId() {
+    	//console.log("getting userId");
+    	var deferred = $q.defer();
+
+    	ds.getDataForCurrentObject('Account', 'Id')
+    		.then(function(result) {
+    			//console.log(result);
+    			deferred.resolve(result.Account.Id);
+    		})
+
+    	return deferred.promise;
+    }
+	
     function getUserNames(ownerIds) {
         var inObject = ds.getInStatement(ownerIds);
 
@@ -878,19 +896,6 @@ function createTrendsChart(months, totals, completes) {
             });
 
         return deferred.promise;
-    }
-    
-    function getAccountId() {
-    	//console.log("getting userId");
-    	var deferred = $q.defer();
-
-    	ds.getDataForCurrentObject('Account', 'Id')
-    		.then(function(result) {
-    			//console.log(result);
-    			deferred.resolve(result.Account.Id);
-    		})
-
-    	return deferred.promise;
     }
     
 	function getAccountNames(accountIds) {
@@ -982,6 +987,9 @@ function createTrendsChart(months, totals, completes) {
 
     //returns true if a match is found
     function countAgainstTagFilters(applyProductFilter, applyDriverFilter, productFilter, driverFilter, suggestionTags) {
+    	$('#response').append('<pre>countAgainstTagFilters - entering: productFilter ' + JSON.stringify(productFilter, null, "\t") +'</pre>');
+    	$('#response').append('<pre>countAgainstTagFilters - entering: driverFilter ' + JSON.stringify(driverFilter, null, "\t") +'</pre>');
+    	$('#response').append('<pre>countAgainstTagFilters - entering: suggestionTags ' + JSON.stringify(suggestionTags, null, "\t") +'</pre>');
         //console.log(suggestionTags);
         var product_match = false;
         var driver_match = false;
@@ -1039,7 +1047,7 @@ function createTrendsChart(months, totals, completes) {
         for (var i = 0; i < suggestions.length; i++) {
 
             if (applyUserFilter) {
-                if (!userSet.has(suggestions[i].OwnerId)) {
+            	if (!userSet.has(suggestions[i].LastStatusUpdatedBy)) {
                     //console.log("filtering out a suggestion");
                     continue;
                 }
@@ -1109,7 +1117,7 @@ function createTrendsChart(months, totals, completes) {
 
                 if (applyUserFilter) { //skip over users that don't match
 
-                    if (!userSet.has(suggestions[i].OwnerId)) {
+                    if (!userSet.has(suggestions[i].LastStatusUpdatedBy)) {
                         continue;
                     }
                 }
@@ -1160,8 +1168,11 @@ function createTrendsChart(months, totals, completes) {
             completed: 0
         }];
         **/
+        $('#response').append('<pre>countSuggestionsByUserByStatus - entering: childUsers ' + JSON.stringify(childUsers, null, "\t") +'</pre>');
+        $('#response').append('<pre>countSuggestionsByUserByStatus - entering: driverFilter ' + JSON.stringify(driverFilter, null, "\t") +'</pre>');
         var children_with_counts = childUsers.slice(0);
         //initialize the object shape
+        $('#response').append('<pre>countSuggestionsByUserByStatus - entering: children_with_counts length ' + JSON.stringify(children_with_counts.length, null, "\t") +'</pre>');
         for (var i = 0; i < children_with_counts.length; i++) {
 
             children_with_counts[i]["pending"] = 0;
@@ -1170,7 +1181,7 @@ function createTrendsChart(months, totals, completes) {
             children_with_counts[i]["completed"] = 0;
         }
         //console.log(children_with_counts);
-
+		$('#response').append('<pre>countSuggestionsByUserByStatus - entering: children_with_counts ' + JSON.stringify(children_with_counts, null, "\t") +'</pre>');
         var applyProductFilter = !(productFilter === null);
         var applyDriverFilter = !(driverFilter === null);
 
@@ -1188,7 +1199,7 @@ function createTrendsChart(months, totals, completes) {
                         //we passed! compare this suggestion to our user array
                         for (var j = 0; j < children_with_counts.length; j++) {
                             //console.log(suggestions[i].OwnerId);
-                            if (suggestions[i].OwnerId === children_with_counts[j].Id) {
+                            if (suggestions[i].LastStatusUpdatedBy == children_with_counts[j].Name) {
                                 //console.log("it's a match");
                             	if (suggestions[i].Status == actionedText) { 
                                 	children_with_counts[j].actioned++;
@@ -1208,7 +1219,7 @@ function createTrendsChart(months, totals, completes) {
                 }
             } else { //no need to respect the filters
                 for (var j = 0; j < children_with_counts.length; j++) {
-                    if (suggestions[i].OwnerId === children_with_counts[j].Id) {
+                	if (suggestions[i].LastStatusUpdatedBy == children_with_counts[j].Name) {
                         //console.log("it's a match");
                         if (suggestions[i].Status == actionedText) { 
                            	children_with_counts[j].actioned++;
@@ -1232,7 +1243,7 @@ function createTrendsChart(months, totals, completes) {
     function createTeamPicker(users) {
         var team_options = '';
         for (var i = 0; i < users.length; i++) {
-            team_options += '<option value="' + users[i].Id + '">' + users[i].Name + '</option>';
+            team_options += '<option value="' + users[i].Name + '">' + users[i].Name + '</option>';
         }
 
         $("#team_picker").append(team_options);
@@ -1279,7 +1290,7 @@ function createTrendsChart(months, totals, completes) {
         return table_data;
     }
 
-    function buildTable(data, nameFilter, statusFilter, typeFilter) {
+    function buildTable(data, lastStatusUpdatedByFilter, statusFilter, typeFilter, selected_users) {
 
         var $table = $('#bootstrap-table');
 
@@ -1301,8 +1312,8 @@ function createTrendsChart(months, totals, completes) {
             }
             //console.log(row.status);
 
-            if (nameFilter || statusFilter) {
-                if (nameFilter === row.name && statusFilter === row.status) {
+            if (lastStatusUpdatedByFilter || statusFilter) {
+                if (lastStatusUpdatedByFilter === row.lastStatusUpdatedBy && statusFilter === row.status) {
                     rows.push(row);
                 }
             } else if (typeFilter) {
@@ -1444,7 +1455,7 @@ function createTrendsChart(months, totals, completes) {
             }],
             ownerIdLookup:{},
             ownerIdList:[],
-            usersList: [],
+            usersList:[],
             monthly_suggestions: {
                 complete: [],
                 total: []
@@ -1484,10 +1495,10 @@ function createTrendsChart(months, totals, completes) {
                 //console.log($("#team_picker").val());
         if (users) {
             //pair down subordinate user data set if we're using those filters
-            for (var i = 0; i < appData.subordinateUsers.length; i++) {
+            for (var i = 0; i < appData.usersList.length; i++) {
                 for (var j = 0; j < selected_users.length; j++) {
-                    if (selected_users[j] === appData.subordinateUsers[i].Id) {
-                        team_subset.push(appData.subordinateUsers[i]);
+                    if (selected_users[j] === appData.usersList[i].Name) {
+                        team_subset.push(appData.usersList[i]);
                         use_team_subset = true;
                     }
                 }
@@ -1498,7 +1509,7 @@ function createTrendsChart(months, totals, completes) {
         if (use_team_subset) {
             new_user_chart_data = countSuggestionsByUserByStatus(selected_products_set, selected_drivers_set, appData.suggestions, team_subset);
         } else {
-            new_user_chart_data = countSuggestionsByUserByStatus(selected_products_set, selected_drivers_set, appData.suggestions, appData.subordinateUsers);
+            new_user_chart_data = countSuggestionsByUserByStatus(selected_products_set, selected_drivers_set, appData.suggestions, appData.usersList);
         }
         //console.log(new_user_chart_data);
         createTeamChart(new_user_chart_data);
@@ -1520,7 +1531,7 @@ function createTrendsChart(months, totals, completes) {
             appData.accountId = accountId;
             //console.log(appData.currentUser.Id);
             return getUserId();
-        }).then(function(userId) {
+    	}).then(function(userId) {
             //console.log(userId);
             appData.currentUser.Id = userId;
             //console.log(appData.currentUser.Id);
@@ -1693,6 +1704,7 @@ function createTrendsChart(months, totals, completes) {
                 disableDriverFilter();
                 disableProductFilter();
             }
+
             //for the first pass, the filters will be null, but something HAS to be selected the next time things go around, so default behavior for Null would be to count everything
             return countSuggestionsByType(null, null, null, appData.recordtype_map, appData.suggestions);
         }).then(function(my_suggestions_by_type_data) {
@@ -1717,12 +1729,13 @@ function createTrendsChart(months, totals, completes) {
             //console.log(appData.months_to_date);
 
             return createTrendsChart(appData.months_to_date, appData.monthly_suggestions.total, appData.monthly_suggestions.complete);
-            $('#response').append('<pre>before: getUserNames</pre>');
+        }).then(function() {
+        	$('#response').append('<pre>before: getUserNames</pre>');
            	return getUserNames(appData.ownerIdList);
         }).then(function(userNames) {
   //      	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
         	try {
-	        	var ownerIdLookup = {};
+	        	var ownerIdLookup = {}, tempList = [];
 	        	for (var i = 0;i < userNames.length; i++) {
 	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
 	        	}
@@ -1733,19 +1746,23 @@ function createTrendsChart(months, totals, completes) {
 	        //		$('#response').append('<pre>appData.ownerIdLookup[appData.suggestions[i].ownerId] : ' + appData.ownerIdLookup[appData.suggestions[i].OwnerId] +'</pre>');
 	        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
 	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
-	        	    appData.usersList.push(appData.suggestions[i].LastStatusUpdatedBy);
+	        	    tempList.push(appData.suggestions[i].LastStatusUpdatedBy);
 	        	}
 	        	
 	        	//Remove Duplicates
-	        	appData.usersList = appData.usersList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+	        	tempList = tempList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+	        	for (var i = 0; i < tempList.length; i++) {
+	        		appData.usersList.push({'Name':tempList[i]});
+	        	}
         	
         		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
         	} catch(e){
         		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
         	}
-            return countSuggestionsByUserByStatus(null, null, appData.suggestions, appData.subordinateUsers);
+            return countSuggestionsByUserByStatus(null, null, appData.suggestions, appData.usersList);
         }).then(function(children_with_counts) {
-            appData.subordinateUsers = children_with_counts.slice(0);
+        	$('#response').append('<pre>countSuggestionsByUserByStatus - children_with_counts: ' + JSON.stringify(children_with_counts, null, "\t") +'</pre>');
+            appData.usersList = children_with_counts.slice(0);
             console.log(appData.subordinateUsers);
 
             //get the overall average for the team
@@ -1753,12 +1770,12 @@ function createTrendsChart(months, totals, completes) {
             var dismissedSum = 0;
             var completedSum = 0;
             var actionedSum = 0;
-            var len = appData.subordinateUsers.length;
+            var len = appData.usersList.length;
             for (var i = 0; i < len; i++) {
-                pendingSum += appData.subordinateUsers[i].pending;
-                dismissedSum += appData.subordinateUsers[i].dismissed;
-                completedSum += appData.subordinateUsers[i].completed;
-                actionedSum += appData.subordinateUsers[i].actioned;
+                pendingSum += appData.usersList[i].pending;
+                dismissedSum += appData.usersList[i].dismissed;
+                completedSum += appData.usersList[i].completed;
+                actionedSum += appData.usersList[i].actioned;
             }
             appData.average_data.pending = (pendingSum / len);
             appData.average_data.dismissed = (dismissedSum / len);
@@ -1769,9 +1786,10 @@ function createTrendsChart(months, totals, completes) {
             //display the overal average for the team
             return createAverageChart(appData.average_data);
         }).then(function() {
-            return createTeamChart(appData.subordinateUsers);
+            return createTeamChart(appData.usersList);
         }).then(function() {
-            return createTeamPicker(appData.subordinateUsers);
+            return createTeamPicker(appData.usersList);
+        }).then(function() {
             //console.log(appData);
             return aggregateSuggestionsForTable(appData);
         }).then(function(table_data) {
