@@ -1125,7 +1125,7 @@ $(document).ready(function() {
 					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
 					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,
 					LastStatusUpdatedBy: '',
-					Status: suggestions[i].Status_AZ_US__c.value
+					Status: ''
                 };
                 appData.ownerIdList.push(suggestions[i].OwnerId.value);
                 
@@ -1143,8 +1143,9 @@ $(document).ready(function() {
 	                	this_suggestion.type = insightText;
 	                    break;
             	}
+                //Calculate LastStatusUpdatedBy and Status
                 this_suggestion.LastStatusUpdatedBy = this_suggestion.Actioned_By_AZ_US__c || this_suggestion.Completed_By_AZ_US__c || this_suggestion.Dismissed_By_AZ_US__c || '';
-               
+                this_suggestion.Status = this_suggestion.Actioned_vod__c ? 'Actioned' : this_suggestion.Marked_As_Complete_vod__c ? 'Marked as Complete' : this_suggestion.Dismissed_vod__c ? 'Dismissed' : 'Pending';
                 appData.suggestionIds[i] = suggestions[i].Id.value;
                 //console.log(this_suggestion);
                 appData.suggestions[i] = this_suggestion;
@@ -1307,11 +1308,7 @@ $(document).ready(function() {
         })
     }
 
-try { 
     mainController();
-} catch(e){
-	$('#response').append('<pre>Syntax error : ' + JSON.stringify(e, null, "\t") + '</pre>');	
-}
 
 });
 </script>
