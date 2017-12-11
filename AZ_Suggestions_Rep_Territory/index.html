@@ -32,6 +32,10 @@
 					        <span class="icon-bar"></span>
 					        <span class="icon-bar"></span>
 					    </button>
+					    <div class="btn-group btn-toggle"> 
+				        	<button class="btn btn-xs btn-success">Active</button>
+				    		<button class="btn btn-xs btn-default">All</button>
+				    	</div>
                         <ul class="nav navbar-nav navbar-right">
                             <li>
                                 <a id="driver_filter_label">Driver:</a>
@@ -703,23 +707,16 @@ $(document).ready(function() {
     }
     
     function getUserNames(ownerIds) {
-        //console.log('getting userNames');
- //       $('#response').append('<pre>userId : ' + JSON.stringify(ownerIds, null, "\t") + '</pre>');
         var inObject = ds.getInStatement(ownerIds);
-        //['005U0000002MmZfIAK','0050P000007E7I1QAK','005U0000002MmeTIAS','0050P000006hwvxQAA','0050P000007E8omQAC','0050P000007E8oZQAS']
 
         var queryConfig = {
             userNames: {
                 object: 'User',
                 fields: ['Id', 'Name'],
                 where: 'Id IN ' + inObject
-   	//			where : 'Id = \'' + ownerIds[0] +'\''
             }
         };
-
         
- //       $('#response').append('<pre>inside: getUserName</pre>');
- //       $('#response').append('<pre>queryConfig : ' + JSON.stringify(queryConfig.userNames, null, "\t") + '</pre>');
         var deferred = $q.defer();
 
         ds.runQuery(queryConfig.userNames)
@@ -818,17 +815,18 @@ $(document).ready(function() {
     }
 
     //returns true if a match is found
-    function countAgainstTagFilters(applyProductFilter, applyDriverFilter, productFilter, driverFilter, suggestionTags) {
+    function countAgainstTagFilters(productFilter, driverFilter, suggestionTags) {
         //console.log(suggestionTags);
         $('#response').append('<pre>countAgainstTagFilters - entered: ' +  JSON.stringify(driverFilter, null, "\t") + '</pre>');
         var product_match = false;
         var driver_match = false;
 
-        if (applyProductFilter || applyDriverFilter) {
+        if (productFilter || driverFilter) {
             if (suggestionTags !== undefined) {
                 for (var i = 0; i < suggestionTags.length; i++) {
                     if (productFilter.has(suggestionTags[i].Product_Name__c)) {
                         product_match = true;
+                        $('#response').append('<pre>countAgainstTagFilters - entered: productFilter.has(suggestionTags[i].Product_vod__c)' +  JSON.stringify(productFilter.has(suggestionTags[i].Driver_vod__c), null, "\t") + '</pre>');
                     }
                     if (driverFilter.has(suggestionTags[i].Driver_vod__c)) {
                         driver_match = true;
@@ -850,20 +848,13 @@ $(document).ready(function() {
         var insight = 0;
         var objective = 0;
 
-        var applyProductFilter = !(productFilter === null);
-        var applyDriverFilter = !(driverFilter === null);
-
         for (var i = 0; i < suggestions.length; i++) {
             var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));
-            if (applyProductFilter || applyDriverFilter) {
+            if (productFilter || driverFilter) {
                 if (!hasTags) { // no tags get filtered out, not counting them
                     break;
                 } else { //check tags
-                    if (countAgainstTagFilters(applyProductFilter,
-                            applyDriverFilter,
-                            productFilter,
-                            driverFilter,
-                            suggestions[i].tags)) {
+                    if (countAgainstTagFilters(productFilter, driverFilter, suggestions[i].tags)) {
                         if (suggestions[i].type == callText) {
                         	calls++;
                         } else if (suggestions[i].type == emailText) {
@@ -904,9 +895,6 @@ $(document).ready(function() {
             complete: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         };
 
-        var applyProductFilter = !(productFilter === null);
-        var applyDriverFilter = !(driverFilter === null);
-
         outerloop:
             for (var i = 0; i < suggestions.length; i++) {
 
@@ -915,18 +903,13 @@ $(document).ready(function() {
                     continue;
                 }
 
-                if (applyProductFilter || applyDriverFilter) {
+                if (productFilter || driverFilter) {
                     var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));
 
                     if (!hasTags) { // no tags get filtered out, not counting them
                         continue;
                     } else { //check tags
-                        if (countAgainstTagFilters(applyProductFilter,
-                                applyDriverFilter,
-                                productFilter,
-                                driverFilter,
-                                suggestions[i].tags)) {
-
+                        if (countAgainstTagFilters(productFilter, driverFilter, suggestions[i].tags)) {
                             var month = new Date(suggestions[i].CreatedDate).getMonth();
                             count.total[month]++;
                             if (suggestions[i].Status == completedText || suggestions[i].Status == actionedText) {
@@ -968,32 +951,24 @@ $(document).ready(function() {
         my_count["completed"] = 0;
         //console.log(my_count);
 
-        var applyProductFilter = !(productFilter === null);
-        var applyDriverFilter = !(driverFilter === null);
+    //    var applyProductFilter = !(productFilter === null);
+    //    var applyDriverFilter = !(driverFilter === null);
 
         for (var i = 0; i < suggestions.length; i++) {
-            if (applyProductFilter || applyDriverFilter) { //if we're respecting the filters
+            if (productFilter || driverFilter) { //if we're respecting the filters
                 var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));
                 if (!hasTags) { // no tags get filtered out, not counting them
                     continue;
                 } else { //check tags
-                    if (countAgainstTagFilters(applyProductFilter,
-                            applyDriverFilter,
-                            productFilter,
-                            driverFilter,
-                            suggestions[i].tags)) {
+                    if (countAgainstTagFilters(productFilter, driverFilter, suggestions[i].tags)) {
                     	$('#response').append('<pre>countSuggestionsByStatus - entered-back: countAgainstTagFilters ' +  JSON.stringify(suggestions[i].Status, null, "\t") + '</pre>');
 	                   	 if (suggestions[i].Status == actionedText) { 
-	       	                     //console.log("Actioned!");
 	       	                     my_count["actioned"]++;
 	       	             } else if (suggestions[i].Status == completedText) {
-	                            //console.log("Complete!");
 	       	                  my_count["completed"]++;
 	       	             } else if (suggestions[i].Status == dismissedText) {
-	       	                     //console.log("Dismissed!");
 	       	                     my_count["dismissed"]++;
 	       	             } else if (suggestions[i].Status == pendingText) {
-	       	                         //console.log("Pending!!");
 	       	                     my_count["pending"]++;
 	       	             }
 	                   	 
@@ -1004,16 +979,12 @@ $(document).ready(function() {
             } else { //no need to respect the filters
                     //console.log("it's a match");
             	if (suggestions[i].Status == actionedText) { 
-	                     //console.log("Actioned!");
 	                     my_count["actioned"]++;
 	             } else if (suggestions[i].Status == completedText) {
-                   //console.log("Complete!");
 	                  my_count["completed"]++;
 	             } else if (suggestions[i].Status == dismissedText) {
-	                     //console.log("Dismissed!");
 	                     my_count["dismissed"]++;
 	             } else if (suggestions[i].Status == pendingText) {
-	                         //console.log("Pending!!");
 	                     my_count["pending"]++;
 	             }
                 

@@ -20,16 +20,20 @@
 
 <body class="sidebar-mini">
     <div class="wrapper">
-    	<div id="response">
-    	</div>
         <div class="main-panel">
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
-                 <!--   <div class="navbar-header">
-                        <a class="navbar-brand"></a>
-                    </div>
-				-->
                     <div class="collapse navbar-collapse">
+                    	<button type="button" style="display:block!important;margint-top:0px;"class="navbar-toggle collapsed pull-left" data-toggle="modal" data-target="#exampleModal" aria-expanded="false">
+					        <span class="sr-only">Toggle navigation</span>
+					        <span class="icon-bar"></span>
+					        <span class="icon-bar"></span>
+					        <span class="icon-bar"></span>
+					    </button>
+					    <div class="btn-group btn-toggle"> 
+				        	<button class="btn btn-xs btn-success">Active</button>
+				    		<button class="btn btn-xs btn-default">All</button>
+				    	</div>
                         <ul class="nav navbar-nav navbar-right">
                             <li style="width: 320px;padding-left:5px;">
                                 <select multiple data-title="Please Select Team Members" name="my_team" id="team_picker" class="selectpicker team_picker" data-style="btn-info btn-fill btn-block">
@@ -112,7 +116,7 @@
 										<th data-field="accountName" data-sortable="true">Account Name</th>
                                         <th data-field="type" data-sortable="true">Type</th>
                                         <th data-field="status" data-sortable="true">Status</th>
-                                        <th data-field="lastStatusBy" data-sortable="true">Last Status By</th>
+                                        <th data-field="lastStatusUpdatedBy" data-sortable="true">Last Status Updated By</th>
                                         <th data-field="postedDate" data-sortable="true">Posted Date</th>
 										<th data-field="expirationDate" data-sortable="true">Expiration Date</th>
 										<th data-field="reason" data-sortable="true">Reason</th>
@@ -127,6 +131,25 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Console Logs</h5>
+	      </div>
+	      <div class="modal-body">
+				<div id="response">
+    			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
 </body>
 <!--   Core JS Files and PerfectScrollbar library inside jquery.ui   -->
 <script src="assets/js/jquery.min.js" type="text/javascript"></script>
@@ -818,11 +841,10 @@ function createTrendsChart(months, totals, completes) {
         var inOwner = ds.getInStatement(userIds);
    //     $('#response').append('<div> Owner :' + JSON.stringify(inOwner, null, "\t") + '</div>');
 
-        var queryConfig = {
+       var queryConfig = {
             suggestions: {
                 object: 'Suggestion_vod__c',
-                fields: ['OwnerId','Account_Name_Stamp_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c','Title_vod__c','Reason_vod__c','Posted_Date_vod__c', 'Expiration_Date_vod__c']
-   //             where: 'OwnerId IN ' + inOwner
+                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Owner_District_AZ_US__c', 'Actioned_By_AZ_US__c', 'Completed_By_AZ_US__c', 'Dismissed_By_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c']
             }
         };
 
@@ -836,12 +858,29 @@ function createTrendsChart(months, totals, completes) {
         return deferred.promise;
     }
 	
-	function getAccountNames(accountIds) {
-        //console.log("getting Account Names from account Id's");
+    function getUserNames(ownerIds) {
+        var inObject = ds.getInStatement(ownerIds);
+
+        var queryConfig = {
+            userNames: {
+                object: 'User',
+                fields: ['Id', 'Name'],
+                where: 'Id IN ' + inObject
+            }
+        };
         
+        var deferred = $q.defer();
+
+        ds.runQuery(queryConfig.userNames)
+            .then(function(result) {
+                deferred.resolve(result.data);
+            });
+
+        return deferred.promise;
+    }
+    
+	function getAccountNames(accountIds) {
         var accIds = ds.getInStatement(accountIds);
-        //var accIds = ds.getInStatement(['001U000000pMeKfIAK', '001U000000pLpEpIAK', '001U000000pLpEQIA0','001U000000pLwcvIAC', '001U000000pM78IIAS', '0010P00001oXvksQAC', '001U000000pM3YPIA0','001U000001OdO3NIAV','001U000001OdO3NIAV', '001U000000pLwxEIAS','001U000000pLwxEIAS','001U000000pM0WnIAK','001U000000pMqtRIAS','001U000001Vli5eIAB','001U000000pLmJmIAK']);
-      //  $('#response').append('<pre> accounts :' + JSON.stringify(accIds, null, "\t") + '</pre>');
         var queryConfig = {
             accounts: {
                 object: 'Account',
@@ -994,75 +1033,33 @@ function createTrendsChart(months, totals, completes) {
 
             var hasTags = (suggestions[i].hasOwnProperty('tags') || !(typeof suggestions[i]["tags"] != 'undefined'));//hacky thing, not good for production
 
-            switch (suggestions[i].RecordTypeId) {
-                case recordTypeMap.Call_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                calls++
-                            }
-                        }
-                    } else {
-                        calls++;
-                    }
+            if (applyProductFilter || applyDriverFilter) {
+                if (!hasTags) { // no tags get filtered out, not counting them
                     break;
-                case recordTypeMap.Email_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                email++
-                            }
+                } else { //check tags
+                    if (countAgainstTagFilters(applyProductFilter, applyDriverFilter, productFilter, driverFilter, suggestions[i].tags)) {
+                        if (suggestions[i].type == callText) {
+                        	calls++;
+                        } else if (suggestions[i].type == emailText) {
+                        	email++;
+                        } else if (suggestions[i].type == callObjectiveText) {
+                        	objective++;
+                        } else if (suggestions[i].type == insightText) {
+                        	insight++;
                         }
-                    } else {
-                        email++;
+                        	
                     }
-                    break;
-                case recordTypeMap.Insight_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                insight++
-                            }
-                        }
-                    } else {
-                        insight++;
-                    }
-                    break;
-                case recordTypeMap.Call_Objective_vod:
-                    if (applyProductFilter || applyDriverFilter) {
-                        if (!hasTags) { // no tags get filtered out, not counting them
-                            break;
-                        } else { //check tags
-                            if (countAgainstTagFilters(applyProductFilter,
-                                    applyDriverFilter,
-                                    productFilter,
-                                    driverFilter,
-                                    suggestions[i].tags)) {
-                                objective++
-                            }
-                        }
-                    } else {
-                        objective++;
-                    }
-                    break;
+                }
+            } else {
+            	if (suggestions[i].type == callText) {
+                	calls++;
+                } else if (suggestions[i].type == emailText) {
+                	email++;
+                } else if (suggestions[i].type == callObjectiveText) {
+                	objective++;
+                } else if (suggestions[i].type == insightText) {
+                	insight++;
+                }
             }
         }
         return [calls, email, insight, objective];
@@ -1117,7 +1114,7 @@ function createTrendsChart(months, totals, completes) {
 
                             var month = new Date(suggestions[i].CreatedDate).getMonth();
                             count.total[month]++;
-                            if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
+                            if (suggestions[i].Status == completedText || suggestions[i].Status == actionedText) {
                                 count.complete[month]++;
                             }
                         } else {
@@ -1127,7 +1124,7 @@ function createTrendsChart(months, totals, completes) {
                 } else {
                     var month = new Date(suggestions[i].CreatedDate).getMonth();
                     count.total[month]++;
-                    if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
+                    if (suggestions[i].Status == completedText || suggestions[i].Status == actionedText) {
                         count.complete[month]++;
                     }
                 }
@@ -1177,23 +1174,15 @@ function createTrendsChart(months, totals, completes) {
                         //we passed! compare this suggestion to our user array
                         for (var j = 0; j < children_with_counts.length; j++) {
                             //console.log(suggestions[i].OwnerId);
-                            var flag = false;
                             if (suggestions[i].OwnerId === children_with_counts[j].Id) {
                                 //console.log("it's a match");
-                                if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
-                                    //console.log("Complete!");
-                                    //children_with_counts[j].completed++;
+                            	if (suggestions[i].Status == actionedText) { 
                                 	children_with_counts[j].actioned++;
-                                	flag = true;
-                                /* } else if (suggestions[i].Actioned_vod__c) {
-                                    //console.log("Actioned!");
-                                    children_with_counts[j].actioned++; */
-                                } else if (suggestions[i].Dismissed_vod__c) {
-                                    //console.log("Dismissed!");
+                            	} else if (suggestions[i].Status == completedText) {
+                            		children_with_counts[j].completed++;
+                            	} else if (suggestions[i].Status == dismissedText) {
                                     children_with_counts[j].dismissed++;
-                                    flag = true;
-                                } else if (suggestions[i].IsPending === 1 || !flag) {
-                                    //console.log("Pending!!");
+                            	} else if (suggestions[i].Status == pendingText) {
                                     children_with_counts[j].pending++;
                                 }
                             }
@@ -1205,24 +1194,15 @@ function createTrendsChart(months, totals, completes) {
                 }
             } else { //no need to respect the filters
                 for (var j = 0; j < children_with_counts.length; j++) {
-
-                	var flag = false;
                     if (suggestions[i].OwnerId === children_with_counts[j].Id) {
                         //console.log("it's a match");
-                        if (suggestions[i].Marked_As_Complete_vod__c || suggestions[i].Actioned_vod__c) {
-                            //console.log("Complete!");
-                            //children_with_counts[j].completed++;
-                        	children_with_counts[j].actioned++;
-                        	flag = true;
-                        /* } else if (suggestions[i].Actioned_vod__c) {
-                            //console.log("Actioned!");
-                            children_with_counts[j].actioned++; */
-                        } else if (suggestions[i].Dismissed_vod__c) {
-                            //console.log("Dismissed!");
+                        if (suggestions[i].Status == actionedText) { 
+                           	children_with_counts[j].actioned++;
+                       	} else if (suggestions[i].Status == completedText) {
+                       		children_with_counts[j].completed++;
+                       	} else if (suggestions[i].Status == dismissedText) {
                             children_with_counts[j].dismissed++;
-                            flag = true;
-                        } else if (suggestions[i].IsPending === 1 || !flag) {
-                            //console.log("Pending!!");
+                       	} else if (suggestions[i].Status == pendingText) {
                             children_with_counts[j].pending++;
                         }
                     }
@@ -1259,41 +1239,19 @@ function createTrendsChart(months, totals, completes) {
             var row = {};
             //match to team member
             //console.log('looking for matching team member');
-            for (var j = 0; j < data.subordinateUsers.length; j++) {
+            /* for (var j = 0; j < data.subordinateUsers.length; j++) {
                 if (data.subordinateUsers[j].Id === data.suggestions[i].OwnerId) {
                     row.name = data.subordinateUsers[j].Name;
                 }
-            }
+            } */
             row.title = data.suggestions[i].Title_vod__c;
             row.reason = data.suggestions[i].Reason_vod__c;
             //match type
             //console.log(data.suggestions[i].RecordTypeId);
-            switch (data.suggestions[i].RecordTypeId) {
-                case data.recordtype_map.Call_vod:
-                    row.type = 'Call';
-                    break;
-                case data.recordtype_map.Call_Objective_vod:
-                    row.type = 'Call Objective';
-                    break;
-                case data.recordtype_map.Email_vod:
-                    row.type = 'Email';
-                    break;
-                case data.recordtype_map.Insight_vod:
-                    row.type = 'Insight';
-                    break;
-            }
-            //console.log(row.type);
-            //match status
-            //console.log('checking status');
-            if (data.suggestions[i].Marked_As_Complete_vod__c || data.suggestions[i].Actioned_vod__c) {
-                /* row.status = 'Marked Complete';
-            } else if (data.suggestions[i].Actioned_vod__c) { */
-                row.status = 'Actioned';
-            } else if (data.suggestions[i].Dismissed_vod__c) {
-                row.status = 'Dismissed';
-            } else {
-                row.status = 'Pending';
-            }
+            row.type = data.suggestions[i].type;
+			row.status = data.suggestions[i].Status;
+			row.lastStatusUpdatedBy = data.suggestions[i].LastStatusUpdatedBy;
+			
             //console.log(row.status);
             //stamp date
             //console.log('checking date');
@@ -1317,11 +1275,12 @@ function createTrendsChart(months, totals, completes) {
         for (var i = 0; i < data.length; i++) {
 
             var row = {
-                name: data[i].name,
+   //             name: data[i].name,
   //              title: data[i].title,
   				accountName: data[i].accountName,
                 type: data[i].type,
                 status: data[i].status,
+                lastStatusUpdatedBy: data[i].lastStatusUpdatedBy,
                 postedDate: data[i].postedDate,
 				expirationDate: data[i].expirationDate,
 				reason: data[i].reason
@@ -1423,7 +1382,15 @@ function createTrendsChart(months, totals, completes) {
         });
 
     }
-
+    var actionedText = 'Actioned',
+	    completedText = 'Marked as Complete',
+	    pendingText = 'Pending',
+	    dismissedText = 'Dismissed';
+	    
+	var callText = 'Call',
+	    callObjectiveText = 'Call Objective',
+	    emailText = 'Email',
+	    insightText = 'Insight';
     var appData = {
             product_map: [{
                 Id: '',
@@ -1461,6 +1428,8 @@ function createTrendsChart(months, totals, completes) {
                 }],
                 IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
             }],
+            ownerIdLookup:{},
+            ownerIdList:[],
             monthly_suggestions: {
                 complete: [],
                 total: []
@@ -1586,8 +1555,9 @@ function createTrendsChart(months, totals, completes) {
             //console.log(suggestions);
         //    $('#response').append('<div>getSuggestions - passed </div>');
             var accountIds = [];
+            appData.ownerIdList = [];
             for (var i = 0; i < suggestions.length; i++) {
-                var this_suggestion = {
+            	var this_suggestion = {
                     Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
                     Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
                     Actioned_vod__c: suggestions[i].Actioned_vod__c.value,
@@ -1600,19 +1570,37 @@ function createTrendsChart(months, totals, completes) {
                     Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
 					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
 					Account_vod__c: suggestions[i].Account_vod__c.value,
-					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value
-				};
-					
+					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
+					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
+					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
+					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,
+					LastStatusUpdatedBy: '',
+					Status: ''
+                };
+            	appData.ownerIdList.push(suggestions[i].OwnerId.value);
+            	
                 appData.suggestionIds[i] = suggestions[i].Id.value;
+                switch (suggestions[i].RecordTypeId.value) {
+	                case appData.recordtype_map.Call_vod:
+	                	this_suggestion.type = callText;
+	                    break;
+	                case appData.recordtype_map.Call_Objective_vod:
+	                	this_suggestion.type = callObjectiveText;
+	                    break;
+	                case appData.recordtype_map.Email_vod:
+	                	this_suggestion.type = emailText;
+	                    break;
+	                case appData.recordtype_map.Insight_vod:
+	                	this_suggestion.type = insightText;
+	                    break;
+	        	}
+                this_suggestion.LastStatusUpdatedBy = this_suggestion.Actioned_By_AZ_US__c || this_suggestion.Completed_By_AZ_US__c || this_suggestion.Dismissed_By_AZ_US__c || '';
+                this_suggestion.Status = this_suggestion.Actioned_vod__c ? 'Actioned' : this_suggestion.Marked_As_Complete_vod__c ? 'Marked as Complete' : this_suggestion.Dismissed_vod__c ? 'Dismissed' : 'Pending';
      //           accountIds[i] = suggestions[i].Account_vod__c.value;
                 //console.log(this_suggestion);
                 appData.suggestions[i] = this_suggestion;
             }
-     //       $('#response').append('<div>accountIds - before filter </div>');
-     //       $('#response').append('<div>' + JSON.stringify(accountIds, null, "\t") + '</div>');
-     //       appData.accountIds = accountIds.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-     //       $('#response').append('<div>accountIds - after filter </div>');
-     //       $('#response').append('<div>' + JSON.stringify(appData.accountIds, null, "\t") + '</div>');
+            appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
             //console.log(appData.suggestionIds);
             //console.log(appData.accountIds);
             return getSuggestionTags(appData.suggestions);
@@ -1687,7 +1675,7 @@ function createTrendsChart(months, totals, completes) {
                 disableProductFilter();
             }
 
-            return getAllSuggestionFeedback();
+   /*          return getAllSuggestionFeedback();
         }).then(function(feedback) {
             //console.log(feedback);
      //       $('#response').append('<div>getAllSuggestionFeedback - passed </div>');
@@ -1710,7 +1698,7 @@ function createTrendsChart(months, totals, completes) {
                     //this suggestion is definiely pending
                     appData.suggestions[i]["IsPending"] = 1;
                 }
-            }
+            } */
 			/* return getAccountNames(appData.accountIds);
         }).then(function(accounts) {
         	//$('#response').append('<div>getAccountNames - passed </div>');
@@ -1779,6 +1767,32 @@ function createTrendsChart(months, totals, completes) {
         }).then(function() {
             return createTeamPicker(appData.subordinateUsers);
         }).then(function() {
+        	
+        }).then(function() {
+       	 
+            //Drive LastStatusUpdatedBy value from ownerId            
+            $('#response').append('<pre>before: getUserNames</pre>');
+           	return getUserNames(appData.ownerIdList);
+        }).then(function(userNames) {
+  //      	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
+        	try {
+	        	var ownerIdLookup = {};
+	        	for (var i = 0;i < userNames.length; i++) {
+	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
+	        	}
+	        	$.extend(appData.ownerIdLookup, ownerIdLookup);
+	        	$('#response').append('<pre>After: ownerIdLookup : ' + JSON.stringify(appData.ownerIdLookup, null, "\t") +'</pre>');
+	        	for (var i = 0; i < appData.suggestions.length; i++) {
+	        //		$('#response').append('<pre>appData.suggestions[i].ownerId : ' + JSON.stringify(appData.suggestions[i].OwnerId, null, "\t") +'</pre>');
+	        //		$('#response').append('<pre>appData.ownerIdLookup[appData.suggestions[i].ownerId] : ' + appData.ownerIdLookup[appData.suggestions[i].OwnerId] +'</pre>');
+	        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
+	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
+	        	}
+        	
+        		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
+        	} catch(e){
+        		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
+        	}
             //console.log(appData);
             return aggregateSuggestionsForTable(appData);
         }).then(function(table_data) {
