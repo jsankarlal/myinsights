@@ -379,15 +379,15 @@ function createAverageChart(mydata) {
                 backgroundColor: dismissedColor,
                 borderColor: dismissedColor
             }, {
-                label: 'Marked Complete',
-                data: [mydata.completed],
-                backgroundColor: completedColor,
-                borderColor: completedColor
-            }, {
                 label: 'Actioned',
                 data: [mydata.actioned],
                 backgroundColor: actionedColor,
                 borderColor: actionedColor
+            }, {
+                label: 'Marked Complete',
+                data: [mydata.completed],
+                backgroundColor: completedColor,
+                borderColor: completedColor
             }]
         },
         options: {
@@ -1692,44 +1692,6 @@ function createTrendsChart(months, totals, completes) {
                 disableDriverFilter();
                 disableProductFilter();
             }
-
-   /*          return getAllSuggestionFeedback();
-        }).then(function(feedback) {
-            //console.log(feedback);
-     //       $('#response').append('<div>getAllSuggestionFeedback - passed </div>');
-             //we only care if a suggestion has feedback, use a set to dedupe
-            var suggestions_with_feedback_set = new Set();
-            for (var i = 0; i < feedback.length; i++) {
-                suggestions_with_feedback_set.add(feedback[i].Suggestion_vod__c.value);
-            }
-            //console.log(suggestions_with_feedback_set);
-
-            //now compare that set to our list of suggestions and tag them appropraitely.
-            for (var i = 0; i < appData.suggestions.length; i++) {
-                //console.log(appData.suggestions[i]);
-
-                //not accounting for senarios if these Values contain the number Zero. Will need to be changed if this is going to production-ready
-                if (!(appData.suggestions[i].Actioned_vod__c) &&
-                    !(appData.suggestions[i].Marked_As_Complete_vod__c) &&
-                    !(appData.suggestions[i].Dismissed_vod__c) && !suggestions_with_feedback_set.has(appData.suggestions[i].Id)) {
-                    //console.log("this suggestion is pending");
-                    //this suggestion is definiely pending
-                    appData.suggestions[i]["IsPending"] = 1;
-                }
-            } */
-			/* return getAccountNames(appData.accountIds);
-        }).then(function(accounts) {
-        	//$('#response').append('<div>getAccountNames - passed </div>');
-            //$('#response').append('<div>' + JSON.stringify(accounts, null, "\t") + ' accounts.length:'+accounts.length+'</div>');
-        	for (var i = 0; i < appData.suggestions.length; i++) {
-                //console.log(appData.suggestions[i]);
-				for(var j = 0; j < accounts.length; j++) {
-                //not accounting for senarios if these Values contain the number Zero. Will need to be changed if this is going to production-ready
-	                if (appData.suggestions[i].Account_vod__c == accounts[j].Id.value) {
-	                	appData.suggestions[i].AccountName = accounts[j].Name.value;
-	                }
-				}
-            }    */    	
             //for the first pass, the filters will be null, but something HAS to be selected the next time things go around, so default behavior for Null would be to count everything
             return countSuggestionsByType(null, null, null, appData.recordtype_map, appData.suggestions);
         }).then(function(my_suggestions_by_type_data) {
