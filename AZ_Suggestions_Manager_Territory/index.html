@@ -1155,9 +1155,10 @@ function createTrendsChart(months, totals, completes) {
         **/
         $('#response').append('<pre>countSuggestionsByUserByStatus - entering: childUsers ' + JSON.stringify(childUsers, null, "\t") +'</pre>');
         $('#response').append('<pre>countSuggestionsByUserByStatus - entering: driverFilter ' + JSON.stringify(driverFilter, null, "\t") +'</pre>');
-        $('#response').append('<pre>countSuggestionsByUserByStatus - entering: productFilter ' + JSON.stringify(productFilter, null, "\t") +'</pre>');
+        $('#response').append('<pre>countSuggestionsByUserByStatus - entering: children_with_counts ' + JSON.stringify(children_with_counts.length, null, "\t") +'</pre>');
         var children_with_counts = childUsers.slice(0);
         //initialize the object shape
+        $('#response').append('<pre>countSuggestionsByUserByStatus - entering: children_with_counts length ' + JSON.stringify(children_with_counts.length, null, "\t") +'</pre>');
         for (var i = 0; i < children_with_counts.length; i++) {
 
             children_with_counts[i]["pending"] = 0;
@@ -1166,7 +1167,7 @@ function createTrendsChart(months, totals, completes) {
             children_with_counts[i]["completed"] = 0;
         }
         //console.log(children_with_counts);
-
+		$('#response').append('<pre>countSuggestionsByUserByStatus - entering: children_with_counts ' + JSON.stringify(children_with_counts, null, "\t") +'</pre>');
         var applyProductFilter = !(productFilter === null);
         var applyDriverFilter = !(driverFilter === null);
 
@@ -1184,7 +1185,7 @@ function createTrendsChart(months, totals, completes) {
                         //we passed! compare this suggestion to our user array
                         for (var j = 0; j < children_with_counts.length; j++) {
                             //console.log(suggestions[i].OwnerId);
-                            if (suggestions[i].LastStatusUpdatedBy === children_with_counts[j]) {
+                            if (suggestions[i].LastStatusUpdatedBy == children_with_counts[j].Name) {
                                 //console.log("it's a match");
                             	if (suggestions[i].Status == actionedText) { 
                                 	children_with_counts[j].actioned++;
@@ -1204,7 +1205,7 @@ function createTrendsChart(months, totals, completes) {
                 }
             } else { //no need to respect the filters
                 for (var j = 0; j < children_with_counts.length; j++) {
-                	if (suggestions[i].LastStatusUpdatedBy === children_with_counts[j]) {
+                	if (suggestions[i].LastStatusUpdatedBy == children_with_counts[j].Name) {
                         //console.log("it's a match");
                         if (suggestions[i].Status == actionedText) { 
                            	children_with_counts[j].actioned++;
@@ -1480,10 +1481,10 @@ function createTrendsChart(months, totals, completes) {
                 //console.log($("#team_picker").val());
         if (users) {
             //pair down subordinate user data set if we're using those filters
-            for (var i = 0; i < appData.subordinateUsers.length; i++) {
+            for (var i = 0; i < appData.usersList.length; i++) {
                 for (var j = 0; j < selected_users.length; j++) {
-                    if (selected_users[j] === appData.subordinateUsers[i].Id) {
-                        team_subset.push(appData.subordinateUsers[i]);
+                    if (selected_users[j] === appData.usersList[i].Name) {
+                        team_subset.push(appData.usersList[i]);
                         use_team_subset = true;
                     }
                 }
@@ -1494,7 +1495,7 @@ function createTrendsChart(months, totals, completes) {
         if (use_team_subset) {
             new_user_chart_data = countSuggestionsByUserByStatus(selected_products_set, selected_drivers_set, appData.suggestions, team_subset);
         } else {
-            new_user_chart_data = countSuggestionsByUserByStatus(selected_products_set, selected_drivers_set, appData.suggestions, appData.subordinateUsers);
+            new_user_chart_data = countSuggestionsByUserByStatus(selected_products_set, selected_drivers_set, appData.suggestions, appData.usersList);
         }
         //console.log(new_user_chart_data);
         createTeamChart(new_user_chart_data);
@@ -1716,7 +1717,7 @@ function createTrendsChart(months, totals, completes) {
         }).then(function(userNames) {
   //      	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
         	try {
-	        	var ownerIdLookup = {};
+	        	var ownerIdLookup = {}, tempList = [];
 	        	for (var i = 0;i < userNames.length; i++) {
 	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
 	        	}
@@ -1727,11 +1728,14 @@ function createTrendsChart(months, totals, completes) {
 	        //		$('#response').append('<pre>appData.ownerIdLookup[appData.suggestions[i].ownerId] : ' + appData.ownerIdLookup[appData.suggestions[i].OwnerId] +'</pre>');
 	        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
 	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
-	        	    appData.usersList.push(appData.suggestions[i].LastStatusUpdatedBy);
+	        	    tempList.push(appData.suggestions[i].LastStatusUpdatedBy);
 	        	}
 	        	
 	        	//Remove Duplicates
-	        	appData.usersList = appData.usersList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+	        	tempList = tempList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+	        	for (var i = 0; i < tempList.length; i++) {
+	        		appData.usersList.push({'Name':tempList[i]});
+	        	}
         	
         		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
         	} catch(e){
