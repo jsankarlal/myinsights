@@ -1734,7 +1734,7 @@ function createTrendsChart(months, totals, completes) {
             return countSuggestionsByUserByStatus(null, null, appData.suggestions, appData.usersList);
         }).then(function(children_with_counts) {
         	$('#response').append('<pre>countSuggestionsByUserByStatus - children_with_counts: ' + JSON.stringify(children_with_counts, null, "\t") +'</pre>');
-            appData.subordinateUsers = children_with_counts.slice(0);
+            appData.usersList = children_with_counts.slice(0);
             console.log(appData.subordinateUsers);
 
             //get the overall average for the team
@@ -1742,12 +1742,12 @@ function createTrendsChart(months, totals, completes) {
             var dismissedSum = 0;
             var completedSum = 0;
             var actionedSum = 0;
-            var len = appData.subordinateUsers.length;
+            var len = appData.usersList.length;
             for (var i = 0; i < len; i++) {
-                pendingSum += appData.subordinateUsers[i].pending;
-                dismissedSum += appData.subordinateUsers[i].dismissed;
-                completedSum += appData.subordinateUsers[i].completed;
-                actionedSum += appData.subordinateUsers[i].actioned;
+                pendingSum += appData.usersList[i].pending;
+                dismissedSum += appData.usersList[i].dismissed;
+                completedSum += appData.usersList[i].completed;
+                actionedSum += appData.usersList[i].actioned;
             }
             appData.average_data.pending = (pendingSum / len);
             appData.average_data.dismissed = (dismissedSum / len);
