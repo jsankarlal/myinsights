@@ -1029,7 +1029,7 @@ function createTrendsChart(months, totals, completes) {
         for (var i = 0; i < suggestions.length; i++) {
 
             if (applyUserFilter) {
-                if (!userSet.has(suggestions[i].OwnerId)) {
+            	if (!userSet.suggestions[i].LastStatusUpdatedBy) {
                     //console.log("filtering out a suggestion");
                     continue;
                 }
@@ -1099,7 +1099,7 @@ function createTrendsChart(months, totals, completes) {
 
                 if (applyUserFilter) { //skip over users that don't match
 
-                    if (!userSet.has(suggestions[i].OwnerId)) {
+                    if (!userSet.suggestions[i].LastStatusUpdatedBy) {
                         continue;
                     }
                 }
@@ -1178,7 +1178,7 @@ function createTrendsChart(months, totals, completes) {
                         //we passed! compare this suggestion to our user array
                         for (var j = 0; j < children_with_counts.length; j++) {
                             //console.log(suggestions[i].OwnerId);
-                            if (suggestions[i].OwnerId === children_with_counts[j].Id) {
+                            if (suggestions[i].LastStatusUpdatedBy === children_with_counts[j]) {
                                 //console.log("it's a match");
                             	if (suggestions[i].Status == actionedText) { 
                                 	children_with_counts[j].actioned++;
@@ -1198,7 +1198,7 @@ function createTrendsChart(months, totals, completes) {
                 }
             } else { //no need to respect the filters
                 for (var j = 0; j < children_with_counts.length; j++) {
-                    if (suggestions[i].OwnerId === children_with_counts[j].Id) {
+                	if (suggestions[i].LastStatusUpdatedBy === children_with_counts[j]) {
                         //console.log("it's a match");
                         if (suggestions[i].Status == actionedText) { 
                            	children_with_counts[j].actioned++;
@@ -1222,7 +1222,7 @@ function createTrendsChart(months, totals, completes) {
     function createTeamPicker(users) {
         var team_options = '';
         for (var i = 0; i < users.length; i++) {
-            team_options += '<option value="' + users[i].Id + '">' + users[i].Name + '</option>';
+            team_options += '<option value="' + users[i] + '">' + users[i] + '</option>';
         }
 
         $("#team_picker").append(team_options);
@@ -1731,7 +1731,7 @@ function createTrendsChart(months, totals, completes) {
         	} catch(e){
         		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
         	}
-            return countSuggestionsByUserByStatus(null, null, appData.suggestions, appData.subordinateUsers);
+            return countSuggestionsByUserByStatus(null, null, appData.suggestions, appData.usersList);
         }).then(function(children_with_counts) {
         	$('#response').append('<pre>countSuggestionsByUserByStatus - children_with_counts: ' + JSON.stringify(children_with_counts, null, "\t") +'</pre>');
             appData.subordinateUsers = children_with_counts.slice(0);
@@ -1760,7 +1760,7 @@ function createTrendsChart(months, totals, completes) {
         }).then(function() {
             return createTeamChart(appData.subordinateUsers);
         }).then(function() {
-            return createTeamPicker(appData.subordinateUsers);
+            return createTeamPicker(appData.usersList);
         }).then(function() {
             //console.log(appData);
             return aggregateSuggestionsForTable(appData);
