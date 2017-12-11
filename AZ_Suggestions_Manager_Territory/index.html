@@ -1032,7 +1032,7 @@ function createTrendsChart(months, totals, completes) {
         for (var i = 0; i < suggestions.length; i++) {
 
             if (applyUserFilter) {
-            	if (!userSet.suggestions[i].LastStatusUpdatedBy) {
+            	if (!userSet.has(suggestions[i].LastStatusUpdatedBy)) {
                     //console.log("filtering out a suggestion");
                     continue;
                 }
@@ -1102,7 +1102,7 @@ function createTrendsChart(months, totals, completes) {
 
                 if (applyUserFilter) { //skip over users that don't match
 
-                    if (!userSet.suggestions[i].LastStatusUpdatedBy) {
+                    if (!userSet.has(suggestions[i].LastStatusUpdatedBy)) {
                         continue;
                     }
                 }
@@ -1275,7 +1275,7 @@ function createTrendsChart(months, totals, completes) {
         return table_data;
     }
 
-    function buildTable(data, lastStatusUpdatedByFilter, statusFilter, typeFilter) {
+    function buildTable(data, lastStatusUpdatedByFilter, statusFilter, typeFilter, selected_users) {
 
         var $table = $('#bootstrap-table');
 
