@@ -139,24 +139,24 @@ $(document).ready(function() {
 	        var myChart = new Chart(ctx, {
 	            type: 'horizontalBar',
 	            data: {
-	                datasets: [{
+	            	datasets: [{
 	                    label: 'Pending',
-	                    data: appData.filtered.myCount.pending,
+	                    data: [appData.filtered.myCount.pending],
 	                    backgroundColor: pendingColorDisplay,
 	                    borderColor: pendingColorDisplay
 	                },{
 	                    label: 'Dismissed',
-	                    data: appData.filtered.myCount.dismissed,
+	                    data: [appData.filtered.myCount.dismissed],
 	                    backgroundColor: dismissedColorDisplay,
 	                    borderColor: dismissedColorDisplay
 	                }, {
 	                    label: 'Actioned',
-	                    data: appData.filtered.myCount.actioned,
+	                    data: [appData.filtered.myCount.actioned],
 	                    backgroundColor: actionedColorDisplay,
 	                    borderColor: actionedColorDisplay
 	                },{
 	                    label: 'Marked Complete',
-	                    data: appData.filtered.myCount.completed,
+	                    data: [appData.filtered.myCount.completed],
 	                    backgroundColor: completedColorDisplay,
 	                    borderColor: completedColorDisplay
 	                }]
