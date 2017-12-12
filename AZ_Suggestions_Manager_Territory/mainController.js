@@ -601,6 +601,7 @@ $(document).ready(function() {
 
     function getUserId() {
         //console.log("getting userId");
+    	$('#response').append('<pre>getUserId - Entering </pre>');
         var deferred = $q.defer();
 
         ds.getDataForCurrentObject('User', 'Id')
@@ -1358,29 +1359,30 @@ $(document).ready(function() {
     }
 
     function mainController() {
-    	$('#response').append('<div>mainController - passed </div>');
+    	$('#response').append('<div>mainController - entering </div>');
         getUserId().then(function(userId) {
+        	$('#response').append('<pre>getUserId - '+ JSON.stringify(userId, null, "\t") +' </pre>');
             appData.currentUser.Id = userId;
             return getCurrentUserTerritoryId(appData.currentUser.Id);
         }).then(function(terrId) {
-            $('#response').append('<div>getCurrentUserTerritoryId - passed </div>');
+            $('#response').append('<pre>getCurrentUserTerritoryId - passed </pre>');
             appData.currentUser.territoryId = terrId[0].TerritoryId.value; //we assume the manager is only aligned to 1 territory
             //console.log(appData.currentUser.territoryId);
             return getChildTerritoryIds(appData.currentUser.territoryId);
         }).then(function(childTerrIds) {
-            $('#response').append('<div>getChildTerritoryIds - passed </div>');
+            $('#response').append('<pre>getChildTerritoryIds - passed </pre>');
             for (var i = 0; i < childTerrIds.length; i++) {
                 appData.childTerrIds.push(childTerrIds[i].Id.value);
             }
             return getChildUserIds(appData.childTerrIds);
         }).then(function(users) {
-            $('#response').append('<div>getChildUserIds - passed </div>');
+            $('#response').append('<pre>getChildUserIds - passed </pre>');
             for (var i = 0; i < users.length; i++) {
                 appData.subordinateUserIds[i] = users[i].UserId.value;
             }
             return getChildUsers(appData.subordinateUserIds);
         }).then(function(subUsers) {
-            $('#response').append('<div>getChildUsers - passed </div>');
+            $('#response').append('<pre>getChildUsers - passed </pre>');
             var usersList = [];
             for (var i = 0; i < subUsers.length; i++) {
                 var user_to_add = {
@@ -1418,17 +1420,17 @@ $(document).ready(function() {
         	return parseUserNames(userNames);
         }).then(function() {
         	$('#response').append('<pre>before: filterSuggestions</pre>');
-           	return filterSuggestions(null, null, null);
-        }).then(function() {
-            
+           	filterSuggestions(null, null, null);
             //make sure we're only displaying the YTD labels and values:
             var this_month_remove = ((new Date().getMonth()) + 1);
             appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
             appData.filtered.count.total = appData.filtered.count.total.slice(0, this_month_remove);
             appData.filtered.count.complete = appData.filtered.count.complete.slice(0, this_month_remove);
+
             
+            //Create charts
             createSuggestionsByTypeChart(appData.filtered);
-            createTrendsChart(appData.months_to_date, appData.monthly_suggestions.total, appData.monthly_suggestions.complete);
+            createTrendsChart(appData.months_to_date, appData.filtered.count.total, appData.filtered.count.complete);
             createAverageChart(appData.filtered.averageData);
             createTeamChart(appData.filtered.userObject.usersList);
             createTeamPicker(appData.usersList);
@@ -1451,7 +1453,7 @@ $(document).ready(function() {
                 refreshCharts(selected_users, selected_drivers, selected_products);
             });
 
-        })
+        });
     }
     
 
