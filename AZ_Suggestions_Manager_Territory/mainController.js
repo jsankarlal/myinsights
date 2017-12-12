@@ -1097,7 +1097,7 @@ $(document).ready(function() {
 	
 	//Count by created month for Trends chart
 	function calculateMonthsCount(suggestion, count) {
-		var month = new Date(suggestion.CreatedDate).getMonth();
+		var month = new Date(suggestion.createdDate).getMonth();
 		appData.filtered.count.total[month]++;
         if (suggestion.status == completedText || suggestion.status == actionedText) {
         	appData.filtered.count.complete[month]++;
