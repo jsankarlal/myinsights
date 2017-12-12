@@ -257,8 +257,8 @@ $(document).ready(function() {
 
 	        	$('#response').append('<div> clicked createTeamChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
 	        	
-	      		if (chartData.label == 'Marked Complete') {
-	      			chartData.label = 'Marked as Complete';
+	      		if (chartData.datasetLabel == 'Marked Complete') {
+	      			chartData.datasetLabel = 'Marked as Complete';
 	      		}
 	      		$('#response').append('<div> clicked createTeamChart:  chartData.datasetLabel :' + JSON.stringify(chartData.datasetLabel, null, "\t") + '</div>');
 	      		//function buildTable(lastStatusUpdatedBy, statusFilter, typeFilter);
