@@ -1400,8 +1400,8 @@ $(document).ready(function() {
                 appData.usersList.push(user_to_add);
                 usersList.push(subUsers[i].Name.value);
             }
-        //    $('#response').append('<pre>usersList '+ JSON.stringify(usersList, null, "\t") +' </pre>');
-        //    $('#response').append('<pre> appData.usersList '+ JSON.stringify( appData.usersList, null, "\t") +' </pre>');
+            $('#response').append('<pre>usersList '+ JSON.stringify(usersList, null, "\t") +' </pre>');
+            $('#response').append('<pre> appData.usersList '+ JSON.stringify( appData.usersList, null, "\t") +' </pre>');
             appData.filtered.userObject.usersList = appData.usersList;
             appData.usersListSet = new Set(usersList);
             $('#response').append('<pre>usersListSet '+ JSON.stringify(usersListSet, null, "\t") +' </pre>');
