@@ -957,6 +957,10 @@ $(document).ready(function() {
     }
     
 	function filterSuggestions(productFilter, driverFilter, userFilter) {
+		$('#response').append('<pre>inside: filterSuggestions : </pre>');
+		$('#response').append('<pre>productFilter :'+ JSON.stringify(productFilter, null, "\t") +' </pre>');
+		$('#response').append('<pre>driverFilter :'+ JSON.stringify(driverFilter, null, "\t") +' </pre>');
+		$('#response').append('<pre>userFilter :'+ JSON.stringify(userFilter, null, "\t") +' </pre>');
 		try {
 			var filtered = {},
 				tableData = [],
@@ -974,10 +978,7 @@ $(document).ready(function() {
 		            complete: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		        },
 		        applyUserFilter = $.isEmptyObject(userFilter) ? false: true;
-			/*var selected_users_set = null;
-			if(userFilter) {
-				selected_users_set = new Set(selected_users);
-			}*/
+			
 			//create filtered usersList array of object based on the selected users
 			if (applyUserFilter) {
 				var tempList = [];
@@ -1007,8 +1008,13 @@ $(document).ready(function() {
 	           	 	appData.filtered.suggestions.push(thisSuggestion);
 	             }
 	        }
+	        
+	        $('#response').append('<pre>appData.filtered.userObject.usersList : ' + JSON.stringify(appData.filtered.userObject.usersList, null, "\t") +'</pre>');
+	        $('#response').append('<pre>appData.filtered.types : ' + JSON.stringify(appData.filtered.types, null, "\t") +'</pre>');
+	        $('#response').append('<pre>appData.filtered.count : ' + JSON.stringify(appData.filtered.count, null, "\t") +'</pre>');
+	        $('#response').append('<pre>appData.filtered.userObject.averageData : ' + JSON.stringify(appData.filtered.userObject.averageData, null, "\t") +'</pre>');
 		} catch(e) {
-			$('#response').append('<pre>After: filterSuggestions : ' + JSON.stringify(e, null, "\t") +'</pre>');
+			$('#response').append('<pre>error: filterSuggestions : ' + JSON.stringify(e, null, "\t") +'</pre>');
 		}
 	}
 	
@@ -1028,7 +1034,7 @@ $(document).ready(function() {
 		return thisSuggestion;
 	}
 	
-	function calculateSuggestionType(row, types) {
+	function calculateSuggestionsType(row, types) {
 		if (row.type == callText) {
 			types.calls++;
         } else if (row.type == emailText) {
@@ -1227,7 +1233,7 @@ $(document).ready(function() {
     }
     
     function parseSuggestions(suggestions) {
-    	$('#response').append('<pre>inside: parseSuggestions : ' + JSON.stringify('', null, "\t") +'</pre>');
+    	$('#response').append('<pre>inside: parseSuggestions : </pre>');
     	var accountIds = [];
         appData.ownerIdList = [];
         for (var i = 0; i < suggestions.length; i++) {
@@ -1275,7 +1281,7 @@ $(document).ready(function() {
             appData.suggestions[i] = this_suggestion;
         }
         appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-        $('#response').append('<pre> appData.suggestions[appData.suggestions.length-1] : ' + JSON.stringify(appData.suggestions[appData.suggestions.length-1], null, "\t") +'</pre>');
+       // $('#response').append('<pre> appData.suggestions[appData.suggestions.length-1] : ' + JSON.stringify(appData.suggestions[appData.suggestions.length-1], null, "\t") +'</pre>');
     }
     
     function parseSuggestionTags(tags) {
@@ -1368,7 +1374,8 @@ $(document).ready(function() {
         	}
     	
         	appData.suggestions = tempSuggestions;
-        	$('#response').append('<pre> appData.suggestions[appData.suggestions.length-1] : ' + JSON.stringify(appData.suggestions[appData.suggestions.length-1], null, "\t") +'</pre>');
+        	$('#response').append('<pre> appData.suggestions length : ' + JSON.stringify(appData.suggestions.length, null, "\t") +'</pre>');
+     //   	$('#response').append('<pre> appData.suggestions[appData.suggestions.length-1] : ' + JSON.stringify(appData.suggestions[appData.suggestions.length-1], null, "\t") +'</pre>');
         	
     	} catch(e){
     		$('#response').append('<pre>error : ' + JSON.stringify(e, null, "\t") +'</pre>');
