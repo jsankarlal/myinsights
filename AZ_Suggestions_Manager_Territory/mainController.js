@@ -1076,7 +1076,7 @@ $(document).ready(function() {
         
 		for (var i = 0; i < userObject.usersList.length; i++) {
             //console.log(row.lastStatusUpdatedBy);
-			if (suggestion.lastStatusUpdatedBy == usersList[i].Name) {
+			if (suggestion.lastStatusUpdatedBy == userObject.usersList[i].Name) {
 			     //console.log("it's a match");
 			 	if (suggestion.Status == actionedText) { 
 			 		userObject.usersList[i].actioned++;
