@@ -1044,17 +1044,17 @@ $(document).ready(function() {
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
     	try {
     		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : </pre>');
-	    	var applyProductFilter = $.isEmptyObject(productFilter) ? false: true;
+	    	var hasTags = false,
+	    		flag = true,
+	    		applyProductFilter = $.isEmptyObject(productFilter) ? false: true,
 	    		applyDriverFilter = $.isEmptyObject(driverFilter) ? false: true;
-	    		hasTags = false,
-	    		flag = true;
 	    	if(suggestion.tags != 'undefined') {
 	    		if($.isArray(suggestion.tags)) {
 	    			hasTags = suggestion.tags.lengh > 0 ? true : false;
 	    		} 
 	    	}
 	    	
-	    	if (applyProductFilter || applyDriverFilter) {
+	    	if (productFilter || driverFilter) {
 	    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : applyDriverFilter || applyProductFilter</pre>');
 	    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
 	    		if(hasTags) {
@@ -1086,12 +1086,12 @@ $(document).ready(function() {
 				tableData = [],
 				thisSuggestion = {},
 				averageData = {}, 
-			    statusByUser = {},
-		        applyUserFilter = $.isEmptyObject(userFilter) ? false: true;
+			    statusByUser = {};
+		 //       applyUserFilter = userFilter  ? false: true;
 			
 			//create filtered usersList array of object based on the selected users
-			if (applyUserFilter) {
-				$('#response').append('<pre> inside applyUserfilter:  :'+ JSON.stringify(applyUserfilter, null, "\t") +' </pre>');
+			if (userFilter) {
+				$('#response').append('<pre> inside applyUserfilter </pre>');
 				var tempList = [];
 	            for (var i = 0; i < appData.usersList.length; i++) {
 	                if (userFilter.has(appData.usersList[i].Name)) {
@@ -1136,7 +1136,7 @@ $(document).ready(function() {
 	        for (var i = 0; i < appData.suggestions.length; i++) {
 	        	thisSuggestion = aggregateTableData(appData.suggestions[i]);
 	        	//apply user filter for suggestions
-		    	if (applyUserFilter && !selected_users_set.has(thisSuggestion.lastStatusUpdatedBy)) {
+		    	if (userFilter && !userFilter.has(thisSuggestion.lastStatusUpdatedBy)) {
 	                //console.log("filtering out a suggestion");
 	                continue;
 	            }
