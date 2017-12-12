@@ -1044,20 +1044,22 @@ $(document).ready(function() {
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
     	try {
     		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : </pre>');
+    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : productFilter-'+ JSON.stringify(productFilter, null, "\t") +'</pre>');
+    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : driverFilter -'+ JSON.stringify(driverFilter, null, "\t") +'</pre>');
 	    	var hasTags = false,
-	    		flag = true,
-	    		applyProductFilter = $.isEmptyObject(productFilter) ? false: true,
-	    		applyDriverFilter = $.isEmptyObject(driverFilter) ? false: true;
-	    	if(suggestion.tags != 'undefined') {
-	    		if($.isArray(suggestion.tags)) {
-	    			hasTags = suggestion.tags.lengh > 0 ? true : false;
-	    		} 
-	    	}
+	    		flag = true;
 	    	
 	    	if (productFilter || driverFilter) {
+		    	if(suggestion.tags != 'undefined') {
+		    		if($.isArray(suggestion.tags)) {
+		    			hasTags = suggestion.tags.lengh > 0 ? true : false;
+		    		} 
+		    	}
+		    	
 	    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : applyDriverFilter || applyProductFilter</pre>');
 	    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
 	    		if(hasTags) {
+	    			flag = false;
 	    			for(var i=0; i < suggestion.tags.length; i++) {
 	    				if(flag) {
 	    					return flag;
@@ -1065,9 +1067,7 @@ $(document).ready(function() {
 	    				if (productFilter.has(suggestion.tags[i].Product_Name__c) || driverFilter.has(suggestion.tags[i].Driver_Name__c)) {
 	    					flag = true;
 	                    }
-	    			}
-	    		} else {
-	    			flag = false;
+	    			}	    			
 	    		}
 	    	} 
 	    	return flag;
@@ -1083,10 +1083,9 @@ $(document).ready(function() {
 		$('#response').append('<pre>userFilter :'+ JSON.stringify(userFilter, null, "\t") +' </pre>');
 		try {
 			var filtered = {},
-				tableData = [],
+				tableDataCount = 0,
 				thisSuggestion = {},
-				averageData = {}, 
-			    statusByUser = {};
+			    usersFilteredCount = 0;
 		 //       applyUserFilter = userFilter  ? false: true;
 			
 			//create filtered usersList array of object based on the selected users
@@ -1138,6 +1137,7 @@ $(document).ready(function() {
 	        	//apply user filter for suggestions
 		    	if (userFilter && !userFilter.has(thisSuggestion.lastStatusUpdatedBy)) {
 	                //console.log("filtering out a suggestion");
+		    		usersFilteredCount++;
 	                continue;
 	            }
 	            //apply product and driver filters
@@ -1146,8 +1146,12 @@ $(document).ready(function() {
 	           		calculateMonthsCount(thisSuggestion);
 	           		calculateSuggestionsType(thisSuggestion);
 	           	 	appData.filtered.suggestions.push(thisSuggestion);
+	           	 	tableDataCount++;
 	             }
 	        }
+	        $('#response').append('<pre>usersFilteredCount: ' + JSON.stringify(usersFilteredCount, null, "\t") +'</pre>');
+	        $('#response').append('<pre>tableDataCount: ' + JSON.stringify(tableDataCount, null, "\t") +'</pre>');
+	        
 	        var len = appData.filtered.userObject.usersList.length;
 			appData.filtered.userObject.averageData.pendingSum = (appData.filtered.userObject.averageData.pendingSum / len);
 			appData.filtered.userObject.averageData.dismissedSum = (appData.filtered.userObject.averageData.dismissedSum / len);
