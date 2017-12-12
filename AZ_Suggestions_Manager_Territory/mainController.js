@@ -105,15 +105,16 @@
 	 var selected_drivers = null;
 	 var selected_products = null;
 	 var selected_users = null;
-	//Create Team Chart
-	 function createTeamChart(teamData) {
+	
+	 //Create Team Chart
+	 function createTeamChart() {
 
 	        $('#team_chart_container').empty();
 	        $('#team_chart_container').append('<canvas id="suggestions"></canvas>');
 	        if (myChart) {
 	            myChart.destroy();
 	        }
-
+	        var teamData = appData.filtered.userObject.usersList;
 	        var names = [];
 	        var pending = [];
 	        var dismissed = [];
@@ -132,10 +133,6 @@
 	            actioned.push(teamData[i].actioned);
 	        }
 
-	        var myDataSets = [];
-	        for (var i = 0; i < completed.length; i++) {
-
-	        }
 	        //suggestions chart
 	        var ctx = document.getElementById("suggestions");
 	        var myChart = new Chart(ctx, {
@@ -264,39 +261,40 @@
 	      		if (chartData.label == 'Marked Complete') {
 	      			chartData.label = 'Marked as Complete';
 	      		}
-	      	//function buildTable(data, lastStatusUpdatedBy, statusFilter, typeFilter, products, drivers, selected_users);
-	        	buildTable(appData.table_data, chartData.label, chartData.datasetLabel);
+	      	//function buildTable(lastStatusUpdatedBy, statusFilter, typeFilter);
+	        	buildTable(chartData.label, chartData.datasetLabel);
 
 	            document.location.href = 'index.html#bootstrap-table';
 	        }
 	    }
 	 
-	 function createAverageChart(mydata) {
+	 function createAverageChart() {
 		    //console.log(mydata);
 		    //suggestions average chart
-		    var ctxAverage = document.getElementById("suggestions_average");
+		    var myData = appData.filtered.userObject.averageData,
+		    	ctxAverage = document.getElementById("suggestions_average");
 		    var myChartAverage = new Chart(ctxAverage, {
 		        type: 'horizontalBar',
 		        data: {
 		            labels: ['Overall Team Average'],
 		            datasets: [{
 		                label: 'Pending',
-		                data: [mydata.pending],
+		                data: [mydata.pendingSum],
 		                backgroundColor: pendingColor,
 		                borderColor: pendingColor
 		            }, {
 		                label: 'Dismissed',
-		                data: [mydata.dismissed],
+		                data: [mydata.dismissedSum],
 		                backgroundColor: dismissedColor,
 		                borderColor: dismissedColor
 		            }, {
 		                label: 'Actioned',
-		                data: [mydata.actioned],
+		                data: [mydata.actionedSum],
 		                backgroundColor: actionedColor,
 		                borderColor: actionedColor
 		            }, {
 		                label: 'Marked Complete',
-		                data: [mydata.completed],
+		                data: [mydata.completedSum],
 		                backgroundColor: completedColor,
 		                borderColor: completedColor
 		            }]
@@ -369,15 +367,15 @@
 	    }
 
 	    var labels = ["Call", "Email", "Insight", "Call Objective"];
-	    var labels_to_display = [];
-	    var data_to_display = [];
+	    var labels_to_display = ["Call", "Email", "Insight", "Call Objective"];
+	    var data_to_display = [appData.filtered.types.call, appData.filtered.types.email, appData.filtered.types.insight, appData.filtered.types.objective];
 
-	    for (var i = 0; i < labels.length; i++) {
+	    /*for (var i = 0; i < labels.length; i++) {
 	        if (type_data[i] !== 0) {
 	            labels_to_display.push(labels[i]);
 	            data_to_display.push(type_data[i]);
 	        }
-	    }
+	    }*/
 
 	    if (data_to_display.length > 1) {//only render the chart if there are meaningful types to break down.
 	        first_run = false;
@@ -504,22 +502,24 @@
 	        $(".search").find(".form-control").val(currentChart._view.label + '&' + currentChart._view.datasetLabel);
 	        $(".search").find(".form-control").trigger("keyup");**/
 
-	        //function buildTable(data, nameFilter, statusFilter, typeFilter)
+	        //function buildTable(nameFilter, statusFilter, typeFilter)
 	        $('#response').append('<div> clicked createSuggestionsByTypeChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
-	        buildTable(appData.suggestions, null, null, chartData.label);
+	        buildTable(null, null, chartData.label);
 	        document.location.href = 'index.html#bootstrap-table';
 
 	    }
 	}
 	
-	function createTrendsChart(months, totals, completes) {
+	function createTrendsChart() {
 
 	    $('#trends_container').empty();
 	    $('#trends_container').append('<canvas id="chart1"></canvas>');
 	    if (myChart3) {
 	        myChart3.destroy();
 	    }
-
+	    var totals = appData.filtered.count.total,
+	    	completes = appData.filtered.count.complete,
+	    	months = appData.months_to_date;
 	    var ctx3 = document.getElementById("chart1");
 	    var myChart3 = new Chart(ctx3, {
 	        type: 'line',
@@ -998,7 +998,7 @@ $(document).ready(function() {
 	        
 			//initialize types object for types calculation
 			appData.filtered.types = {
-				calls: 0,
+				call: 0,
 	        	email: 0,
 	        	insight: 0,
 	        	objective: 0
@@ -1008,6 +1008,8 @@ $(document).ready(function() {
 	            total: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	            complete: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	        };
+	        //initialize appData.filtered.suggestions object
+	        appData.filtered.suggestions = [];
 	        
 	        for (var i = 0; i < appData.suggestions.length; i++) {
 	        	thisSuggestion = aggregateTableData(appData.suggestions[i]);
@@ -1018,10 +1020,9 @@ $(document).ready(function() {
 	            }
 	            //count by Type for Type Chart
 	            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
-	           		appData.filtered.userObject = countUserStatus(thisSuggestion, appData.filtered.userObject);
-	           		appData.filtered.count = calculateMonthsCount(thisSuggestion, appData.filtered.count);
-	           		appData.filtered.types = calculateSuggestionsType(thisSuggestion, appData.filtered.types);
-	           	 	//appData.filtered.tableData.push(thisSuggestion);
+	           		countUserStatus(thisSuggestion);
+	           		calculateMonthsCount(thisSuggestion);
+	           		calculateSuggestionsType(thisSuggestion);
 	           	 	appData.filtered.suggestions.push(thisSuggestion);
 	             }
 	        }
@@ -1058,66 +1059,61 @@ $(document).ready(function() {
 		return thisSuggestion;
 	}
 	
-	function calculateSuggestionsType(suggstion, types) {
+	function calculateSuggestionsType(suggstion) {
 		if (suggstion.type == callText) {
-			types.calls++;
+			appData.filtered.types.call++;
         } else if (suggstion.type == emailText) {
-        	types.email++;
+        	appData.filtered.types.email++;
         } else if (suggstion.type == callObjectiveText) {
-        	types.objective++;
+        	appData.filtered.types.objective++;
         } else if (suggstion.type == insightText) {
-        	types.insight++;
+        	appData.filtered.types.insight++;
         }
-		return types;
 	}
 	
 	//Count by User Status for Team Chart
-	function countUserStatus(suggestion, userObject) {
+	function countUserStatus(suggestion) {
         
-		for (var i = 0; i < userObject.usersList.length; i++) {
-            //console.log(row.lastStatusUpdatedBy);
-			if (suggestion.lastStatusUpdatedBy == userObject.usersList[i].Name) {
-			     //console.log("it's a match");
+		for (var i = 0; i < appData.filtered.userObject.usersList.length; i++) {
+			if (suggestion.lastStatusUpdatedBy == appData.filtered.userObject.usersList[i].Name) {
 			 	if (suggestion.Status == actionedText) { 
-			 		userObject.usersList[i].actioned++;
-			 		userObject.averageData.actionedSum++
+			 		appData.filtered.userObject.usersList[i].actioned++;
+			 		appData.filtered.userObject.averageData.actionedSum++
 			 	} else if (suggestion.Status == completedText) {
-			 		userObject.usersList[i].completed++;
-			 		userObject.averageData.completedSum++
+			 		appData.filtered.userObject.usersList[i].completed++;
+			 		appData.filtered.userObject.averageData.completedSum++
 			 	} else if (suggestion.Status == dismissedText) {
-			 		userObject.usersList[i].dismissed++;
-			 		userObject.averageData.dismissedSum++
+			 		appData.filtered.userObject.usersList[i].dismissed++;
+			 		appData.filtered.userObject.averageData.dismissedSum++
 			 	} else if (suggestion.Status == pendingText) {
-			 		userObject.usersList[i].pending++;
-			 		userObject.averageData.pendingSum++
+			 		appData.filtered.userObject.usersList[i].pending++;
+			 		appData.filtered.userObject.averageData.pendingSum++
 			     }
 			}
 		}
 		
-		return userObject;
 	}
 	
 	//Count by created month for Trends chart
 	function calculateMonthsCount(suggestion, count) {
 		var month = new Date(suggestion.CreatedDate).getMonth();
-        count.total[month]++;
+		appData.filtered.count.total[month]++;
         if (suggestion.status == completedText || suggestion.status == actionedText) {
-            count.complete[month]++;
+        	appData.filtered.count.complete[month]++;
         }
-		
-        return count;
 	}
 	
     
     //buildTable
 	
 	
-    function buildTable(suggestions, lastStatusUpdatedByFilter, statusFilter, typeFilter) {
+    function buildTable(lastStatusUpdatedByFilter, statusFilter, typeFilter) {
 
         var $table = $('#bootstrap-table'),
         	rows = [],
         	row = {},
-        	markup = '';
+        	markup = '',
+        	suggestions = appData.filtered.suggestions;
        
         for (var i = 0; i < suggestions.length; i++) {
         	row = suggestions[i];
@@ -1220,18 +1216,19 @@ $(document).ready(function() {
 	        appData.filtered.count.complete = appData.filtered.count.complete.slice(0, this_month_remove);
 	        
 	        //CREATE TYPE CHART
-	        createSuggestionsByTypeChart(appData.filtered);
+	        createSuggestionsByTypeChart();
 	        
 	        //CREATE TRENDS CHART
-	        createTrendsChart(appData.months_to_date, appData.filtered.count.total, appData.filtered.count.complete);
+	        createTrendsChart();
 	        
 	        //CREATE AVERAGE USERS CHART
-	        createAverageChart(appData.filtered.userObject.averageData);
+	        createAverageChart();
 	        
 	        //CREATE AVERAGE USERS CHART
-	        createTeamChart(appData.filtered.userObject.usersList);
+	        createTeamChart();
 	      //  createTeamPicker(appData.usersList);
-	        buildTable(appData.filtered.suggestions);
+	        //BuildTable based on the filtered results
+	        buildTable();
 	    });
     }
     
@@ -1468,12 +1465,12 @@ $(document).ready(function() {
             appData.filtered.count.complete = appData.filtered.count.complete.slice(0, this_month_remove);
             
             //Create charts
-            createSuggestionsByTypeChart(appData.filtered.types);
-            createTrendsChart(appData.months_to_date, appData.filtered.count.total, appData.filtered.count.complete);
-            createAverageChart(appData.filtered.averageData);
-            createTeamChart(appData.filtered.userObject.usersList);
+            createSuggestionsByTypeChart();
+            createTrendsChart();
+            createAverageChart();
+            createTeamChart();
             
-            buildTable(appData.filtered.tableDatasuggestions);
+            buildTable();
             //event listener for team picker
             $("#team_picker").on("hidden.bs.select", function(e) {
                 selected_users = $("#team_picker").val();
