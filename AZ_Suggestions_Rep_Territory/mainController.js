@@ -603,7 +603,7 @@ $(document).ready(function() {
         createTeamChart();
       //  createTeamPicker(appData.usersList);
         //BuildTable based on the filtered results
-        buildTable();
+        buildTable(null, null);
     }
 
     //initialize the promise library
@@ -1254,10 +1254,9 @@ $(document).ready(function() {
             //Create charts
             createSuggestionsByTypeChart();
             createTrendsChart();
-            createAverageChart();
             createTeamChart();
             
-            buildTable();
+            buildTable(null, null);
 
             //event listener for driver filter
             $("#driver_filter").on("hidden.bs.select", function(e) {
