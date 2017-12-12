@@ -38,6 +38,7 @@ $(document).ready(function() {
              Id: '',
              Name: ''
          }],
+         accountId:'',
          currentUser: {
              Id: '',
              territoryId: ''
@@ -741,6 +742,19 @@ $(document).ready(function() {
 
         return deferred.promise;
     }
+    
+    function getAccountId() {
+    	//console.log("getting userId");
+    	var deferred = $q.defer();
+
+    	ds.getDataForCurrentObject('Account', 'Id')
+    		.then(function(result) {
+    			//console.log(result);
+    			deferred.resolve(result.Account.Id);
+    		})
+
+    	return deferred.promise;
+    }
 
     function getCurrentUserTerritoryId(userId) {
         //console.log("getting UserTerr data based on userid = " + userId);
@@ -880,7 +894,7 @@ $(document).ready(function() {
         return deferred.promise;
     }
 
-    function getSuggestions() {
+    function getSuggestions(accountId) {
         //console.log("getting Suggestion header records");
   //      var inOwner = ds.getInStatement(userIds);
    //     $('#response').append('<div> Owner :' + JSON.stringify(inOwner, null, "\t") + '</div>');
@@ -888,7 +902,8 @@ $(document).ready(function() {
        var queryConfig = {
             suggestions: {
                 object: 'Suggestion_vod__c',
-                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Owner_District_AZ_US__c', 'Actioned_By_AZ_US__c', 'Completed_By_AZ_US__c', 'Dismissed_By_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c']
+                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Owner_District_AZ_US__c', 'Actioned_By_AZ_US__c', 'Completed_By_AZ_US__c', 'Dismissed_By_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c'],
+                where: 'Account_vod__c =\''+ accountId +'\''
             }
         };
 
@@ -1389,7 +1404,12 @@ $(document).ready(function() {
 
     function mainController() {
     	$('#response').append('<div>mainController - entering </div>');
-        getUserId().then(function(userId) {
+    	getAccountId().then(function(accountId) {
+            //console.log(userId);
+            appData.accountId = accountId;
+            //console.log(appData.currentUser.Id);
+            return getUserId();
+    	}).then(function(userId) {
         	$('#response').append('<pre>getUserId - '+ JSON.stringify(userId, null, "\t") +' </pre>');
         //	try {
         //		$('#response').append('<pre>appData - '+ JSON.stringify(appData, null, "\t") +' </pre>');
@@ -1443,7 +1463,7 @@ $(document).ready(function() {
             } //for the horrified: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names
        //     $('#response').append('<pre>appData.recordtype_map '+ JSON.stringify(appData.recordtype_map, null, "\t") +' </pre>');
             console.log(appData.recordtype_map);
-            return getSuggestions();
+            return getSuggestions(appData.accountId);
         }).then(function(suggestions) {
             $('#response').append('<div>getSuggestions - passed </div>');
         	return parseSuggestions(suggestions);
