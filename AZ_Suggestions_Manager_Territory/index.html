@@ -1689,30 +1689,6 @@ function createTrendsChart(months, totals, completes) {
             }
 
             //for the first pass, the filters will be null, but something HAS to be selected the next time things go around, so default behavior for Null would be to count everything
-            return countSuggestionsByType(null, null, null, appData.recordtype_map, appData.suggestions);
-        }).then(function(my_suggestions_by_type_data) {
-            //console.log(my_suggestions_by_type_data);
-            appData.suggestions_by_type_data = my_suggestions_by_type_data;
-
-            return createSuggestionsByTypeChart(appData.suggestions_by_type_data);
-        }).then(function() {
-            return countSuggestionsByMonth(null, null, null, appData.suggestions);
-        }).then(function(monthly_count) {
-            console.log(monthly_count);
-            $.extend(appData.monthly_suggestions, monthly_count);
-            //appData.monthly_suggestions.total
-            //appData.monthly_suggestions.complete
-
-            //make sure we're only displaying the YTD labels and values:
-            var this_month_remove = ((new Date().getMonth()) + 1);
-            appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
-            appData.monthly_suggestions.total = appData.monthly_suggestions.total.slice(0, this_month_remove);
-            appData.monthly_suggestions.complete = appData.monthly_suggestions.complete.slice(0, this_month_remove);
-            //console.log(appData.monthly_suggestions);
-            //console.log(appData.months_to_date);
-
-            return createTrendsChart(appData.months_to_date, appData.monthly_suggestions.total, appData.monthly_suggestions.complete);
-        }).then(function() {
         	$('#response').append('<pre>before: getUserNames</pre>');
            	return getUserNames(appData.ownerIdList);
         }).then(function(userNames) {
@@ -1746,8 +1722,32 @@ function createTrendsChart(months, totals, completes) {
         	
         		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
         	} catch(e){
-        		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
+        		$('#response').append('<pre>catch error : ' + JSON.stringify(e, null, "\t") +'</pre>');
         	}
+        	return countSuggestionsByType(null, null, null, appData.recordtype_map, appData.suggestions);
+        }).then(function(my_suggestions_by_type_data) {
+            //console.log(my_suggestions_by_type_data);
+            appData.suggestions_by_type_data = my_suggestions_by_type_data;
+
+            return createSuggestionsByTypeChart(appData.suggestions_by_type_data);
+        }).then(function() {
+            return countSuggestionsByMonth(null, null, null, appData.suggestions);
+        }).then(function(monthly_count) {
+            console.log(monthly_count);
+            $.extend(appData.monthly_suggestions, monthly_count);
+            //appData.monthly_suggestions.total
+            //appData.monthly_suggestions.complete
+
+            //make sure we're only displaying the YTD labels and values:
+            var this_month_remove = ((new Date().getMonth()) + 1);
+            appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
+            appData.monthly_suggestions.total = appData.monthly_suggestions.total.slice(0, this_month_remove);
+            appData.monthly_suggestions.complete = appData.monthly_suggestions.complete.slice(0, this_month_remove);
+            //console.log(appData.monthly_suggestions);
+            //console.log(appData.months_to_date);
+
+            return createTrendsChart(appData.months_to_date, appData.monthly_suggestions.total, appData.monthly_suggestions.complete);
+        }).then(function(){
             return countSuggestionsByUserByStatus(null, null, appData.suggestions, appData.usersList);
         }).then(function(children_with_counts) {
         	$('#response').append('<pre>countSuggestionsByUserByStatus - children_with_counts: ' + JSON.stringify(children_with_counts, null, "\t") +'</pre>');
