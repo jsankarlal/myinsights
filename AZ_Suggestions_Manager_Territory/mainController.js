@@ -1047,7 +1047,7 @@ $(document).ready(function() {
 	    	var applyProductFilter = $.isEmptyObject(productFilter) ? false: true;
 	    		applyDriverFilter = $.isEmptyObject(driverFilter) ? false: true;
 	    		hasTags = false,
-	    		flag = false;
+	    		flag = true;
 	    	if(suggestion.tags != 'undefined') {
 	    		if($.isArray(suggestion.tags)) {
 	    			hasTags = suggestion.tags.lengh > 0 ? true : false;
