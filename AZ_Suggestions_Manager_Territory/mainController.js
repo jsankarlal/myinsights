@@ -684,29 +684,28 @@ $(document).ready(function() {
             selected_users_set = new Set(selected_users);
         }
         
-        filterSuggestions(selected_products_set, selected_drivers_set, selected_users_set).then(function() {
+        filterSuggestions(selected_products_set, selected_drivers_set, selected_users_set);
         
-	        //make sure we're only displaying the YTD labels and values:
-	        var this_month_remove = ((new Date().getMonth()) + 1);
-	        appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
-	        appData.filtered.count.total = appData.filtered.count.total.slice(0, this_month_remove);
-	        appData.filtered.count.complete = appData.filtered.count.complete.slice(0, this_month_remove);
-	        
-	        //CREATE TYPE CHART
-	        createSuggestionsByTypeChart();
-	        
-	        //CREATE TRENDS CHART
-	        createTrendsChart();
-	        
-	        //CREATE AVERAGE USERS CHART
-	        createAverageChart();
-	        
-	        //CREATE AVERAGE USERS CHART
-	        createTeamChart();
-	      //  createTeamPicker(appData.usersList);
-	        //BuildTable based on the filtered results
-	        buildTable();
-	    });
+        //make sure we're only displaying the YTD labels and values:
+        var this_month_remove = ((new Date().getMonth()) + 1);
+        appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
+        appData.filtered.count.total = appData.filtered.count.total.slice(0, this_month_remove);
+        appData.filtered.count.complete = appData.filtered.count.complete.slice(0, this_month_remove);
+        
+        //CREATE TYPE CHART
+        createSuggestionsByTypeChart();
+        
+        //CREATE TRENDS CHART
+        createTrendsChart();
+        
+        //CREATE AVERAGE USERS CHART
+        createAverageChart();
+        
+        //CREATE AVERAGE USERS CHART
+        createTeamChart();
+      //  createTeamPicker(appData.usersList);
+        //BuildTable based on the filtered results
+        buildTable();
     }
 
     //initialize the promise library
