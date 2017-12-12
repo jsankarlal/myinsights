@@ -700,29 +700,28 @@ $(document).ready(function() {
             selected_users_set = new Set(selected_users);
         }
         
-        filterSuggestions(selected_products_set, selected_drivers_set, selected_users_set).then(function() {
+        filterSuggestions(selected_products_set, selected_drivers_set, selected_users_set);
         
-	        //make sure we're only displaying the YTD labels and values:
-	        var this_month_remove = ((new Date().getMonth()) + 1);
-	        appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
-	        appData.filtered.count.total = appData.filtered.count.total.slice(0, this_month_remove);
-	        appData.filtered.count.complete = appData.filtered.count.complete.slice(0, this_month_remove);
-	        
-	        //CREATE TYPE CHART
-	        createSuggestionsByTypeChart();
-	        
-	        //CREATE TRENDS CHART
-	        createTrendsChart();
-	        
-	        //CREATE AVERAGE USERS CHART
-	        createAverageChart();
-	        
-	        //CREATE AVERAGE USERS CHART
-	        createTeamChart();
-	      //  createTeamPicker(appData.usersList);
-	        //BuildTable based on the filtered results
-	        buildTable();
-	    });
+        //make sure we're only displaying the YTD labels and values:
+        var this_month_remove = ((new Date().getMonth()) + 1);
+        appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
+        appData.filtered.count.total = appData.filtered.count.total.slice(0, this_month_remove);
+        appData.filtered.count.complete = appData.filtered.count.complete.slice(0, this_month_remove);
+        
+        //CREATE TYPE CHART
+        createSuggestionsByTypeChart();
+        
+        //CREATE TRENDS CHART
+        createTrendsChart();
+        
+        //CREATE AVERAGE USERS CHART
+        createAverageChart();
+        
+        //CREATE AVERAGE USERS CHART
+        createTeamChart();
+      //  createTeamPicker(appData.usersList);
+        //BuildTable based on the filtered results
+        buildTable();
     }
 
     //initialize the promise library
@@ -1073,26 +1072,31 @@ $(document).ready(function() {
     
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
     	try {
-	    	var applyProductFilter = $.isEmptyObject(productFilter) ? false: true;
-	    		applyDriverFilter = $.isEmptyObject(driverFilter) ? false: true;
-	    		hasTags = false,
+    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : </pre>');
+    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : productFilter-'+ JSON.stringify(productFilter, null, "\t") +'</pre>');
+    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : driverFilter -'+ JSON.stringify(driverFilter, null, "\t") +'</pre>');
+	    	var hasTags = false,
 	    		flag = true;
-	    	if(suggestion.tags != 'undefined') {
-	    		if($.isArray(suggestion.tags)) {
-	    			hasTags = suggestion.tags.lengh > 0 ? true : false;
-	    		} 
-	    	}
 	    	
-	    	if (applyProductFilter || applyDriverFilter) {
+	    	if (productFilter || driverFilter) {
+		    	if(suggestion.tags != 'undefined') {
+		    		if($.isArray(suggestion.tags)) {
+		    			hasTags = suggestion.tags.lengh > 0 ? true : false;
+		    		} 
+		    	}
+		    	
+	    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : applyDriverFilter || applyProductFilter</pre>');
+	    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
 	    		if(hasTags) {
-	    			for(var i=0; i<suggestion.tags.length; i++) {
-	    				if(!flag) {
+	    			flag = false;
+	    			for(var i=0; i < suggestion.tags.length; i++) {
+	    				if(flag) {
 	    					return flag;
 	    				}
-	    				if (!productFilter.has(suggestion.tags[i].Product_Name__c) || !driverFilter.has(suggestion.tags[i].Driver_Name__c)) {
-	    					flag = false;
+	    				if (productFilter.has(suggestion.tags[i].Product_Name__c) || driverFilter.has(suggestion.tags[i].Driver_Name__c)) {
+	    					flag = true;
 	                    }
-	    			}
+	    			}	    			
 	    		}
 	    	} 
 	    	return flag;
@@ -1108,14 +1112,14 @@ $(document).ready(function() {
 		$('#response').append('<pre>userFilter :'+ JSON.stringify(userFilter, null, "\t") +' </pre>');
 		try {
 			var filtered = {},
-				tableData = [],
+				tableDataCount = 0,
 				thisSuggestion = {},
-				averageData = {}, 
-			    statusByUser = {},
-		        applyUserFilter = $.isEmptyObject(userFilter) ? false: true;
+			    usersFilteredCount = 0;
+		 //       applyUserFilter = userFilter  ? false: true;
 			
 			//create filtered usersList array of object based on the selected users
-			if (applyUserFilter) {
+			if (userFilter) {
+				$('#response').append('<pre> inside applyUserfilter </pre>');
 				var tempList = [];
 	            for (var i = 0; i < appData.usersList.length; i++) {
 	                if (userFilter.has(appData.usersList[i].Name)) {
@@ -1126,6 +1130,7 @@ $(document).ready(function() {
 	        } else {
 	        	appData.filtered.userObject.usersList = appData.usersList;
 	        }
+			$('#response').append('<pre> after applyUserfilter: appData.filtered.userObject.usersList :'+ JSON.stringify(appData.filtered.userObject.usersList, null, "\t") +' </pre>');
 			//initialize userObject for status calculation
 			for (var i = 0; i < appData.filtered.userObject.usersList.length; i++) {
 				appData.filtered.userObject.usersList[i]["pending"] = 0;
@@ -1159,18 +1164,23 @@ $(document).ready(function() {
 	        for (var i = 0; i < appData.suggestions.length; i++) {
 	        	thisSuggestion = aggregateTableData(appData.suggestions[i]);
 	        	//apply user filter for suggestions
-		    	if (applyUserFilter && !selected_users_set.has(thisSuggestion.lastStatusUpdatedBy)) {
+		    	if (userFilter && !userFilter.has(thisSuggestion.lastStatusUpdatedBy)) {
 	                //console.log("filtering out a suggestion");
+		    		usersFilteredCount++;
 	                continue;
 	            }
-	            //count by Type for Type Chart
+	            //apply product and driver filters
 	            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
 	           		countUserStatus(thisSuggestion);
 	           		calculateMonthsCount(thisSuggestion);
 	           		calculateSuggestionsType(thisSuggestion);
 	           	 	appData.filtered.suggestions.push(thisSuggestion);
+	           	 	tableDataCount++;
 	             }
 	        }
+	        $('#response').append('<pre>usersFilteredCount: ' + JSON.stringify(usersFilteredCount, null, "\t") +'</pre>');
+	        $('#response').append('<pre>tableDataCount: ' + JSON.stringify(tableDataCount, null, "\t") +'</pre>');
+	        
 	        var len = appData.filtered.userObject.usersList.length;
 			appData.filtered.userObject.averageData.pendingSum = (appData.filtered.userObject.averageData.pendingSum / len);
 			appData.filtered.userObject.averageData.dismissedSum = (appData.filtered.userObject.averageData.dismissedSum / len);
