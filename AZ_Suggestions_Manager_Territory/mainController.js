@@ -967,16 +967,6 @@ $(document).ready(function() {
 				thisSuggestion = {},
 				averageData = {}, 
 			    statusByUser = {},
-				types = {
-					calls: 0,
-		        	email: 0,
-		        	insight: 0,
-		        	objective: 0
-		        },
-				count = {
-		            total: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-		            complete: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-		        },
 		        applyUserFilter = $.isEmptyObject(userFilter) ? false: true;
 			
 			//create filtered usersList array of object based on the selected users
@@ -991,6 +981,33 @@ $(document).ready(function() {
 	        } else {
 	        	appData.filtered.userObject.usersList = appData.usersList;
 	        }
+			//initialize userObject for status calculation
+			for (var i = 0; i < appData.filtered.userObject.usersList.length; i++) {
+				appData.filtered.userObject.usersList[i]["pending"] = 0;
+				appData.filtered.userObject.usersList[i]["dismissed"] = 0;
+				appData.filtered.userObject.usersList[i]["actioned"] = 0;
+				appData.filtered.userObject.usersList[i]["completed"] = 0;
+	        }
+			
+			appData.filtered.userObject.averageData= {
+					pendingSum: 0,
+			        dismissedSum: 0,
+			        completedSum: 0,
+			        actionedSum: 0
+				}
+	        
+			//initialize types object for types calculation
+			appData.filtered.types = {
+				calls: 0,
+	        	email: 0,
+	        	insight: 0,
+	        	objective: 0
+	        };
+			//initialize count object for types calculation
+	        appData.filtered.count = {
+	            total: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	            complete: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	        };
 	        
 	        for (var i = 0; i < appData.suggestions.length; i++) {
 	        	thisSuggestion = aggregateTableData(appData.suggestions[i]);
@@ -1001,18 +1018,25 @@ $(document).ready(function() {
 	            }
 	            //count by Type for Type Chart
 	            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
-	           		appData.filtered.userObject =  countUserStatus(thisSuggestion, appData.filtered.userObject);
-	           		appData.filtered.count = calculateMonthsCount(thisSuggestion, count);
-	           		appData.filtered.types = calculateSuggestionsType(thisSuggestion, types);
+	           		appData.filtered.userObject = countUserStatus(thisSuggestion, appData.filtered.userObject);
+	           		appData.filtered.count = calculateMonthsCount(thisSuggestion, appData.filtered.count);
+	           		appData.filtered.types = calculateSuggestionsType(thisSuggestion, appData.filtered.types);
 	           	 	//appData.filtered.tableData.push(thisSuggestion);
 	           	 	appData.filtered.suggestions.push(thisSuggestion);
 	             }
 	        }
-	        
+	        var len = appData.filtered.userObject.usersList.length;
+			appData.filtered.userObject.averageData.pendingSum = (appData.filtered.userObject.averageData.pendingSum / len);
+			appData.filtered.userObject.averageData.dismissedSum = (appData.filtered.userObject.averageData.dismissedSum / len);
+			appData.filtered.userObject.averageData.completedSum = (appData.filtered.userObject.averageData.completedSum / len);
+			averappData.filtered.userObject.averageData.actionedSum = (appData.filtered.userObject.averageData.actionedSum / len);
+			
+			$('#response').append('<pre>appData.filtered.suggestions.length : ' + JSON.stringify(appData.filtered.suggestions.length, null, "\t") +'</pre>'); 
 	        $('#response').append('<pre>appData.filtered.userObject.usersList : ' + JSON.stringify(appData.filtered.userObject.usersList, null, "\t") +'</pre>');
+	        $('#response').append('<pre>appData.filtered.userObject.averageData : ' + JSON.stringify(appData.filtered.userObject.averageData, null, "\t") +'</pre>');
 	        $('#response').append('<pre>appData.filtered.types : ' + JSON.stringify(appData.filtered.types, null, "\t") +'</pre>');
 	        $('#response').append('<pre>appData.filtered.count : ' + JSON.stringify(appData.filtered.count, null, "\t") +'</pre>');
-	        $('#response').append('<pre>appData.filtered.userObject.averageData : ' + JSON.stringify(appData.filtered.userObject.averageData, null, "\t") +'</pre>');
+	        
 		} catch(e) {
 			$('#response').append('<pre>error: filterSuggestions : ' + JSON.stringify(e, null, "\t") +'</pre>');
 		}
@@ -1034,14 +1058,14 @@ $(document).ready(function() {
 		return thisSuggestion;
 	}
 	
-	function calculateSuggestionsType(row, types) {
-		if (row.type == callText) {
+	function calculateSuggestionsType(suggstion, types) {
+		if (suggstion.type == callText) {
 			types.calls++;
-        } else if (row.type == emailText) {
+        } else if (suggstion.type == emailText) {
         	types.email++;
-        } else if (row.type == callObjectiveText) {
+        } else if (suggstion.type == callObjectiveText) {
         	types.objective++;
-        } else if (row.type == insightText) {
+        } else if (suggstion.type == insightText) {
         	types.insight++;
         }
 		return types;
@@ -1049,47 +1073,26 @@ $(document).ready(function() {
 	
 	//Count by User Status for Team Chart
 	function countUserStatus(suggestion, userObject) {
-		var averageData = {
-				pendingSum: 0,
-		        dismissedSum: 0,
-		        completedSum: 0,
-		        actionedSum: 0
-			},
-			usersList = userObject.usersList,
-        	len = usersList.length;
-		for (var i = 0; i < usersList.length; i++) {
-			usersList[i]["pending"] = 0;
-			usersList[i]["dismissed"] = 0;
-			usersList[i]["actioned"] = 0;
-			usersList[i]["completed"] = 0;
-        }
         
-		for (var i = 0; i < usersList.length; i++) {
+		for (var i = 0; i < userObject.usersList.length; i++) {
             //console.log(row.lastStatusUpdatedBy);
 			if (suggestion.lastStatusUpdatedBy == usersList[i].Name) {
 			     //console.log("it's a match");
 			 	if (suggestion.Status == actionedText) { 
-			 		usersList[i].actioned++;
-			 		averageData.actionedSum++
+			 		userObject.usersList[i].actioned++;
+			 		userObject.averageData.actionedSum++
 			 	} else if (suggestion.Status == completedText) {
-			 		usersList[i].completed++;
-			 		averageData.completedSum++
+			 		userObject.usersList[i].completed++;
+			 		userObject.averageData.completedSum++
 			 	} else if (suggestion.Status == dismissedText) {
-			 		usersList[i].dismissed++;
-			 		averageData.dismissedSum++
+			 		userObject.usersList[i].dismissed++;
+			 		userObject.averageData.dismissedSum++
 			 	} else if (suggestion.Status == pendingText) {
-			 		usersList[i].pending++;
-			 		averageData.pendingSum++
+			 		userObject.usersList[i].pending++;
+			 		userObject.averageData.pendingSum++
 			     }
 			}
 		}
-		averageData.pendingSum = (averageData.pendingSum / len);
-		averageData.dismissedSum = (averageData.dismissedSum / len);
-		averageData.completedSum = (averageData.completedSum / len);
-		averageData.actionedSum = (averageData.actionedSum / len);
-        
-		userObject.usersList = usersList;
-		userObject.averageData = averageData;
 		
 		return userObject;
 	}
