@@ -254,20 +254,22 @@ $(document).ready(function() {
 	        /**console.log(currentChart);
 	        $(".search").find(".form-control").val(currentChart._view.label + '&' + currentChart._view.datasetLabel);
 	        $(".search").find(".form-control").trigger("keyup");**/
+	            var lastStatusUpdatedBy = chartData.label,
+	            	status = chartData.datasetLabel;
 
 	        	$('#response').append('<div> clicked createTeamChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
 	        	
-	      		if (chartData.datasetLabel == 'Marked Complete') {
-	      			chartData.datasetLabel = 'Marked as Complete';
+	      		if (status == 'Marked Complete') {
+	      			status = 'Marked as Complete';
 	      		}
 	      		$('#response').append('<div> clicked createTeamChart:  chartData.datasetLabel :' + JSON.stringify(chartData.datasetLabel, null, "\t") + '</div>');
 	      		//function buildTable(lastStatusUpdatedBy, statusFilter, typeFilter);
 	      		try{
-	      			buildTable(chartData.label, chartData.datasetLabel);
-
-		            document.location.href = 'index.html#bootstrap-table';
+	      			buildTable(lastStatusUpdatedBy, status, null);
+		            //document.location.href = 'index.html#bootstrap-table';
+	      			location.hash = '#bootstrap-table';
 	      		} catch(e){
-	      			$('#response').append('<div>error :' + JSON.stringify(e, null, "\t") + '</div>');
+	      			$('#response').append('<pre>error :' + JSON.stringify(e, null, "\t") + '</pre>');
 	      		}
       			
 	        }
@@ -481,35 +483,18 @@ $(document).ready(function() {
 	        **/
 	        //document.location.href = 'index.html#bootstrap-table';
 	        //console.log(chart_config.data.datasets[activeElement[0]._datasetIndex].data[activeElement[0]._index]);
-
-
-	        /**
-
-	        switch (data.suggestions[i].RecordTypeId) {
-	                case data.recordtype_map.Call_vod:
-	                    row.type = 'Call';
-	                    break;
-	                case data.recordtype_map.Call_Objective_vod:
-	                    row.type = 'Call Objective';
-	                    break;
-	                case data.recordtype_map.Email_vod:
-	                    row.type = 'Email';
-	                case data.recordtype_map.Insight_vod:
-	                    row.type = 'Insight';
-	            }
-
-	        **/
-
-	        var chartData = myChart1.getElementAtEvent(e)[0]._view;
+	        var chartData = myChart1.getElementAtEvent(e)[0]._view,
+	        	type = chartData.label;
 	        console.log(chartData);
 	        /**console.log(currentChart);
 	        $(".search").find(".form-control").val(currentChart._view.label + '&' + currentChart._view.datasetLabel);
 	        $(".search").find(".form-control").trigger("keyup");**/
 
 	        //function buildTable(nameFilter, statusFilter, typeFilter)
-	        $('#response').append('<div> clicked createSuggestionsByTypeChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
-	        buildTable(null, null, chartData.label);
-	        document.location.href = 'index.html#bootstrap-table';
+	        $('#response').append('<pre> clicked createSuggestionsByTypeChart:  chartData.label :' + JSON.stringify(type, null, "\t") + '</pre>');
+	        buildTable(null, null, type);
+	        //document.location.href = 'index.html#bootstrap-table';
+	        location.hash = '#bootstrap-table';
 
 	    }
 	}
