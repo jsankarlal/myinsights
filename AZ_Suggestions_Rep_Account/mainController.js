@@ -140,22 +140,22 @@ $(document).ready(function() {
 	            data: {
 	                datasets: [{
 	                    label: 'Pending',
-	                    data: pending,
+	                    data: appData.filtered.myCount.pending,
 	                    backgroundColor: pendingColorDisplay,
 	                    borderColor: pendingColorDisplay
 	                },{
 	                    label: 'Dismissed',
-	                    data: dismissed,
+	                    data: appData.filtered.myCount.dismissed,
 	                    backgroundColor: dismissedColorDisplay,
 	                    borderColor: dismissedColorDisplay
 	                }, {
 	                    label: 'Actioned',
-	                    data: actioned,
+	                    data: appData.filtered.myCount.actioned,
 	                    backgroundColor: actionedColorDisplay,
 	                    borderColor: actionedColorDisplay
 	                },{
 	                    label: 'Marked Complete',
-	                    data: completed,
+	                    data: appData.filtered.myCount.completed,
 	                    backgroundColor: completedColorDisplay,
 	                    borderColor: completedColorDisplay
 	                }]
@@ -391,24 +391,6 @@ $(document).ready(function() {
 	        //document.location.href = 'index.html#bootstrap-table';
 	        //console.log(chart_config.data.datasets[activeElement[0]._datasetIndex].data[activeElement[0]._index]);
 
-
-	        /**
-
-	        switch (data.suggestions[i].RecordTypeId) {
-	                case data.recordtype_map.Call_vod:
-	                    row.type = 'Call';
-	                    break;
-	                case data.recordtype_map.Call_Objective_vod:
-	                    row.type = 'Call Objective';
-	                    break;
-	                case data.recordtype_map.Email_vod:
-	                    row.type = 'Email';
-	                case data.recordtype_map.Insight_vod:
-	                    row.type = 'Insight';
-	            }
-
-	        **/
-
 	        var chartData = myChart1.getElementAtEvent(e)[0]._view;
 	        console.log(chartData);
 	        /**console.log(currentChart);
@@ -418,7 +400,7 @@ $(document).ready(function() {
 	        //function buildTable(statusFilter, typeFilter)
 	        $('#response').append('<div> clicked createSuggestionsByTypeChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
 	        buildTable(null, chartData.label);
-	        document.location.href = 'index.html#bootstrap-table';
+	        location.hash = 'index.html#bootstrap-table';
 
 	    }
 	}

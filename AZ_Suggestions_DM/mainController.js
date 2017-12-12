@@ -266,7 +266,7 @@ $(document).ready(function() {
 	      		try{
 	      			buildTable(chartData.label, chartData.datasetLabel);
 
-		            document.location.href = 'index.html#bootstrap-table';
+		            location.hash = 'index.html#bootstrap-table';
 	      		} catch(e){
 	      			$('#response').append('<div>error :' + JSON.stringify(e, null, "\t") + '</div>');
 	      		}

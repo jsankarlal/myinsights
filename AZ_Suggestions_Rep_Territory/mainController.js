@@ -140,22 +140,22 @@ $(document).ready(function() {
 	            data: {
 	                datasets: [{
 	                    label: 'Pending',
-	                    data: pending,
+	                    data: appData.filtered.myCount.pending,
 	                    backgroundColor: pendingColorDisplay,
 	                    borderColor: pendingColorDisplay
 	                },{
 	                    label: 'Dismissed',
-	                    data: dismissed,
+	                    data: appData.filtered.myCount.dismissed,
 	                    backgroundColor: dismissedColorDisplay,
 	                    borderColor: dismissedColorDisplay
 	                }, {
 	                    label: 'Actioned',
-	                    data: actioned,
+	                    data: appData.filtered.myCount.actioned,
 	                    backgroundColor: actionedColorDisplay,
 	                    borderColor: actionedColorDisplay
 	                },{
 	                    label: 'Marked Complete',
-	                    data: completed,
+	                    data: appData.filtered.myCount.completed,
 	                    backgroundColor: completedColorDisplay,
 	                    borderColor: completedColorDisplay
 	                }]
@@ -391,24 +391,6 @@ $(document).ready(function() {
 	        //document.location.href = 'index.html#bootstrap-table';
 	        //console.log(chart_config.data.datasets[activeElement[0]._datasetIndex].data[activeElement[0]._index]);
 
-
-	        /**
-
-	        switch (data.suggestions[i].RecordTypeId) {
-	                case data.recordtype_map.Call_vod:
-	                    row.type = 'Call';
-	                    break;
-	                case data.recordtype_map.Call_Objective_vod:
-	                    row.type = 'Call Objective';
-	                    break;
-	                case data.recordtype_map.Email_vod:
-	                    row.type = 'Email';
-	                case data.recordtype_map.Insight_vod:
-	                    row.type = 'Insight';
-	            }
-
-	        **/
-
 	        var chartData = myChart1.getElementAtEvent(e)[0]._view;
 	        console.log(chartData);
 	        /**console.log(currentChart);
@@ -514,16 +496,12 @@ $(document).ready(function() {
         $('#response').append('<pre> inside buildTable: typeFilter :' + JSON.stringify(typeFilter, null, "\t") + '</div>');
         for (var i = 0; i < appData.filtered.suggestions.length; i++) {
         	row = appData.filtered.suggestions[i];
-        	if (statusFilter) {
-                if (statusFilter === row.status) {
-                	$('#response').append('<pre> inside buildTable: lastStatusUpdatedByFilter && statusFilter Matched :' + JSON.stringify('', null, "\t") + '</div>');
-                    rows.push(row);
-                }
-            } else if (typeFilter) {
-                if (typeFilter === row.type) {
-                	$('#response').append('<pre> inside buildTable: typeFilter Matched :' + JSON.stringify(typeFilter, null, "\t") + '</div>');
-                    rows.push(row);
-                }
+        	if (statusFilter && statusFilter === row.status) {
+            	$('#response').append('<pre> inside buildTable: lastStatusUpdatedByFilter && statusFilter Matched :' + JSON.stringify('', null, "\t") + '</div>');
+                rows.push(row);
+            } else if (typeFilter && typeFilter === row.type) {
+            	$('#response').append('<pre> inside buildTable: typeFilter Matched :' + JSON.stringify(typeFilter, null, "\t") + '</div>');
+                rows.push(row);
             } else if(!statusFilter && !typeFilter) {
                 rows.push(row);
             }
