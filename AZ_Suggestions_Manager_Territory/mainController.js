@@ -114,23 +114,22 @@
 	        if (myChart) {
 	            myChart.destroy();
 	        }
-	        var teamData = appData.filtered.userObject.usersList;
 	        var names = [];
 	        var pending = [];
 	        var dismissed = [];
 	        var completed = [];
 	        var actioned = [];
 
-	        for (var i = 0; i < teamData.length; i++) {
+	        for (var i = 0; i < appData.filtered.userObject.usersList.length; i++) {
 	            pendingColorDisplay[i] = 'rgba(250,164,58, 1)';
 	            dismissedColorDisplay[i] = 'rgba(242,227,83, 1)';
 	            completedColorDisplay[i] = 'rgba(169,208,94, 1)';
 	            actionedColorDisplay[i] = 'rgba(96,189,104, 1)';
-	            names.push(teamData[i].Name);
-	            pending.push(teamData[i].pending);
-	            dismissed.push(teamData[i].dismissed);
-	            completed.push(teamData[i].completed);
-	            actioned.push(teamData[i].actioned);
+	            names.push(appData.filtered.userObject.usersList[i].Name);
+	            pending.push(appData.filtered.userObject.usersList[i].pending);
+	            dismissed.push(appData.filtered.userObject.usersList[i].dismissed);
+	            completed.push(appData.filtered.userObject.usersList[i].completed);
+	            actioned.push(appData.filtered.userObject.usersList[i].actioned);
 	        }
 
 	        //suggestions chart
@@ -271,30 +270,29 @@
 	 function createAverageChart() {
 		    //console.log(mydata);
 		    //suggestions average chart
-		    var myData = appData.filtered.userObject.averageData,
-		    	ctxAverage = document.getElementById("suggestions_average");
+		    var ctxAverage = document.getElementById("suggestions_average");
 		    var myChartAverage = new Chart(ctxAverage, {
 		        type: 'horizontalBar',
 		        data: {
 		            labels: ['Overall Team Average'],
 		            datasets: [{
 		                label: 'Pending',
-		                data: [mydata.pendingSum],
+		                data: [appData.filtered.userObject.averageData.pendingSum],
 		                backgroundColor: pendingColor,
 		                borderColor: pendingColor
 		            }, {
 		                label: 'Dismissed',
-		                data: [mydata.dismissedSum],
+		                data: [appData.filtered.userObject.averageData.dismissedSum],
 		                backgroundColor: dismissedColor,
 		                borderColor: dismissedColor
 		            }, {
 		                label: 'Actioned',
-		                data: [mydata.actionedSum],
+		                data: [appData.filtered.userObject.averageData.actionedSum],
 		                backgroundColor: actionedColor,
 		                borderColor: actionedColor
 		            }, {
 		                label: 'Marked Complete',
-		                data: [mydata.completedSum],
+		                data: [appData.filtered.userObject.averageData.completedSum],
 		                backgroundColor: completedColor,
 		                borderColor: completedColor
 		            }]
@@ -1116,8 +1114,8 @@ $(document).ready(function() {
         	markup = '',
         	suggestions = appData.filtered.suggestions;
        
-        for (var i = 0; i < suggestions.length; i++) {
-        	row = suggestions[i];
+        for (var i = 0; i < appData.filtered.suggestions.length; i++) {
+        	row = appData.filtered.suggestions[i];
         	if (lastStatusUpdatedByFilter || statusFilter) {
                 if (lastStatusUpdatedByFilter === row.lastStatusUpdatedBy && statusFilter === row.status) {
                     rows.push(row);
