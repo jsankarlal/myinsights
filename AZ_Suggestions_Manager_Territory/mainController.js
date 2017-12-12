@@ -1029,7 +1029,7 @@ $(document).ready(function() {
 			appData.filtered.userObject.averageData.pendingSum = (appData.filtered.userObject.averageData.pendingSum / len);
 			appData.filtered.userObject.averageData.dismissedSum = (appData.filtered.userObject.averageData.dismissedSum / len);
 			appData.filtered.userObject.averageData.completedSum = (appData.filtered.userObject.averageData.completedSum / len);
-			averappData.filtered.userObject.averageData.actionedSum = (appData.filtered.userObject.averageData.actionedSum / len);
+			appData.filtered.userObject.averageData.actionedSum = (appData.filtered.userObject.averageData.actionedSum / len);
 			
 			$('#response').append('<pre>appData.filtered.suggestions.length : ' + JSON.stringify(appData.filtered.suggestions.length, null, "\t") +'</pre>'); 
 	        $('#response').append('<pre>appData.filtered.userObject.usersList : ' + JSON.stringify(appData.filtered.userObject.usersList, null, "\t") +'</pre>');
