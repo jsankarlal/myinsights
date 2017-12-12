@@ -1357,7 +1357,6 @@ $(document).ready(function() {
     	
         	appData.suggestions = tempSuggestions;
         	$('#response').append('<pre>before parseUserNames : appData.suggestions.length ' + JSON.stringify(appData.suggestions.length, null, "\t") +'</pre>');
-    		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
     	} catch(e){
     		$('#response').append('<pre>error : ' + JSON.stringify(e, null, "\t") +'</pre>');
     	}
@@ -1396,17 +1395,18 @@ $(document).ready(function() {
         }).then(function(subUsers) {
             $('#response').append('<pre>getChildUsers - passed </pre>');
        //     $('#response').append('<pre>subUsers '+ JSON.stringify(subUsers, null, "\t") +' </pre>');
-            var usersList = [];
+            var tempUsersList = [];
             for (var i = 0; i < subUsers.length; i++) {
                 var user_to_add = {
                     Name: subUsers[i].Name.value,
                     Id: subUsers[i].Id.value
                 };
                 appData.usersList.push(user_to_add);
-                usersList.push(subUsers[i].Name.value);
+                tempUsersList.push(subUsers[i].Name.value);
             }
             appData.filtered.userObject.usersList = appData.usersList;
-            appData.usersListSet = new Set(appData.usersList);
+            appData.usersListSet = new Set(tempUsersList);
+            $('#response').append('<pre>tempUsersList '+ JSON.stringify(tempUsersList, null, "\t") +' </pre>');
             $('#response').append('<pre>usersListSet '+ JSON.stringify(appData.usersListSet, null, "\t") +' </pre>');
             return getRecordTypes();
         }).then(function(rt) {
@@ -1432,7 +1432,7 @@ $(document).ready(function() {
         	$('#response').append('<pre>before: getUserNames</pre>');
            	return getUserNames(appData.ownerIdList);
         }).then(function(userNames) {
-        	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
+        	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify('', null, "\t") +'</pre>');
         	return parseUserNames(userNames);
         }).then(function() {
         	$('#response').append('<pre>before: filterSuggestions</pre>');
