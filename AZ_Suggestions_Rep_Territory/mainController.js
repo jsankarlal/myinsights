@@ -595,11 +595,7 @@ $(document).ready(function() {
         
         //CREATE TRENDS CHART
         createTrendsChart();
-        
-        //CREATE AVERAGE USERS CHART
-        createAverageChart();
-        
-        //CREATE AVERAGE USERS CHART
+                
         createTeamChart();
       //  createTeamPicker(appData.usersList);
         //BuildTable based on the filtered results
