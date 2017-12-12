@@ -1,5 +1,5 @@
 
-
+$(document).ready(function() {
 //invoke immediately
 	
 	//proper color scheme for data visualizations
@@ -262,9 +262,14 @@
 	      		}
 	      		$('#response').append('<div> clicked createTeamChart:  chartData.datasetLabel :' + JSON.stringify(chartData.datasetLabel, null, "\t") + '</div>');
 	      		//function buildTable(lastStatusUpdatedBy, statusFilter, typeFilter);
-      			buildTable(chartData.label, chartData.datasetLabel);
+	      		try{
+	      			buildTable(chartData.label, chartData.datasetLabel);
 
-	            document.location.href = 'index.html#bootstrap-table';
+		            document.location.href = 'index.html#bootstrap-table';
+	      		} catch(e){
+	      			$('#response').append('<div>error :' + JSON.stringify(e, null, "\t") + '</div>');
+	      		}
+      			
 	        }
 	    }
 	 
@@ -589,9 +594,135 @@
 	        }
 	    });
 	}
+	
+	function buildTable(lastStatusUpdatedByFilter, statusFilter, typeFilter) {
+
+        var $table = $('#bootstrap-table'),
+        	rows = [],
+        	row = {},
+        	markup = '';
+        $('#response').append('<pre> inside buildTable: lastStatusUpdatedByFilter :' + JSON.stringify(lastStatusUpdatedByFilter, null, "\t") + '</div>');
+        $('#response').append('<pre> inside buildTable: statusFilter :' + JSON.stringify(statusFilter, null, "\t") + '</div>');
+        $('#response').append('<pre> inside buildTable: typeFilter :' + JSON.stringify(typeFilter, null, "\t") + '</div>');
+        for (var i = 0; i < appData.filtered.suggestions.length; i++) {
+        	row = appData.filtered.suggestions[i];
+        	if (lastStatusUpdatedByFilter && statusFilter) {
+                if (lastStatusUpdatedByFilter === row.lastStatusUpdatedBy && statusFilter === row.status) {
+                	$('#response').append('<pre> inside buildTable: lastStatusUpdatedByFilter && statusFilter Matched :' + JSON.stringify('', null, "\t") + '</div>');
+                    rows.push(row);
+                }
+            } else if (typeFilter) {
+                if (typeFilter === row.type) {
+                	$('#response').append('<pre> inside buildTable: typeFilter Matched :' + JSON.stringify(typeFilter, null, "\t") + '</div>');
+                    rows.push(row);
+                }
+            } else if(!lastStatusUpdatedByFilter && !statusFilter && !typeFilter) {
+                rows.push(row);
+            }
+
+        }
+        //$("#tablebody").append(markup);
+
+        function operateFormatter(value, row, index) {
+            return [
+                '<div class="table-icons">',
+                '<a rel="tooltip" title="View" class="btn btn-simple btn-info btn-icon table-action view" href="javascript:void(0)">',
+                '<i class="ti-image"></i>',
+                '</a>',
+                '<a rel="tooltip" title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
+                '<i class="ti-pencil-alt"></i>',
+                '</a>',
+                '<a rel="tooltip" title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
+                '<i class="ti-close"></i>',
+                '</a>',
+                '</div>',
+            ].join('');
+        }
+        
+        $table.bootstrapTable({
+            toolbar: ".toolbar",
+            clickToSelect: true,
+            showRefresh: false,
+            search: true,
+            showToggle: false,
+            showColumns: false,
+            pagination: true,
+            searchAlign: 'left',
+            pageSize: 5,
+            clickToSelect: false,
+            pageList: [5, 10, 15, 20],
+            multipleSearch: true,
+            delimeter: '&',
+            showFilter: true,
+            filterControl: true,
 
 
-$(document).ready(function() {
+            formatShowingRows: function(pageFrom, pageTo, totalRows) {
+                //do nothing here, we don't want to show the text "showing x of y from..."
+            },
+            formatRecordsPerPage: function(pageNumber) {
+                return pageNumber + " rows visible";
+            },
+            icons: {
+                refresh: 'fa fa-refresh',
+                toggle: 'fa fa-th-list',
+                columns: 'fa fa-columns',
+                detailOpen: 'fa fa-plus-circle',
+                detailClose: 'ti-close'
+            }
+        });
+
+        $table.bootstrapTable('load', rows);
+
+        //activate the tooltips after the data table is initialized
+        $('[rel="tooltip"]').tooltip();
+
+        $(window).resize(function() {
+            $table.bootstrapTable('resetView');
+        });
+
+    }
+	
+	//refreshCharts(selected_users, selected_drivers, selected_products);     
+    function refreshCharts(users, drivers, products) {
+        
+        var selected_drivers_set = null;
+        if (drivers) {
+            selected_drivers_set = new Set(selected_drivers);
+        }
+        var selected_products_set = null;
+        if (products) {
+            selected_products_set = new Set(selected_products);
+        }
+        var selected_users_set = null;
+        if (users) {
+            selected_users_set = new Set(selected_users);
+        }
+        
+        filterSuggestions(selected_products_set, selected_drivers_set, selected_users_set).then(function() {
+        
+	        //make sure we're only displaying the YTD labels and values:
+	        var this_month_remove = ((new Date().getMonth()) + 1);
+	        appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
+	        appData.filtered.count.total = appData.filtered.count.total.slice(0, this_month_remove);
+	        appData.filtered.count.complete = appData.filtered.count.complete.slice(0, this_month_remove);
+	        
+	        //CREATE TYPE CHART
+	        createSuggestionsByTypeChart();
+	        
+	        //CREATE TRENDS CHART
+	        createTrendsChart();
+	        
+	        //CREATE AVERAGE USERS CHART
+	        createAverageChart();
+	        
+	        //CREATE AVERAGE USERS CHART
+	        createTeamChart();
+	      //  createTeamPicker(appData.usersList);
+	        //BuildTable based on the filtered results
+	        buildTable();
+	    });
+    }
 
     //initialize the promise library
     $q = window.Q;
@@ -1104,137 +1235,7 @@ $(document).ready(function() {
 	}
 	
     
-    //buildTable
-	
-	
-    function buildTable(lastStatusUpdatedByFilter, statusFilter, typeFilter) {
-
-        var $table = $('#bootstrap-table'),
-        	rows = [],
-        	row = {},
-        	markup = '';
-        $('#response').append('<pre> inside buildTable: lastStatusUpdatedByFilter :' + JSON.stringify(lastStatusUpdatedByFilter, null, "\t") + '</div>');
-        $('#response').append('<pre> inside buildTable: statusFilter :' + JSON.stringify(statusFilter, null, "\t") + '</div>');
-        $('#response').append('<pre> inside buildTable: typeFilter :' + JSON.stringify(typeFilter, null, "\t") + '</div>');
-        for (var i = 0; i < appData.filtered.suggestions.length; i++) {
-        	row = appData.filtered.suggestions[i];
-        	if (lastStatusUpdatedByFilter && statusFilter) {
-                if (lastStatusUpdatedByFilter === row.lastStatusUpdatedBy && statusFilter === row.status) {
-                	$('#response').append('<pre> inside buildTable: lastStatusUpdatedByFilter && statusFilter Matched :' + JSON.stringify('', null, "\t") + '</div>');
-                    rows.push(row);
-                }
-            } else if (typeFilter) {
-                if (typeFilter === row.type) {
-                	$('#response').append('<pre> inside buildTable: typeFilter Matched :' + JSON.stringify(typeFilter, null, "\t") + '</div>');
-                    rows.push(row);
-                }
-            } else if(!lastStatusUpdatedByFilter && !statusFilter && !typeFilter) {
-                rows.push(row);
-            }
-
-        }
-        //$("#tablebody").append(markup);
-
-        function operateFormatter(value, row, index) {
-            return [
-                '<div class="table-icons">',
-                '<a rel="tooltip" title="View" class="btn btn-simple btn-info btn-icon table-action view" href="javascript:void(0)">',
-                '<i class="ti-image"></i>',
-                '</a>',
-                '<a rel="tooltip" title="Edit" class="btn btn-simple btn-warning btn-icon table-action edit" href="javascript:void(0)">',
-                '<i class="ti-pencil-alt"></i>',
-                '</a>',
-                '<a rel="tooltip" title="Remove" class="btn btn-simple btn-danger btn-icon table-action remove" href="javascript:void(0)">',
-                '<i class="ti-close"></i>',
-                '</a>',
-                '</div>',
-            ].join('');
-        }
-        
-        $table.bootstrapTable({
-            toolbar: ".toolbar",
-            clickToSelect: true,
-            showRefresh: false,
-            search: true,
-            showToggle: false,
-            showColumns: false,
-            pagination: true,
-            searchAlign: 'left',
-            pageSize: 5,
-            clickToSelect: false,
-            pageList: [5, 10, 15, 20],
-            multipleSearch: true,
-            delimeter: '&',
-            showFilter: true,
-            filterControl: true,
-
-
-            formatShowingRows: function(pageFrom, pageTo, totalRows) {
-                //do nothing here, we don't want to show the text "showing x of y from..."
-            },
-            formatRecordsPerPage: function(pageNumber) {
-                return pageNumber + " rows visible";
-            },
-            icons: {
-                refresh: 'fa fa-refresh',
-                toggle: 'fa fa-th-list',
-                columns: 'fa fa-columns',
-                detailOpen: 'fa fa-plus-circle',
-                detailClose: 'ti-close'
-            }
-        });
-
-        $table.bootstrapTable('load', rows);
-
-        //activate the tooltips after the data table is initialized
-        $('[rel="tooltip"]').tooltip();
-
-        $(window).resize(function() {
-            $table.bootstrapTable('resetView');
-        });
-
-    }
    
-   //refreshCharts(selected_users, selected_drivers, selected_products);     
-    function refreshCharts(users, drivers, products) {
-        
-        var selected_drivers_set = null;
-        if (drivers) {
-            selected_drivers_set = new Set(selected_drivers);
-        }
-        var selected_products_set = null;
-        if (products) {
-            selected_products_set = new Set(selected_products);
-        }
-        var selected_users_set = null;
-        if (users) {
-            selected_users_set = new Set(selected_users);
-        }
-        
-        filterSuggestions(selected_products_set, selected_drivers_set, selected_users_set).then(function() {
-        
-	        //make sure we're only displaying the YTD labels and values:
-	        var this_month_remove = ((new Date().getMonth()) + 1);
-	        appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
-	        appData.filtered.count.total = appData.filtered.count.total.slice(0, this_month_remove);
-	        appData.filtered.count.complete = appData.filtered.count.complete.slice(0, this_month_remove);
-	        
-	        //CREATE TYPE CHART
-	        createSuggestionsByTypeChart();
-	        
-	        //CREATE TRENDS CHART
-	        createTrendsChart();
-	        
-	        //CREATE AVERAGE USERS CHART
-	        createAverageChart();
-	        
-	        //CREATE AVERAGE USERS CHART
-	        createTeamChart();
-	      //  createTeamPicker(appData.usersList);
-	        //BuildTable based on the filtered results
-	        buildTable();
-	    });
-    }
     
     function parseSuggestions(suggestions) {
     	$('#response').append('<pre>inside: parseSuggestions : </pre>');
