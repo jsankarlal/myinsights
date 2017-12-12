@@ -1043,10 +1043,11 @@ $(document).ready(function() {
     
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
     	try {
+    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : </pre>');
 	    	var applyProductFilter = $.isEmptyObject(productFilter) ? false: true;
 	    		applyDriverFilter = $.isEmptyObject(driverFilter) ? false: true;
 	    		hasTags = false,
-	    		flag = true;
+	    		flag = false;
 	    	if(suggestion.tags != 'undefined') {
 	    		if($.isArray(suggestion.tags)) {
 	    			hasTags = suggestion.tags.lengh > 0 ? true : false;
@@ -1054,15 +1055,19 @@ $(document).ready(function() {
 	    	}
 	    	
 	    	if (applyProductFilter || applyDriverFilter) {
+	    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : applyDriverFilter || applyProductFilter</pre>');
+	    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
 	    		if(hasTags) {
-	    			for(var i=0; i<suggestion.tags.length; i++) {
-	    				if(!flag) {
+	    			for(var i=0; i < suggestion.tags.length; i++) {
+	    				if(flag) {
 	    					return flag;
 	    				}
-	    				if (!productFilter.has(suggestion.tags[i].Product_Name__c) || !driverFilter.has(suggestion.tags[i].Driver_Name__c)) {
-	    					flag = false;
+	    				if (productFilter.has(suggestion.tags[i].Product_Name__c) || driverFilter.has(suggestion.tags[i].Driver_Name__c)) {
+	    					flag = true;
 	                    }
 	    			}
+	    		} else {
+	    			flag = false;
 	    		}
 	    	} 
 	    	return flag;
@@ -1086,6 +1091,7 @@ $(document).ready(function() {
 			
 			//create filtered usersList array of object based on the selected users
 			if (applyUserFilter) {
+				$('#response').append('<pre> inside applyUserfilter:  :'+ JSON.stringify(applyUserfilter, null, "\t") +' </pre>');
 				var tempList = [];
 	            for (var i = 0; i < appData.usersList.length; i++) {
 	                if (userFilter.has(appData.usersList[i].Name)) {
@@ -1096,6 +1102,7 @@ $(document).ready(function() {
 	        } else {
 	        	appData.filtered.userObject.usersList = appData.usersList;
 	        }
+			$('#response').append('<pre> after applyUserfilter: appData.filtered.userObject.usersList :'+ JSON.stringify(appData.filtered.userObject.usersList, null, "\t") +' </pre>');
 			//initialize userObject for status calculation
 			for (var i = 0; i < appData.filtered.userObject.usersList.length; i++) {
 				appData.filtered.userObject.usersList[i]["pending"] = 0;
@@ -1133,7 +1140,7 @@ $(document).ready(function() {
 	                //console.log("filtering out a suggestion");
 	                continue;
 	            }
-	            //count by Type for Type Chart
+	            //apply product and driver filters
 	            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
 	           		countUserStatus(thisSuggestion);
 	           		calculateMonthsCount(thisSuggestion);
