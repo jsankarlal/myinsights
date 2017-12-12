@@ -1361,8 +1361,13 @@ $(document).ready(function() {
     	$('#response').append('<div>mainController - entering </div>');
         getUserId().then(function(userId) {
         	$('#response').append('<pre>getUserId - '+ JSON.stringify(userId, null, "\t") +' </pre>');
-            appData.currentUser.Id = userId;
-            return getCurrentUserTerritoryId(appData.currentUser.Id);
+        	try {
+        		$('#response').append('<pre>appData - '+ JSON.stringify(appData, null, "\t") +' </pre>');
+        		appData.currentUser.Id = userId;
+                return getCurrentUserTerritoryId(appData.currentUser.Id);
+        	} catch(e) {
+        		$('#response').append('<pre>error - '+ JSON.stringify(e, null, "\t") +' </pre>');
+        	}
         }).then(function(terrId) {
             $('#response').append('<pre>getCurrentUserTerritoryId - '+ JSON.stringify(terrId, null, "\t") +'  </pre>');
             appData.currentUser.territoryId = terrId[0].TerritoryId.value; //we assume the manager is only aligned to 1 territory
