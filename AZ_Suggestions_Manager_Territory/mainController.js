@@ -1206,7 +1206,7 @@ $(document).ready(function() {
 	        createTrendsChart(appData.months_to_date, appData.filtered.count.total, appData.filtered.count.complete);
 	        
 	        //CREATE AVERAGE USERS CHART
-	        createAverageChart(appData.filtered.averageData);
+	        createAverageChart(appData.filtered.userObject.averageData);
 	        
 	        //CREATE AVERAGE USERS CHART
 	        createTeamChart(appData.filtered.userObject.usersList);
@@ -1349,7 +1349,8 @@ $(document).ready(function() {
         	for (var i = 0; i < appData.suggestions.length; i++) {
         		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
         	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
-        	    if (appData.usersListSet.has(appData.suggestions[i].LastStatusUpdatedBy) && !moment().diff(suggestions[i].CreatedDate, 'years') > 0) {
+        	    //if (appData.usersListSet.has(appData.suggestions[i].LastStatusUpdatedBy) && !moment().diff(suggestions[i].CreatedDate, 'years') > 0) {
+        	    if (appData.usersListSet.has(appData.suggestions[i].LastStatusUpdatedBy)) {
         	    	tempSuggestions.push(appData.suggestions[i]);
         	    }
         	}
@@ -1375,7 +1376,7 @@ $(document).ready(function() {
        // 	}
         }).then(function(terrId) {
         	$('#response').append('<pre>getCurrentUserTerritoryId - passed </pre>');
-            $('#response').append('<pre>getCurrentUserTerritoryId - '+ JSON.stringify(terrId, null, "\t") +'  </pre>');
+     //       $('#response').append('<pre>getCurrentUserTerritoryId - '+ JSON.stringify(terrId, null, "\t") +'  </pre>');
             appData.currentUser.territoryId = terrId[0].TerritoryId.value; //we assume the manager is only aligned to 1 territory
             //console.log(appData.currentUser.territoryId);
             return getChildTerritoryIds(appData.currentUser.territoryId);
@@ -1405,7 +1406,7 @@ $(document).ready(function() {
                 usersList.push(subUsers[i].Name.value);
             }
             appData.filtered.userObject.usersList = appData.usersList;
-            appData.usersListSet = new Set(usersList);
+            appData.usersListSet = new Set(appData.usersList);
             $('#response').append('<pre>usersListSet '+ JSON.stringify(appData.usersListSet, null, "\t") +' </pre>');
             return getRecordTypes();
         }).then(function(rt) {
@@ -1415,7 +1416,7 @@ $(document).ready(function() {
                     [rt[i].DeveloperName.value]: rt[i].Id.value
                 });
             } //for the horrified: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names
-            $('#response').append('<pre>appData.recordtype_map '+ JSON.stringify(appData.recordtype_map, null, "\t") +' </pre>');
+       //     $('#response').append('<pre>appData.recordtype_map '+ JSON.stringify(appData.recordtype_map, null, "\t") +' </pre>');
             console.log(appData.recordtype_map);
             return getSuggestions();
         }).then(function(suggestions) {
@@ -1444,7 +1445,7 @@ $(document).ready(function() {
 
             
             //Create charts
-            createSuggestionsByTypeChart(appData.filtered);
+            createSuggestionsByTypeChart(appData.filtered.types);
             createTrendsChart(appData.months_to_date, appData.filtered.count.total, appData.filtered.count.complete);
             createAverageChart(appData.filtered.averageData);
             createTeamChart(appData.filtered.userObject.usersList);
