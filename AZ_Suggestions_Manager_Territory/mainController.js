@@ -749,9 +749,9 @@ $(document).ready(function() {
         return deferred.promise;
     }
 
-    function getSuggestions(userIds) {
+    function getSuggestions() {
         //console.log("getting Suggestion header records");
-        var inOwner = ds.getInStatement(userIds);
+  //      var inOwner = ds.getInStatement(userIds);
    //     $('#response').append('<div> Owner :' + JSON.stringify(inOwner, null, "\t") + '</div>');
 
        var queryConfig = {
@@ -1215,6 +1215,7 @@ $(document).ready(function() {
     }
     
     function parseSuggestions(suggestions) {
+    	$('#response').append('<pre>inside: parseSuggestions : ' + JSON.stringify('', null, "\t") +'</pre>');
     	var accountIds = [];
         appData.ownerIdList = [];
         for (var i = 0; i < suggestions.length; i++) {
@@ -1361,19 +1362,21 @@ $(document).ready(function() {
     	$('#response').append('<div>mainController - entering </div>');
         getUserId().then(function(userId) {
         	$('#response').append('<pre>getUserId - '+ JSON.stringify(userId, null, "\t") +' </pre>');
-        	try {
+        //	try {
         //		$('#response').append('<pre>appData - '+ JSON.stringify(appData, null, "\t") +' </pre>');
         		appData.currentUser.Id = userId;
                 return getCurrentUserTerritoryId(appData.currentUser.Id);
-        	} catch(e) {
-        		$('#response').append('<pre>error - '+ JSON.stringify(e, null, "\t") +' </pre>');
-        	}
+       // 	} catch(e) {
+        //		$('#response').append('<pre>error - '+ JSON.stringify(e, null, "\t") +' </pre>');
+       // 	}
         }).then(function(terrId) {
-         //   $('#response').append('<pre>getCurrentUserTerritoryId - '+ JSON.stringify(terrId, null, "\t") +'  </pre>');
+        	$('#response').append('<pre>getCurrentUserTerritoryId - passed </pre>');
+            $('#response').append('<pre>getCurrentUserTerritoryId - '+ JSON.stringify(terrId, null, "\t") +'  </pre>');
             appData.currentUser.territoryId = terrId[0].TerritoryId.value; //we assume the manager is only aligned to 1 territory
             //console.log(appData.currentUser.territoryId);
             return getChildTerritoryIds(appData.currentUser.territoryId);
         }).then(function(childTerrIds) {
+        	 $('#response').append('<pre>getChildTerritoryIds - passed </pre>');
          //   $('#response').append('<pre>getChildTerritoryIds - '+ JSON.stringify(childTerrIds, null, "\t") +' </pre>');
             for (var i = 0; i < childTerrIds.length; i++) {
                 appData.childTerrIds.push(childTerrIds[i].Id.value);
@@ -1387,7 +1390,7 @@ $(document).ready(function() {
             return getChildUsers(appData.subordinateUserIds);
         }).then(function(subUsers) {
             $('#response').append('<pre>getChildUsers - passed </pre>');
-            $('#response').append('<pre>subUsers '+ JSON.stringify(subUsers, null, "\t") +' </pre>');
+       //     $('#response').append('<pre>subUsers '+ JSON.stringify(subUsers, null, "\t") +' </pre>');
             var usersList = [];
             for (var i = 0; i < subUsers.length; i++) {
                 var user_to_add = {
@@ -1397,10 +1400,11 @@ $(document).ready(function() {
                 appData.usersList.push(user_to_add);
                 usersList.push(subUsers[i].Name.value);
             }
-            $('#response').append('<pre>usersList '+ JSON.stringify(usersList, null, "\t") +' </pre>');
-            $('#response').append('<pre> appData.usersList '+ JSON.stringify( appData.usersList, null, "\t") +' </pre>');
+        //    $('#response').append('<pre>usersList '+ JSON.stringify(usersList, null, "\t") +' </pre>');
+        //    $('#response').append('<pre> appData.usersList '+ JSON.stringify( appData.usersList, null, "\t") +' </pre>');
             appData.filtered.userObject.usersList = appData.usersList;
             appData.usersListSet = new Set(usersList);
+            $('#response').append('<pre>usersListSet '+ JSON.stringify(usersListSet, null, "\t") +' </pre>');
             return getRecordTypes();
         }).then(function(rt) {
             $('#response').append('<div>getRecordTypes - passed </div>');
@@ -1409,12 +1413,14 @@ $(document).ready(function() {
                     [rt[i].DeveloperName.value]: rt[i].Id.value
                 });
             } //for the horrified: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names
+            $('#response').append('<pre>appData.recordtype_map '+ JSON.stringify(appData.recordtype_map, null, "\t") +' </pre>');
             console.log(appData.recordtype_map);
             return getSuggestions();
         }).then(function(suggestions) {
             $('#response').append('<div>getSuggestions - passed </div>');
         	return parseSuggestions(suggestions);
         }).then(function() {
+        	$('#response').append('<div>parseSuggestions - passed </div>');
             return getSuggestionTags(appData.suggestions);
         }).then(function(tags) {
             $('#response').append('<div>getSuggestionTags - passed </div>');
