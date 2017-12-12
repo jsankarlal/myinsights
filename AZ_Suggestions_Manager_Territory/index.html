@@ -1719,7 +1719,7 @@ function createTrendsChart(months, totals, completes) {
   //      	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
         	try {
 	        	var ownerIdLookup = {}, tempList = [], tempSuggestions = [];
-	        	var subordinateUsersSet = new Set(subordinateUsersList);
+	        	var subordinateUsersSet = new Set(appData.subordinateUsersList);
 	        	for (var i = 0;i < userNames.length; i++) {
 	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
 	        	}
