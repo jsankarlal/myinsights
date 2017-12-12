@@ -401,7 +401,7 @@ $(document).ready(function() {
 	        //function buildTable(statusFilter, typeFilter)
 	        $('#response').append('<div> clicked createSuggestionsByTypeChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
 	        buildTable(null, chartData.label);
-	        document.location.href = 'index.html#bootstrap-table';
+	        location.hash = '#bootstrap-table';
 
 	    }
 	}
