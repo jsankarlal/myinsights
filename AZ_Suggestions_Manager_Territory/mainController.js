@@ -70,6 +70,7 @@
              }],
              IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
          }],
+         childUserLookup:{},
          ownerIdLookup:{},
          ownerIdList:[],
          usersList:[],
@@ -1336,11 +1337,13 @@ $(document).ready(function() {
     }
     
     function parseUserNames(userNames) {
+    	$('#response').append('<pre>inside parseUserNames : ' + JSON.stringify('', null, "\t") +'</pre>');
+    	$('#response').append('<pre>before parseUserNames : appData.suggestions.length ' + JSON.stringify(appData.suggestions.length, null, "\t") +'</pre>');
     	try {
         	var ownerIdLookup = {}, 
         	    tempSuggestions = [];
         	for (var i = 0;i < userNames.length; i++) {
-        		childUserLookup[userNames[i].Id.value] = userNames[i].Name.value;
+        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
         	}
         	$.extend(appData.ownerIdLookup, ownerIdLookup);
         	for (var i = 0; i < appData.suggestions.length; i++) {
@@ -1352,9 +1355,10 @@ $(document).ready(function() {
         	}
     	
         	appData.suggestions = tempSuggestions;
+        	$('#response').append('<pre>before parseUserNames : appData.suggestions.length ' + JSON.stringify(appData.suggestions.length, null, "\t") +'</pre>');
     		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
     	} catch(e){
-    		$('#response').append('<pre>ownerIdLookup for loop : ' + JSON.stringify(e, null, "\t") +'</pre>');
+    		$('#response').append('<pre>error : ' + JSON.stringify(e, null, "\t") +'</pre>');
     	}
     }
 
