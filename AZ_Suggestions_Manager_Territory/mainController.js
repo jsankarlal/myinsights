@@ -74,7 +74,7 @@
          ownerIdLookup:{},
          ownerIdList:[],
          usersList:[],
-         usersListSet:{},
+         usersListSet:'',
          filtered:{
          	userObject:{
          		usersList:[],
@@ -927,78 +927,89 @@ $(document).ready(function() {
     }
     
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
-    	var applyProductFilter = $.isEmptyObject(productFilter) ? false: true;
-    		applyDriverFilter = $.isEmptyObject(driverFilter) ? false: true;
-    		hasTags = false,
-    		flag = true;
-    	if(suggestion.tags != 'undefined') {
-    		if($.isArray(suggestion.tags)) {
-    			hasTags = suggestion.tags.lengh > 0 ? true : false;
-    		} 
-    	}
-    	
-    	if (applyProductFilter || applyDriverFilter) {
-    		if(hasTags) {
-    			for(var i=0; i<suggestion.tags.length; i++) {
-    				if(!flag) {
-    					return flag;
-    				}
-    				if (!productFilter.has(suggestion.tags[i].Product_Name__c) || !driverFilter.has(suggestion.tags[i].Driver_Name__c)) {
-    					flag = false;
-                    }
-    			}
-    		}
-    	} 
-    	return flag;
+    	try {
+	    	var applyProductFilter = $.isEmptyObject(productFilter) ? false: true;
+	    		applyDriverFilter = $.isEmptyObject(driverFilter) ? false: true;
+	    		hasTags = false,
+	    		flag = true;
+	    	if(suggestion.tags != 'undefined') {
+	    		if($.isArray(suggestion.tags)) {
+	    			hasTags = suggestion.tags.lengh > 0 ? true : false;
+	    		} 
+	    	}
+	    	
+	    	if (applyProductFilter || applyDriverFilter) {
+	    		if(hasTags) {
+	    			for(var i=0; i<suggestion.tags.length; i++) {
+	    				if(!flag) {
+	    					return flag;
+	    				}
+	    				if (!productFilter.has(suggestion.tags[i].Product_Name__c) || !driverFilter.has(suggestion.tags[i].Driver_Name__c)) {
+	    					flag = false;
+	                    }
+	    			}
+	    		}
+	    	} 
+	    	return flag;
+    	} catch(e) {
+			$('#response').append('<pre>After: filterSuggestionByProductsDrivers : ' + JSON.stringify(e, null, "\t") +'</pre>');
+		}
     }
     
 	function filterSuggestions(productFilter, driverFilter, userFilter) {
-		var filtered = {},
-			tableData = [],
-			thisSuggestion = {},
-			averageData = {}, 
-		    statusByUser = {},
-			types = {
-				calls: 0,
-	        	email: 0,
-	        	insight: 0,
-	        	objective: 0
-	        },
-			count = {
-	            total: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	            complete: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-	        },
-	        applyUserFilter = $.isEmptyObject(userFilter) ? false: true;
-		
-		//create filtered usersList array of object based on the selected users
-		if (applyUserFilter) {
-			var tempList = [];
-            for (var i = 0; i < appData.usersList.length; i++) {
-                if (userFilter.has(appData.usersList[i].Name)) {
-                	tempList.push(appData.usersList[i]);
-                }
-            }
-            appData.filtered.userObject.usersList = tempList;
-        } else {
-        	appData.filtered.userObject.usersList = appData.usersList;
-        }
-        
-        for (var i = 0; i < appData.suggestions.length; i++) {
-        	thisSuggestion = aggregateTableData(appData.suggestions[i]);
-        	//apply user filter for suggestions
-	    	if (applyUserFilter && !userFilter.has(thisSuggestion.lastStatusUpdatedBy)) {
-                //console.log("filtering out a suggestion");
-                continue;
-            }
-            //count by Type for Type Chart
-            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
-           		appData.filtered.userObject =  countUserStatus(thisSuggestion, appData.filtered.userObject);
-           		appData.filtered.count = calculateMonthsCount(thisSuggestion, count);
-           		appData.filtered.types = calculateSuggestionsType(thisSuggestion, types);
-           	 	//appData.filtered.tableData.push(thisSuggestion);
-           	 	appData.filtered.suggestions.push(thisSuggestion);
-             }
-        }
+		try {
+			var filtered = {},
+				tableData = [],
+				thisSuggestion = {},
+				averageData = {}, 
+			    statusByUser = {},
+				types = {
+					calls: 0,
+		        	email: 0,
+		        	insight: 0,
+		        	objective: 0
+		        },
+				count = {
+		            total: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		            complete: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		        },
+		        applyUserFilter = $.isEmptyObject(userFilter) ? false: true;
+			/*var selected_users_set = null;
+			if(userFilter) {
+				selected_users_set = new Set(selected_users);
+			}*/
+			//create filtered usersList array of object based on the selected users
+			if (applyUserFilter) {
+				var tempList = [];
+	            for (var i = 0; i < appData.usersList.length; i++) {
+	                if (userFilter.has(appData.usersList[i].Name)) {
+	                	tempList.push(appData.usersList[i]);
+	                }
+	            }
+	            appData.filtered.userObject.usersList = tempList;
+	        } else {
+	        	appData.filtered.userObject.usersList = appData.usersList;
+	        }
+	        
+	        for (var i = 0; i < appData.suggestions.length; i++) {
+	        	thisSuggestion = aggregateTableData(appData.suggestions[i]);
+	        	//apply user filter for suggestions
+		    	if (applyUserFilter && !selected_users_set.has(thisSuggestion.lastStatusUpdatedBy)) {
+	                //console.log("filtering out a suggestion");
+	                continue;
+	            }
+	            //count by Type for Type Chart
+	            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
+	           		appData.filtered.userObject =  countUserStatus(thisSuggestion, appData.filtered.userObject);
+	           		appData.filtered.count = calculateMonthsCount(thisSuggestion, count);
+	           		appData.filtered.types = calculateSuggestionsType(thisSuggestion, types);
+	           	 	//appData.filtered.tableData.push(thisSuggestion);
+	           	 	appData.filtered.suggestions.push(thisSuggestion);
+	             }
+	        }
+		} catch(e) {
+			$('#response').append('<pre>After: filterSuggestions : ' + JSON.stringify(e, null, "\t") +'</pre>');
+		}
 	}
 	
 	function aggregateTableData(suggestion) {
@@ -1264,6 +1275,7 @@ $(document).ready(function() {
             appData.suggestions[i] = this_suggestion;
         }
         appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+        $('#response').append('<pre> appData.suggestions[appData.suggestions.length-1] : ' + JSON.stringify(appData.suggestions[appData.suggestions.length-1], null, "\t") +'</pre>');
     }
     
     function parseSuggestionTags(tags) {
@@ -1356,7 +1368,8 @@ $(document).ready(function() {
         	}
     	
         	appData.suggestions = tempSuggestions;
-        	$('#response').append('<pre>before parseUserNames : appData.suggestions.length ' + JSON.stringify(appData.suggestions.length, null, "\t") +'</pre>');
+        	$('#response').append('<pre> appData.suggestions[appData.suggestions.length-1] : ' + JSON.stringify(appData.suggestions[appData.suggestions.length-1], null, "\t") +'</pre>');
+        	
     	} catch(e){
     		$('#response').append('<pre>error : ' + JSON.stringify(e, null, "\t") +'</pre>');
     	}
@@ -1406,7 +1419,7 @@ $(document).ready(function() {
             }
             appData.filtered.userObject.usersList = appData.usersList;
             appData.usersListSet = new Set(tempUsersList);
-            $('#response').append('<pre>tempUsersList '+ JSON.stringify(tempUsersList, null, "\t") +' </pre>');
+       //     $('#response').append('<pre>tempUsersList '+ JSON.stringify(tempUsersList, null, "\t") +' </pre>');
             $('#response').append('<pre>usersListSet '+ JSON.stringify(appData.usersListSet, null, "\t") +' </pre>');
             return getRecordTypes();
         }).then(function(rt) {
@@ -1436,20 +1449,20 @@ $(document).ready(function() {
         	return parseUserNames(userNames);
         }).then(function() {
         	$('#response').append('<pre>before: filterSuggestions</pre>');
+        	createTeamPicker(appData.usersList);
            	filterSuggestions(null, null, null);
             //make sure we're only displaying the YTD labels and values:
             var this_month_remove = ((new Date().getMonth()) + 1);
             appData.months_to_date = appData.months_to_date.slice(0, this_month_remove);
             appData.filtered.count.total = appData.filtered.count.total.slice(0, this_month_remove);
             appData.filtered.count.complete = appData.filtered.count.complete.slice(0, this_month_remove);
-
             
             //Create charts
             createSuggestionsByTypeChart(appData.filtered.types);
             createTrendsChart(appData.months_to_date, appData.filtered.count.total, appData.filtered.count.complete);
             createAverageChart(appData.filtered.averageData);
             createTeamChart(appData.filtered.userObject.usersList);
-            createTeamPicker(appData.usersList);
+            
             buildTable(appData.filtered.tableDatasuggestions);
             //event listener for team picker
             $("#team_picker").on("hidden.bs.select", function(e) {
