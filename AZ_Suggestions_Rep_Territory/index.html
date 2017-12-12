@@ -32,22 +32,22 @@
 					        <span class="icon-bar"></span>
 					        <span class="icon-bar"></span>
 					    </button>
-					    <div class="btn-group btn-toggle"> 
+					   <!--  <div class="btn-group btn-toggle"> 
 				        	<button class="btn btn-xs btn-success">Active</button>
 				    		<button class="btn btn-xs btn-default">All</button>
-				    	</div>
+				    	</div> -->
                         <ul class="nav navbar-nav navbar-right">
                             <li>
                                 <a id="driver_filter_label">Driver:</a>
                             </li>
-                            <li style="min-width: 320px;">
+                            <li style="width: 280px;">
                                 <select multiple name="driver" id="driver_filter" class="selectpicker driver-filter" data-title="Select Driver(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
                                 </select>
                             </li>
                             <li>
                                 <a id="product_filter_label">Product:</a>
                             </li>
-                            <li style="min-width: 320px;">
+                            <li style="width: 280px;">
                                 <select multiple name="product" id="product_filter" class="selectpicker product-filter" data-title="Select Product(s)" data-style="btn-block btn-info" data-menu-style="dropdown-blue">
                                 </select>
 							</li>
@@ -126,13 +126,16 @@
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Console Logs</h5>
+	        <h5 class="modal-title" id="exampleModalLabel">Console Logs
+	        <button type="button" class="btn btn-secondary" onClick="$('#response').html('');">Clear Logs</button>
+	        </h5>
 	      </div>
 	      <div class="modal-body">
 				<div id="response">
     			</div>
 	      </div>
 	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-secondary" onClick="$('#response').html('');">Clear Logs</button>
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 	      </div>
 	    </div>
