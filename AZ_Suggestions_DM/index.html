@@ -1428,6 +1428,7 @@ function createTrendsChart(months, totals, completes) {
             childTerrIds: [],
             subordinateUserIds: [],
             subordinateUsers: [],
+            subordinateUsersList: [],
             recordtype_map: { //best practice is to actually store this in a unique object per SFDC object
                 Call_vod: '',
                 Call_Objective_vod: '',
@@ -1567,6 +1568,7 @@ function createTrendsChart(months, totals, completes) {
                     Id: subUsers[i].Id.value
                 };
                 appData.subordinateUsers.push(user_to_add);
+                appData.subordinateUsersList.push(subUsers[i].Name.value);
             }
             //console.log(appData.subordinateUsers);
             return getRecordTypes();
@@ -1735,10 +1737,11 @@ function createTrendsChart(months, totals, completes) {
         }).then(function(userNames) {
   //      	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify(userNames, null, "\t") +'</pre>');
         	try {
-	        	var ownerIdLookup = {}, tempList = [];
+        		var subordinateUsersSet = new Set(subordinateUsersList);
 	        	for (var i = 0;i < userNames.length; i++) {
 	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
 	        	}
+	        	
 	        	$.extend(appData.ownerIdLookup, ownerIdLookup);
 	        	$('#response').append('<pre>After: ownerIdLookup : ' + JSON.stringify(appData.ownerIdLookup, null, "\t") +'</pre>');
 	        	for (var i = 0; i < appData.suggestions.length; i++) {
@@ -1747,13 +1750,13 @@ function createTrendsChart(months, totals, completes) {
 	        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
 	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
 	        	    tempList.push(appData.suggestions[i].LastStatusUpdatedBy);
+	        	    if(subordinateUsersSet.has(appData.suggestions[i].LastStatusUpdatedBy)) {
+	        	    	tempSuggestions.push(appData.suggestions[i]);
+	        	    }
 	        	}
 	        	
-	        	//Remove Duplicates
-	        	tempList = tempList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-	        	for (var i = 0; i < tempList.length; i++) {
-	        		appData.usersList.push({'Name':tempList[i]});
-	        	}
+	        	appData.suggestions = tempSuggestions;
+	        	appData.usersList = appData.subordinateUsers;
         	
         		$('#response').append('<pre>After: LastStatusUpdatedBy of last suggestion : ' + appData.suggestions[appData.suggestions.length-1].LastStatusUpdatedBy +'</pre>');
         	} catch(e){
