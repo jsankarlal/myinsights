@@ -1050,6 +1050,7 @@ $(document).ready(function() {
 	            type: suggestion.type,
 				status: suggestion.Status,
 				lastStatusUpdatedBy: suggestion.LastStatusUpdatedBy,
+				createdDate: suggestion.CreatedDate,
 	            postedDate: moment(suggestion.Posted_Date_vod__c).format('LL'),
 				expirationDate: moment(suggestion.Expiration_Date_vod__c).format('LL'),
 				accountName: suggestion.AccountName,
@@ -1076,16 +1077,16 @@ $(document).ready(function() {
         
 		for (var i = 0; i < appData.filtered.userObject.usersList.length; i++) {
 			if (suggestion.lastStatusUpdatedBy == appData.filtered.userObject.usersList[i].Name) {
-			 	if (suggestion.Status == actionedText) { 
+			 	if (suggestion.status == actionedText) { 
 			 		appData.filtered.userObject.usersList[i].actioned++;
 			 		appData.filtered.userObject.averageData.actionedSum++
-			 	} else if (suggestion.Status == completedText) {
+			 	} else if (suggestion.status == completedText) {
 			 		appData.filtered.userObject.usersList[i].completed++;
 			 		appData.filtered.userObject.averageData.completedSum++
-			 	} else if (suggestion.Status == dismissedText) {
+			 	} else if (suggestion.status == dismissedText) {
 			 		appData.filtered.userObject.usersList[i].dismissed++;
 			 		appData.filtered.userObject.averageData.dismissedSum++
-			 	} else if (suggestion.Status == pendingText) {
+			 	} else if (suggestion.status == pendingText) {
 			 		appData.filtered.userObject.usersList[i].pending++;
 			 		appData.filtered.userObject.averageData.pendingSum++
 			     }
