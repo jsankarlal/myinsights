@@ -81,6 +81,7 @@ $(document).ready(function() {
          		usersList:[],
          		averageData:{}
          	},
+         	myCount:{},
          	count:{},
          	types:{},
          	tableData:[],
