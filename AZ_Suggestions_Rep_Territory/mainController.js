@@ -139,6 +139,7 @@ $(document).ready(function() {
 	        var myChart = new Chart(ctx, {
 	            type: 'horizontalBar',
 	            data: {
+	            	labels: [''],
 	            	datasets: [{
 	                    label: 'Pending',
 	                    data: [appData.filtered.myCount.pending],
