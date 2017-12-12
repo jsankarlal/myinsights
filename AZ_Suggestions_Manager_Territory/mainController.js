@@ -593,7 +593,7 @@
 
 })();
 
-
+$(document).ready(function() {
 
     //initialize the promise library
     $q = window.Q;
@@ -1358,7 +1358,7 @@
     }
 
     function mainController() {
-        
+    	$('#response').append('<div>mainController - passed </div>');
         getUserId().then(function(userId) {
             appData.currentUser.Id = userId;
             return getCurrentUserTerritoryId(appData.currentUser.Id);
@@ -1454,6 +1454,7 @@
         })
     }
     
-$(document).ready(function() {
+
+	$('#response').append('<pre>document-ready</pre>');
     mainController();
 });
