@@ -960,10 +960,10 @@ $(document).ready(function() {
 			
 			
 			//initialize userObject for status calculation
-				appData.filtered.myCount["pending"] = 0;
-				appData.filtered.myCount["dismissed"] = 0;
-				appData.filtered.myCount["actioned"] = 0;
-				appData.filtered.myCount["completed"] = 0;
+			appData.filtered.myCount["pending"] = 0;
+			appData.filtered.myCount["dismissed"] = 0;
+			appData.filtered.myCount["actioned"] = 0;
+			appData.filtered.myCount["completed"] = 0;
 			
 	        
 			//initialize types object for types calculation
@@ -984,13 +984,21 @@ $(document).ready(function() {
 	        for (var i = 0; i < appData.suggestions.length; i++) {
 	        	thisSuggestion = aggregateTableData(appData.suggestions[i]);
 	            //apply product and driver filters
-	            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
-	           		countSuggestionStatus(thisSuggestion);
+	        	if(productFilter || driverFilter) {
+		            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
+		           		countSuggestionStatus(thisSuggestion);
+		           		calculateMonthsCount(thisSuggestion);
+		           		calculateSuggestionsType(thisSuggestion);
+		           	 	appData.filtered.suggestions.push(thisSuggestion);
+		           	 	tableDataCount++;
+		             }
+	        	} else {
+	        		countSuggestionStatus(thisSuggestion);
 	           		calculateMonthsCount(thisSuggestion);
 	           		calculateSuggestionsType(thisSuggestion);
 	           	 	appData.filtered.suggestions.push(thisSuggestion);
 	           	 	tableDataCount++;
-	             }
+	        	}
 	        }
 	        $('#response').append('<pre>tableDataCount: ' + JSON.stringify(tableDataCount, null, "\t") +'</pre>');
 	        
@@ -1037,15 +1045,14 @@ $(document).ready(function() {
 	//Count by User Status for Team Chart
 	function countSuggestionStatus(suggestion) {
 	 	if (suggestion.status == actionedText) { 
-	 		appData.filtered.myCount.actioned++;
+	 		appData.filtered.myCount['actioned']++;
 	 	} else if (suggestion.status == completedText) {
-	 		appData.filtered.myCount.completed++;
+	 		appData.filtered.myCount['completed']++;
 	 	} else if (suggestion.status == dismissedText) {
-	 		appData.filtered.myCount.dismissed++;
+	 		appData.filtered.myCount['dismissed']++;
 	 	} else if (suggestion.status == pendingText) {
-	 		appData.filtered.myCount.pending++;
-	     }
-		
+	 		appData.filtered.myCount['pending']++;
+	    }
 	}
 	
 	//Count by created month for Trends chart
