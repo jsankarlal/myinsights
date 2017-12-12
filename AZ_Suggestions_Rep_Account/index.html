@@ -1061,11 +1061,11 @@ $(document).ready(function() {
         
         var selected_drivers_set = null;
         if (drivers) {
-            selected_drivers_set = new Set(drivers);
+            selected_drivers_set = new Set(selected_drivers);
         }
         var selected_products_set = null;
         if (products) {
-            selected_products_set = new Set(drivers);
+            selected_products_set = new Set(selected_products);
         }   
 
         createTeamChart(countSuggestionsByStatus(selected_products_set, selected_drivers_set, appData.suggestions))
