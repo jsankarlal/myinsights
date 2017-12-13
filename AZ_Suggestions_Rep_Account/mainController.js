@@ -566,7 +566,7 @@ $(document).ready(function() {
                 toggle: 'fa fa-th-list',
                 columns: 'fa fa-columns',
                 detailOpen: 'fa fa-plus-circle',
-                detailClose: 'ti-close'
+                detailClose: 'fa fa-close-circle'
             }
         });
 

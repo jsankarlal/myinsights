@@ -533,6 +533,14 @@ $(document).ready(function() {
             ].join('');
         }
         
+        function detailFormatter(index, row) {
+            var html = [];
+            $.each(row, function (key, value) {
+                html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+            });
+            return html.join('');
+        }
+        
         $table.bootstrapTable({
             toolbar: ".toolbar",
             clickToSelect: true,
@@ -549,6 +557,8 @@ $(document).ready(function() {
             delimeter: '&',
             showFilter: true,
             filterControl: true,
+            detailView: true,
+            detailFormatter: detailFormatter,
 
 
             formatShowingRows: function(pageFrom, pageTo, totalRows) {
@@ -561,10 +571,11 @@ $(document).ready(function() {
                 refresh: 'fa fa-refresh',
                 toggle: 'fa fa-th-list',
                 columns: 'fa fa-columns',
-                detailOpen: 'fa fa-plus-circle',
-                detailClose: 'ti-close'
+                detailOpen: 'fa fa-plus-square',
+                detailClose: 'fa fa-minus-square'
             }
         });
+        
 
         $table.bootstrapTable('load', rows);
 
