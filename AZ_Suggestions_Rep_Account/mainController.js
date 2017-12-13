@@ -975,33 +975,28 @@ $(document).ready(function() {
     
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
     	try {
-    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : </pre>');
-    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : productFilter-'+ JSON.stringify(productFilter, null, "\t") +'</pre>');
-    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : driverFilter -'+ JSON.stringify(driverFilter, null, "\t") +'</pre>');
 	    	var hasTags = false,
-	    		flag = true;
-	    	
-	    	if (productFilter || driverFilter) {
+	    		flag = false;
+	    //	if (productFilter || driverFilter) {
 		    	if(suggestion.tags != 'undefined') {
 		    		if($.isArray(suggestion.tags)) {
-		    			hasTags = suggestion.tags.lengh > 0 ? true : false;
+		    			hasTags = suggestion.tags.length > 0 ? true : false;
 		    		} 
 		    	}
 		    	
-	    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : applyDriverFilter || applyProductFilter</pre>');
-	    		$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
+	    		
 	    		if(hasTags) {
-	    			flag = false;
+	    			$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : inside - '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
 	    			for(var i=0; i < suggestion.tags.length; i++) {
 	    				if(flag) {
 	    					return flag;
 	    				}
-	    				if (productFilter.has(suggestion.tags[i].Product_Name__c) || driverFilter.has(suggestion.tags[i].Driver_Name__c)) {
+	    				if (productFilter.has(suggestion.tags[i].Product_Name__c) || driverFilter.has(suggestion.tags[i].Driver_vod__c)) {
 	    					flag = true;
 	                    }
 	    			}	    			
 	    		}
-	    	} 
+	    //	} 
 	    	return flag;
     	} catch(e) {
 			$('#response').append('<pre>After: filterSuggestionByProductsDrivers : ' + JSON.stringify(e, null, "\t") +'</pre>');
