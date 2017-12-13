@@ -543,6 +543,7 @@ $(document).ready(function() {
             map['title'] = 'Title';
             map['reason'] = 'Reason';
             map['type'] = 'Type';
+            map['status'] = 'Status';
             map['lastStatusUpdatedBy'] = 'Last Status Updated By';
             map['accountName'] = 'Account Name';
             map['postedDate'] = 'Posted Date';
