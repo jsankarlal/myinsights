@@ -925,26 +925,25 @@ $(document).ready(function() {
     	try {
 	    	var hasTags = false,
 	    		flag = false;
-	    //	if (productFilter || driverFilter) {
-		    	if(suggestion.tags != 'undefined') {
-		    		if($.isArray(suggestion.tags)) {
-		    			hasTags = suggestion.tags.length > 0 ? true : false;
-		    		} 
-		    	}
-		    	
-	    		
-	    		if(hasTags) {
-	    			$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : inside - '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
-	    			for(var i=0; i < suggestion.tags.length; i++) {
-	    				if(flag) {
-	    					return flag;
-	    				}
-	    				if (productFilter.has(suggestion.tags[i].Product_Name__c) || driverFilter.has(suggestion.tags[i].Driver_vod__c)) {
-	    					flag = true;
-	                    }
-	    			}	    			
-	    		}
-	    //	} 
+
+	    	if(suggestion.tags != 'undefined') {
+	    		if($.isArray(suggestion.tags)) {
+	    			hasTags = suggestion.tags.length > 0 ? true : false;
+	    		} 
+	    	}
+	    	
+    		
+    		if(hasTags) {
+    			$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : inside - '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
+    			for(var i=0; i < suggestion.tags.length; i++) {
+    				if(flag) {
+    					return flag;
+    				}
+    				if (productFilter.has(suggestion.tags[i].Product_Name__c) || driverFilter.has(suggestion.tags[i].Driver_vod__c)) {
+    					flag = true;
+                    }
+    			}	    			
+    		}
 	    	return flag;
     	} catch(e) {
 			$('#response').append('<pre>After: filterSuggestionByProductsDrivers : ' + JSON.stringify(e, null, "\t") +'</pre>');
@@ -958,7 +957,9 @@ $(document).ready(function() {
 		try {
 			var filtered = {},
 				tableDataCount = 0,
-				thisSuggestion = {};
+				thisSuggestion = {},
+				matchRequired = 0,
+				matchNotRequired = 0;
 			
 			
 			//initialize userObject for status calculation
@@ -993,15 +994,26 @@ $(document).ready(function() {
 		           		calculateSuggestionsType(thisSuggestion);
 		           	 	appData.filtered.suggestions.push(thisSuggestion);
 		           	 	tableDataCount++;
+		           	 	matchRequired++;
 		             }
 	        	} else {
+	        		
 	        		countSuggestionStatus(thisSuggestion);
 	           		calculateMonthsCount(thisSuggestion);
 	           		calculateSuggestionsType(thisSuggestion);
 	           	 	appData.filtered.suggestions.push(thisSuggestion);
 	           	 	tableDataCount++;
+	           	 	matchNotRequired++;
 	        	}
 	        }
+	        if (matchNotRequired > 0) {
+	        	$('#response').append('<pre>filterSuggestionByProductsDrivers: NO product || No Driver Match Required : ' + JSON.stringify(matchNotRequired, null, "\t") +'</pre>');
+	        }
+	        
+	        if (matchRequired > 0) {
+	        	$('#response').append('<pre>filterSuggestionByProductsDrivers: product || Driver Match Required :' + JSON.stringify(matchRequired, null, "\t") +'</pre>');
+	        }
+	        
 	        $('#response').append('<pre>tableDataCount: ' + JSON.stringify(tableDataCount, null, "\t") +'</pre>');
 	        
 	        $('#response').append('<pre>appData.filtered.suggestions : first suggestion ' + JSON.stringify(appData.filtered.suggestions[0], null, "\t") +'</pre>');
