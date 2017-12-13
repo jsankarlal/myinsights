@@ -630,6 +630,26 @@ $(document).ready(function() {
             ].join('');
         }
         
+        function detailFormatter(index, row) {
+            var html = ['<div style="padding:50px;"> <h3> Suggestion Detailed Description </h3>'],
+            map = {};
+            map['title'] = 'Title';
+            map['reason'] = 'Reason';
+            map['type'] = 'Type';
+            map['lastStatusUpdatedBy'] = 'Last Status Updated By';
+            map['accountName'] = 'Account Name';
+            map['postedDate'] = 'Posted Date';
+            map['expirationDate'] = 'Expiration Date';
+            		
+            $.each(row, function (key, value) {
+            	if(key != 'tags' && key != 'undefined' && key != 'createdDate') {
+            		html.push('<p><b>' + map[key] + ':</b> ' + value + '</p>');
+            	}
+            });
+            html.push('</div>')
+            return html.join('');
+        }
+        
         $table.bootstrapTable({
             toolbar: ".toolbar",
             clickToSelect: true,
@@ -646,6 +666,8 @@ $(document).ready(function() {
             delimeter: '&',
             showFilter: true,
             filterControl: true,
+            detailView: true,
+            detailFormatter: detailFormatter,
 
 
             formatShowingRows: function(pageFrom, pageTo, totalRows) {
@@ -658,8 +680,8 @@ $(document).ready(function() {
                 refresh: 'fa fa-refresh',
                 toggle: 'fa fa-th-list',
                 columns: 'fa fa-columns',
-                detailOpen: 'fa fa-plus-circle',
-                detailClose: 'ti-close'
+                detailOpen: 'fa fa-plus-square',
+                detailClose: 'fa fa-minus-square'
             }
         });
 

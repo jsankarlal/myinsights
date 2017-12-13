@@ -534,12 +534,22 @@ $(document).ready(function() {
         }
         
         function detailFormatter(index, row) {
-            var html = [];
+            var html = ['<div style="padding:50px;"> <h3> Suggestion Detailed Description </h3>'],
+            map = {};
+            map['title'] = 'Title';
+            map['reason'] = 'Reason';
+            map['type'] = 'Type';
+            map['lastStatusUpdatedBy'] = 'Last Status Updated By';
+            map['accountName'] = 'Account Name';
+            map['postedDate'] = 'Posted Date';
+            map['expirationDate'] = 'Expiration Date';
+            		
             $.each(row, function (key, value) {
-            	if(key != 'tags') {
-            		html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+            	if(key != 'tags' && key != 'undefined' && key != 'createdDate') {
+            		html.push('<p><b>' + map[key] + ':</b> ' + value + '</p>');
             	}
             });
+            html.push('</div>')
             return html.join('');
         }
         
