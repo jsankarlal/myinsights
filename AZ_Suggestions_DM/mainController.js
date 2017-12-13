@@ -646,8 +646,8 @@ $(document).ready(function() {
         }
         
         function detailFormatter(index, row) {
-            var html = ['<div style="padding:50px;"> <h3> Suggestion Detailed Description </h3>'],
-            map = {};
+        	var html = ['<div style="padding-left:50px;padding-right:50px;"> <h4 class="text-align:center;"> Suggestion Details </h4>'],
+        		map = {};
             map['title'] = 'Title';
             map['reason'] = 'Reason';
             map['type'] = 'Type';
