@@ -939,8 +939,11 @@ $(document).ready(function() {
     				if(flag) {
     					return flag;
     				}
-    				if (productFilter.has(suggestion.tags[i].Product_Name__c) || driverFilter.has(suggestion.tags[i].Driver_vod__c)) {
+    				if (productFilter && productFilter.has(suggestion.tags[i].Product_Name__c)) {
     					flag = true;
+                    }
+    				if(driverFilter && driverFilter.has(suggestion.tags[i].Driver_vod__c)) {
+     				    flag = true;
                     }
     			}	    			
     		}
