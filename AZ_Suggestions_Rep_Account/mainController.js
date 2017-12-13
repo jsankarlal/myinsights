@@ -1003,7 +1003,7 @@ $(document).ready(function() {
 		}
     }
     
-	function filterSuggestions(productFilter, driverFilter) {
+    function filterSuggestions(productFilter, driverFilter) {
 		$('#response').append('<pre>inside: filterSuggestions : </pre>');
 		$('#response').append('<pre>productFilter :'+ JSON.stringify(productFilter, null, "\t") +' </pre>');
 		$('#response').append('<pre>driverFilter :'+ JSON.stringify(driverFilter, null, "\t") +' </pre>');
@@ -1056,7 +1056,7 @@ $(document).ready(function() {
 	        }
 	        $('#response').append('<pre>tableDataCount: ' + JSON.stringify(tableDataCount, null, "\t") +'</pre>');
 	        
-			
+	        $('#response').append('<pre>appData.filtered.suggestions : first suggestion ' + JSON.stringify(appData.filtered.suggestions[0], null, "\t") +'</pre>');
 			$('#response').append('<pre>appData.filtered.suggestions.length : ' + JSON.stringify(appData.filtered.suggestions.length, null, "\t") +'</pre>'); 
 	        $('#response').append('<pre>appData.filtered.myCount : ' + JSON.stringify(appData.filtered.myCount, null, "\t") +'</pre>');
 	        $('#response').append('<pre>appData.filtered.types : ' + JSON.stringify(appData.filtered.types, null, "\t") +'</pre>');

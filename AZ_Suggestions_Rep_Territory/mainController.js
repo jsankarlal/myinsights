@@ -1004,7 +1004,7 @@ $(document).ready(function() {
 	        }
 	        $('#response').append('<pre>tableDataCount: ' + JSON.stringify(tableDataCount, null, "\t") +'</pre>');
 	        
-			
+	        $('#response').append('<pre>appData.filtered.suggestions : first suggestion ' + JSON.stringify(appData.filtered.suggestions[0], null, "\t") +'</pre>');
 			$('#response').append('<pre>appData.filtered.suggestions.length : ' + JSON.stringify(appData.filtered.suggestions.length, null, "\t") +'</pre>'); 
 	        $('#response').append('<pre>appData.filtered.myCount : ' + JSON.stringify(appData.filtered.myCount, null, "\t") +'</pre>');
 	        $('#response').append('<pre>appData.filtered.types : ' + JSON.stringify(appData.filtered.types, null, "\t") +'</pre>');
