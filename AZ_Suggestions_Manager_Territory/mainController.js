@@ -267,7 +267,10 @@ $(document).ready(function() {
 	      		try{
 	      			buildTable(lastStatusUpdatedBy, status, null);
 		            //document.location.href = 'index.html#bootstrap-table';
-	      			location.hash = '#bootstrap-table';
+	      			//location.hash = '#bootstrap-table';
+	      			$('html, body').animate({
+	      		        scrollTop: $("#bootstrap-table").offset().top
+	      		    }, 1000);
 	      		} catch(e){
 	      			$('#response').append('<pre>error :' + JSON.stringify(e, null, "\t") + '</pre>');
 	      		}
@@ -494,7 +497,10 @@ $(document).ready(function() {
 	        $('#response').append('<pre> clicked createSuggestionsByTypeChart:  chartData.label :' + JSON.stringify(type, null, "\t") + '</pre>');
 	        buildTable(null, null, type);
 	        //document.location.href = 'index.html#bootstrap-table';
-	        location.hash = '#bootstrap-table';
+	        //location.hash = '#bootstrap-table';
+	        $('html, body').animate({
+  		        scrollTop: $("#bootstrap-table").offset().top
+  		    }, 1000);
 
 	    }
 	}

@@ -267,7 +267,10 @@ $(document).ready(function() {
 	      		try{
 	      			buildTable(status, null);
 		            //document.location.href = 'index.html#bootstrap-table';
-	      			location.hash = '#bootstrap-table';
+	      			//location.hash = '#bootstrap-table';
+	      			$('html, body').animate({
+	      		        scrollTop: $("#bootstrap-table").offset().top
+	      		    }, 1000);
 	      		} catch(e){
 	      			$('#response').append('<pre>error :' + JSON.stringify(e, null, "\t") + '</pre>');
 	      		}
@@ -402,7 +405,10 @@ $(document).ready(function() {
 	        //function buildTable(statusFilter, typeFilter)
 	        $('#response').append('<div> clicked createSuggestionsByTypeChart:  chartData.label :' + JSON.stringify(chartData.label, null, "\t") + '</div>');
 	        buildTable(null, chartData.label);
-	        location.hash = '#bootstrap-table';
+	        //location.hash = '#bootstrap-table';
+	        $('html, body').animate({
+  		        scrollTop: $("#bootstrap-table").offset().top
+  		    }, 2000);
 
 	    }
 	}
