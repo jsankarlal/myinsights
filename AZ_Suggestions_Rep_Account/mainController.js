@@ -270,7 +270,7 @@ $(document).ready(function() {
 	      			//location.hash = '#bootstrap-table';
 	      			$('html, body').animate({
 	      		        scrollTop: $("#bootstrap-table").offset().top
-	      		    }, 1000);
+	      		    }, 2000);
 	      		} catch(e){
 	      			$('#response').append('<pre>error :' + JSON.stringify(e, null, "\t") + '</pre>');
 	      		}
@@ -408,7 +408,7 @@ $(document).ready(function() {
 	        //location.hash = '#bootstrap-table';
 	        $('html, body').animate({
   		        scrollTop: $("#bootstrap-table").offset().top
-  		    }, 1000);
+  		    }, 2000);
 
 	    }
 	}

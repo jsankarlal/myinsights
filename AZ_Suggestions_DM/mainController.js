@@ -267,7 +267,7 @@ $(document).ready(function() {
 	      			buildTable(chartData.label, chartData.datasetLabel);
 	      			$('html, body').animate({
 	      		        scrollTop: $("#bootstrap-table").offset().top
-	      		    }, 1000);
+	      		    }, 2000);
 	      		} catch(e){
 	      			$('#response').append('<div>error :' + JSON.stringify(e, null, "\t") + '</div>');
 	      		}
@@ -515,7 +515,7 @@ $(document).ready(function() {
 	        //location.hash = '#bootstrap-table';
 	        $('html, body').animate({
   		        scrollTop: $("#bootstrap-table").offset().top
-  		    }, 1000);
+  		    }, 2000);
 
 	    }
 	}
@@ -1175,13 +1175,21 @@ $(document).ready(function() {
 	                continue;
 	            }
 	            //apply product and driver filters
-	            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
-	           		countUserStatus(thisSuggestion);
+		    	if (productFilter || driverFilter) {
+		            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
+		           		countUserStatus(thisSuggestion);
+		           		calculateMonthsCount(thisSuggestion);
+		           		calculateSuggestionsType(thisSuggestion);
+		           	 	appData.filtered.suggestions.push(thisSuggestion);
+		           	 	tableDataCount++;
+		             }
+		    	} else {
+		    		countUserStatus(thisSuggestion);
 	           		calculateMonthsCount(thisSuggestion);
 	           		calculateSuggestionsType(thisSuggestion);
 	           	 	appData.filtered.suggestions.push(thisSuggestion);
 	           	 	tableDataCount++;
-	             }
+		    	}
 	        }
 	        $('#response').append('<pre>usersFilteredCount: ' + JSON.stringify(usersFilteredCount, null, "\t") +'</pre>');
 	        $('#response').append('<pre>tableDataCount: ' + JSON.stringify(tableDataCount, null, "\t") +'</pre>');
