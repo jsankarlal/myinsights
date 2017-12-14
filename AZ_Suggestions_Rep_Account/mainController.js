@@ -999,8 +999,8 @@ $(document).ready(function() {
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
     	try {
 	    	var hasTags = false,
-	    		productFlag = false,
-	    		driverFlag = false;
+	    		productFlag = productFilter ? false: true,
+	    		driverFlag = driverFilter ? false: true;
 
 	    	if(suggestion.tags != 'undefined') {
 	    		if($.isArray(suggestion.tags)) {
