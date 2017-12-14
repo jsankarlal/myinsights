@@ -961,15 +961,24 @@ $(document).ready(function() {
     
     function checkTags(tags, filters) {
     	var flag = false, count = 0;
-    	for (var i=0; i < tags.length; i++) {
-    		for (var j=0; j < filters.length; j++) {
+    	for (var j=0; j < filters.length; j++) {
+    		/*if (flag) {
+    			return flag;
+    		}*/
+    		for (var i=0; i < tags.length; i++) {
+    			/*if (flag) {
+        			return flag;
+        		}*/
         		if(tags[i] == filters[j]) {
-        			count++;
+        		//	count++;
+        			flag = true;
+        			return flag;
         		}
         	}
     	}
     	
-    	return filters.length == count ? true : false;
+    	return flag;
+    	//return filters.length == count ? true : false;
     }
     
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
