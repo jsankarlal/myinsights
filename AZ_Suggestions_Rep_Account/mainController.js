@@ -270,7 +270,7 @@ $(document).ready(function() {
 	      			//location.hash = '#bootstrap-table';
 	      			$('html, body').animate({
 	      		        scrollTop: $("#bootstrap-table").offset().top
-	      		    }, 2000);
+	      		    }, 1200);
 	      		} catch(e){
 	      			$('#response').append('<pre>error :' + JSON.stringify(e, null, "\t") + '</pre>');
 	      		}
@@ -408,7 +408,7 @@ $(document).ready(function() {
 	        //location.hash = '#bootstrap-table';
 	        $('html, body').animate({
   		        scrollTop: $("#bootstrap-table").offset().top
-  		    }, 2000);
+  		    }, 1200);
 
 	    }
 	}
@@ -538,8 +538,8 @@ $(document).ready(function() {
         }
         
         function detailFormatter(index, row) {
-        	var html = ['<div style="padding-left:50px;padding-right:50px;"> <h4 style="text-align:center;"> Suggestion Details </h4>'],
-        		map = {};
+            var html = ['<div style="padding-left:50px;padding-right:50px;"> <h4 style="text-align:center;"> Suggestion Details </h4>'],
+            	map = {};
             map['title'] = 'Title';
             map['reason'] = 'Reason';
             map['type'] = 'Type';
@@ -548,9 +548,15 @@ $(document).ready(function() {
             map['accountName'] = 'Account Name';
             map['postedDate'] = 'Posted Date';
             map['expirationDate'] = 'Expiration Date';
+            map['productTags'] = 'Tagged Products';
+            map['driverTags'] = 'Tagged Drivers';
+            map['createdDate'] = 'Created Date';
             		
             $.each(row, function (key, value) {
-            	if(key != 'tags' && key != 'undefined' && key != 'createdDate') {
+            	if(key != 'tags' && key != 'undefined') {
+            		if (key == 'createdDate') {
+            			value = moment(value).format('LL');
+            		} 
             		html.push('<p><b>' + map[key] + ':</b> ' + value + '</p>');
             	}
             });
@@ -567,9 +573,9 @@ $(document).ready(function() {
             showColumns: false,
             pagination: true,
             searchAlign: 'left',
-            pageSize: 5,
+            pageSize: 10,
             clickToSelect: false,
-            pageList: [5, 10, 15, 20],
+            pageList: [10, 20, 30, 40],
             multipleSearch: true,
             delimeter: '&',
             showFilter: true,
@@ -996,33 +1002,32 @@ $(document).ready(function() {
 
     }
     
+    function checkTags(tags, filters) {
+    	var flag = false, count = 0;
+    	for (var i=0; i < tags.length; i++) {
+    		for (var j=0; j < filters.length; j++) {
+        		if(tags[i] == filters[j]) {
+        			count++;
+        		}
+        	}
+    	}
+    	
+    	return filters.length == count ? true : false;
+    }
+    
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
     	try {
-	    	var hasTags = false,
-	    		productFlag = productFilter ? false: true,
-	    		driverFlag = driverFilter ? false: true;
-
-	    	if(suggestion.tags != 'undefined') {
-	    		if($.isArray(suggestion.tags)) {
-	    			hasTags = suggestion.tags.length > 0 ? true : false;
-	    		} 
-	    	}
-	    	
-    		
-    		if(hasTags) {
-    			$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : inside - '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
-    			for(var i=0; i < suggestion.tags.length; i++) {
-    				if(productFlag && driverFlag) {
-    					return true;
-    				}
-    				if (productFilter && !productFlag && productFilter.has(suggestion.tags[i].Product_Name__c)) {
-    					productFlag = true;
-                    }
-    				if(driverFilter && !driverFlag && driverFilter.has(suggestion.tags[i].Driver_vod__c)) {
-    					driverFlag = true;
-                    }
-    			}	    			
-    		}
+	    	var productFlag = false,
+	    		driverFlag = false;
+	    	  				
+			if (productFilter && suggestion.productTags.length > 0 && checkTags(suggestion.productTags, selected_products)) {
+				productFlag = true;
+            }
+			
+			if (driverFilter && suggestion.driverTags.length > 0 && checkTags(suggestion.driverTags, selected_drivers)) {
+				driverFlag = true;
+            }
+    				
 	    	return productFlag && driverFlag;
     	} catch(e) {
 			$('#response').append('<pre>After: filterSuggestionByProductsDrivers : ' + JSON.stringify(e, null, "\t") +'</pre>');
@@ -1104,7 +1109,9 @@ $(document).ready(function() {
 	            postedDate: moment(suggestion.Posted_Date_vod__c).format('LL'),
 				expirationDate: moment(suggestion.Expiration_Date_vod__c).format('LL'),
 				accountName: suggestion.AccountName,
-				tags: suggestion.tags
+				tags: suggestion.tags,
+				productTags: suggestion.productTags,
+				driverTags: suggestion.driverTags
             };
 		
 		return thisSuggestion;
@@ -1170,7 +1177,10 @@ $(document).ready(function() {
 				Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
 				Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,
 				LastStatusUpdatedBy: '',
-				Status: ''
+				Status: '',
+				productTags: [],
+				driverTags: []
+					
             };
         	appData.ownerIdList.push(suggestions[i].OwnerId.value);
         	
@@ -1202,70 +1212,82 @@ $(document).ready(function() {
     function parseSuggestionTags(tags) {
 
         console.log(tags);
-        if (tags.length > 0) {
-            var product_tags_missing = true;
-            var driver_tags_missing = true;
-            //console.log(appData.suggestions);
-            for (var i = 0; i < appData.suggestions.length; i++) {
-                var tag_count = 0;
-                for (var j = 0; j < tags.length; j++) {
-                    //check if this tag parentid matches this suggestion id
-                    if (tags[j].Suggestion_vod__c.value === appData.suggestions[i].Id) {
-                        //console.log("it's a match!");
-                        var newTag = {
-                            Driver_vod__c: tags[j].Driver_vod__c.value,
-                            Product_Name__c: tags[j].Product_Name__c.value
-                        };
-                        //console.log(newTag);
-                        //console.log(appData.suggestions[i]);
-                        if (tag_count === 0) {
-                            appData.suggestions[i]["tags"] = [];
-                        }
-                        appData.suggestions[i].tags[tag_count] = newTag;
-                        tag_count++;
-                        //console.log(appData.suggestions[i].tags);
-                        if (newTag.Driver_vod__c) {
-                            drivers_master_set.add(newTag.Driver_vod__c);
-                            driver_tags_missing = false;
-                        }
-                        if (newTag.Product_Name__c) {
-                            products_master_set.add(newTag.Product_Name__c);
-                            product_tags_missing = false;
-                        }
-                    }
-                }
-            }
-            console.log("Driver tags missing? " + driver_tags_missing);
-            console.log(drivers_master_set);
-            console.log("Product tags missing? " + product_tags_missing);
-            console.log(products_master_set);
-            if (product_tags_missing) {
-                disableProductFilter();
-            } else { //now that all the tags are built out, time to compose the select pickers
-                var product_options = '';
-                for (let product of products_master_set) {
-                    product_options += '<option value="' + product + '">' + product + '</option>';
-                }
-                $("#product_filter").append(product_options);
-                $('.product-filter').selectpicker('refresh');
-
-            }
-            if (driver_tags_missing) {
-                disableDriverFilter();
-            } else { //now that all the tags are built out, time to compose the driver  pickers
-                var driver_options = '';
-                for (let driver of drivers_master_set) {
-                    driver_options += '<option value="' + driver + '">' + driver + '</option>';
-                }
-                $("#driver_filter").append(driver_options);
-                $('.driver-filter').selectpicker('refresh');
-            }
-        } else { //no tags!!
-            //disable the filters that don't apply
-            //console.log("There are zero Suggestion Tags")
-            disableDriverFilter();
-            disableProductFilter();
-        }
+        try {
+	        if (tags.length > 0) {
+	            var product_tags_missing = true;
+	            var driver_tags_missing = true;
+	            //console.log(appData.suggestions);
+	            for (var i = 0; i < appData.suggestions.length; i++) {
+	                var tag_count = 0,
+	                	driverTags = [],
+	                	productTags = [];
+	                for (var j = 0; j < tags.length; j++) {
+	                    //check if this tag parentid matches this suggestion id
+	                    if (tags[j].Suggestion_vod__c.value === appData.suggestions[i].Id) {
+	                        //console.log("it's a match!");
+	                    	driverTags.push(tags[j].Driver_vod__c.value);
+	                    	productTags.push(tags[j].Product_Name__c.value);
+	                        var newTag = {
+	                            Driver_vod__c: tags[j].Driver_vod__c.value,
+	                            Product_Name__c: tags[j].Product_Name__c.value
+	                        };
+	                        //console.log(newTag);
+	                        //console.log(appData.suggestions[i]);
+	                        if (tag_count === 0) {
+	                            appData.suggestions[i]["tags"] = [];
+	                        }
+	                        appData.suggestions[i].tags[tag_count] = newTag;
+	                        tag_count++;
+	                        //console.log(appData.suggestions[i].tags);
+	                        if (newTag.Driver_vod__c) {
+	                            drivers_master_set.add(newTag.Driver_vod__c);
+	                            driver_tags_missing = false;
+	                        }
+	                        if (newTag.Product_Name__c) {
+	                            products_master_set.add(newTag.Product_Name__c);
+	                            product_tags_missing = false;
+	                        }
+	                    }
+	                    appData.suggestions[i]['driverTags'] = driverTags.filter(function(n){ return n != '' });
+	                    appData.suggestions[i]['productTags'] = productTags.filter(function(n){ return n != '' });
+	                    
+	                }
+	            }
+	            console.log("Driver tags missing? " + driver_tags_missing);
+	            console.log(drivers_master_set);
+	            console.log("Product tags missing? " + product_tags_missing);
+	            console.log(products_master_set);
+	            if (product_tags_missing) {
+	                disableProductFilter();
+	            } else { //now that all the tags are built out, time to compose the select pickers
+	                var product_options = '';
+	                for (let product of products_master_set) {
+	                    product_options += '<option value="' + product + '">' + product + '</option>';
+	                }
+	                $("#product_filter").append(product_options);
+	                $('.product-filter').selectpicker('refresh');
+	
+	            }
+	            if (driver_tags_missing) {
+	                disableDriverFilter();
+	            } else { //now that all the tags are built out, time to compose the driver  pickers
+	                var driver_options = '';
+	                for (let driver of drivers_master_set) {
+	                    driver_options += '<option value="' + driver + '">' + driver + '</option>';
+	                }
+	                $("#driver_filter").append(driver_options);
+	                $('.driver-filter').selectpicker('refresh');
+	            }
+	        } else { //no tags!!
+	            //disable the filters that don't apply
+	            //console.log("There are zero Suggestion Tags")
+	            disableDriverFilter();
+	            disableProductFilter();
+	        }
+        
+	    } catch(e) {
+			$('#response').append('<pre>Error in: parseSuggestionTags : ' + JSON.stringify(e, null, "\t") +'</pre>');
+		}
     	
     }
     

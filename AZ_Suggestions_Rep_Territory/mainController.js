@@ -544,9 +544,15 @@ $(document).ready(function() {
             map['accountName'] = 'Account Name';
             map['postedDate'] = 'Posted Date';
             map['expirationDate'] = 'Expiration Date';
+            map['productTags'] = 'Tagged Products';
+            map['driverTags'] = 'Tagged Drivers';
+            map['createdDate'] = 'Created Date';
             		
             $.each(row, function (key, value) {
-            	if(key != 'tags' && key != 'undefined' && key != 'createdDate') {
+            	if(key != 'tags' && key != 'undefined') {
+            		if (key == 'createdDate') {
+            			value = moment(value).format('LL');
+            		} 
             		html.push('<p><b>' + map[key] + ':</b> ' + value + '</p>');
             	}
             });
@@ -563,9 +569,9 @@ $(document).ready(function() {
             showColumns: false,
             pagination: true,
             searchAlign: 'left',
-            pageSize: 5,
+            pageSize: 10,
             clickToSelect: false,
-            pageList: [5, 10, 15, 20],
+            pageList: [10, 20, 30, 40],
             multipleSearch: true,
             delimeter: '&',
             showFilter: true,
@@ -960,40 +966,17 @@ $(document).ready(function() {
     
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
     	try {
-	    	var hasTags = false,
-	    		productFlag = productFilter ? false: true,
-	    		driverFlag = driverFilter ? false: true;
-
-	    	/*if(suggestion.tags != 'undefined') {
-	    		if($.isArray(suggestion.tags)) {
-	    			hasTags = suggestion.tags.length > 0 ? true : false;
-	    		} 
-	    	}
-	    	
-    		
-    		if(hasTags) {
-    			$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : inside - '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
-    			for(var i=0; i < suggestion.tags.length; i++) {
-    				if(productFlag && driverFlag) {
-    					return true;
-    				}*/
+	    	var productFlag = false,
+	    		driverFlag = false;
+	    	  				
+			if (productFilter && suggestion.productTags.length > 0 && checkTags(suggestion.productTags, selected_products)) {
+				productFlag = true;
+            }
+			
+			if (driverFilter && suggestion.driverTags.length > 0 && checkTags(suggestion.driverTags, selected_drivers)) {
+				driverFlag = true;
+            }
     				
-    				if (productFilter && !productFlag && suggestion.productTags.length > 0 && checkTags(suggestion.productTags, selected_products)) {
-    					productFlag = true;
-                    }
-    				
-    				if (driverFilter && !driverFlag && suggestion.driverTags.length > 0 && checkTags(suggestion.driverTags, selected_drivers)) {
-    					driverFlag = true;
-                    }
-    				
-    				/*if (productFilter && !productFlag && productFilter.has(suggestion.tags[i].Product_Name__c)) {
-    					productFlag = true;
-                    }
-    				if(driverFilter && !driverFlag && driverFilter.has(suggestion.tags[i].Driver_vod__c)) {
-    					driverFlag = true;
-                    }
-    			}	    			
-    		}*/
 	    	return productFlag && driverFlag;
     	} catch(e) {
 			$('#response').append('<pre>After: filterSuggestionByProductsDrivers : ' + JSON.stringify(e, null, "\t") +'</pre>');
