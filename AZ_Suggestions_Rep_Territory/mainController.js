@@ -283,7 +283,7 @@ $(document).ready(function() {
 	//1 = email
 	//2 = insight
 	//3 = call objective
-	function createSuggestionsByTypeChart(type_data) {
+	function createSuggestionsByTypeChart() {
 
 	    $('#suggestions_by_type_container').empty();
 	    $('#suggestions_by_type_container').append('<canvas id="suggestions_by_type"></canvas>');
@@ -303,7 +303,7 @@ $(document).ready(function() {
 	        }
 	    }
 
-	    if (data_to_display.length > 1) {//only render the chart if there are meaningful types to break down.
+	    if (data_to_display.length > 0) {//only render the chart if there are meaningful types to break down.
 	        first_run = false;
 	        var ctx1 = document.getElementById("suggestions_by_type");
 
