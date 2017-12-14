@@ -966,14 +966,14 @@ $(document).ready(function() {
     
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
     	try {
-	    	var productFlag = false,
-	    		driverFlag = false;
+	    	var productFlag = productFilter ? false : true,
+	    		driverFlag = driverFilter ? false : true;
 	    	  				
-			if (productFilter && suggestion.productTags.length > 0 && checkTags(suggestion.productTags, selected_products)) {
+	    	if (productFilter && !productFlag && suggestion.productTags.length > 0 && checkTags(suggestion.productTags, selected_products)) {
 				productFlag = true;
             }
 			
-			if (driverFilter && suggestion.driverTags.length > 0 && checkTags(suggestion.driverTags, selected_drivers)) {
+			if (driverFilter && !driverFlag && suggestion.driverTags.length > 0 && checkTags(suggestion.driverTags, selected_drivers)) {
 				driverFlag = true;
             }
     				
