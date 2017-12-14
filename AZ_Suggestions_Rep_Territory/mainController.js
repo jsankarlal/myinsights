@@ -944,6 +944,7 @@ $(document).ready(function() {
 
         return deferred.promise;
     }
+    
     function checkTags(tags, filters) {
     	var flag = false, count = 0;
     	for (var i=0; i < tags.length; i++) {
@@ -1089,7 +1090,9 @@ $(document).ready(function() {
 	            postedDate: moment(suggestion.Posted_Date_vod__c).format('LL'),
 				expirationDate: moment(suggestion.Expiration_Date_vod__c).format('LL'),
 				accountName: suggestion.AccountName,
-				tags: suggestion.tags
+				tags: suggestion.tags,
+				productTags: suggestion.productTags,
+				driverTags: suggestion.driverTags
             };
 		
 		return thisSuggestion;
