@@ -375,18 +375,19 @@ $(document).ready(function() {
 	        myChart1.destroy();
 	    }
 
-	    var labels = ["Call", "Email", "Insight", "Call Objective"];
-	    var labels_to_display = ["Call", "Email", "Insight", "Call Objective"];
-	    var data_to_display = [appData.filtered.types.call, appData.filtered.types.email, appData.filtered.types.insight, appData.filtered.types.objective];
-
-	    /*for (var i = 0; i < labels.length; i++) {
+	    var type_data = [appData.filtered.types.call, appData.filtered.types.email, appData.filtered.types.insight, appData.filtered.types.objective],
+	        labels = ["Call", "Email", "Insight", "Call Objective"],
+	        labels_to_display = [],
+	        data_to_display = [];
+	
+	    for (var i = 0; i < labels.length; i++) {
 	        if (type_data[i] !== 0) {
 	            labels_to_display.push(labels[i]);
 	            data_to_display.push(type_data[i]);
 	        }
-	    }*/
-
-	    if (data_to_display.length > 1) {//only render the chart if there are meaningful types to break down.
+	    }
+	
+	    if (data_to_display.length > 0) {//only render the chart if there are meaningful types to break down.
 	        first_run = false;
 	        var ctx1 = document.getElementById("suggestions_by_type");
 
