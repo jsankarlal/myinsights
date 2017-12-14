@@ -1077,17 +1077,10 @@ $(document).ready(function() {
     }
     
     function checkTags(tags, filters) {
-    	var flag = false, count = 0;
+    	var flag = false;
     	for (var j=0; j < filters.length; j++) {
-    		/*if (flag) {
-    			return flag;
-    		}*/
     		for (var i=0; i < tags.length; i++) {
-    			/*if (flag) {
-        			return flag;
-        		}*/
         		if(tags[i] == filters[j]) {
-        		//	count++;
         			flag = true;
         			return flag;
         		}
@@ -1095,7 +1088,6 @@ $(document).ready(function() {
     	}
     	
     	return flag;
-    	//return filters.length == count ? true : false;
     }
     
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {

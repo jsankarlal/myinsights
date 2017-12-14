@@ -1011,16 +1011,17 @@ $(document).ready(function() {
     }
     
     function checkTags(tags, filters) {
-    	var flag = false, count = 0;
-    	for (var i=0; i < tags.length; i++) {
-    		for (var j=0; j < filters.length; j++) {
+    	var flag = false;
+    	for (var j=0; j < filters.length; j++) {
+    		for (var i=0; i < tags.length; i++) {
         		if(tags[i] == filters[j]) {
-        			count++;
+        			flag = true;
+        			return flag;
         		}
         	}
     	}
     	
-    	return filters.length == count ? true : false;
+    	return flag;
     }
     
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
