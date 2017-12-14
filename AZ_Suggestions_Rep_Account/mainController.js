@@ -538,7 +538,7 @@ $(document).ready(function() {
         }
         
         function detailFormatter(index, row) {
-        	var html = ['<div style="padding-left:50px;padding-right:50px;"> <h4 class="text-align:center;"> Suggestion Details </h4>'],
+        	var html = ['<div style="padding-left:50px;padding-right:50px;"> <h4 style="text-align:center;"> Suggestion Details </h4>'],
         		map = {};
             map['title'] = 'Title';
             map['reason'] = 'Reason';
@@ -999,31 +999,31 @@ $(document).ready(function() {
     function filterSuggestionByProductsDrivers(productFilter, driverFilter, suggestion) {
     	try {
 	    	var hasTags = false,
-	    		flag = false;
-	    //	if (productFilter || driverFilter) {
-		    	if(suggestion.tags != 'undefined') {
-		    		if($.isArray(suggestion.tags)) {
-		    			hasTags = suggestion.tags.length > 0 ? true : false;
-		    		} 
-		    	}
-		    	
-	    		
-	    		if(hasTags) {
-	    			$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : inside - '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
-	    			for(var i=0; i < suggestion.tags.length; i++) {
-	    				if(flag) {
-	    					return flag;
-	    				}
-	    				if (productFilter && productFilter.has(suggestion.tags[i].Product_Name__c)) {
-	    					flag = true;
-	                    }
-	    				if(driverFilter && driverFilter.has(suggestion.tags[i].Driver_vod__c)) {
-	     				    flag = true;
-	                    }
-	    			}	    			
-	    		}
-	    //	} 
-	    	return flag;
+	    		productFlag = false,
+	    		driverFlag = false;
+
+	    	if(suggestion.tags != 'undefined') {
+	    		if($.isArray(suggestion.tags)) {
+	    			hasTags = suggestion.tags.length > 0 ? true : false;
+	    		} 
+	    	}
+	    	
+    		
+    		if(hasTags) {
+    			$('#response').append('<pre>inside: filterSuggestionByProductsDrivers : hasTags : inside - '+ JSON.stringify(hasTags, null, "\t") +'</pre>');
+    			for(var i=0; i < suggestion.tags.length; i++) {
+    				if(productFlag && driverFlag) {
+    					return true;
+    				}
+    				if (productFilter && !productFlag && productFilter.has(suggestion.tags[i].Product_Name__c)) {
+    					productFlag = true;
+                    }
+    				if(driverFilter && !driverFlag && driverFilter.has(suggestion.tags[i].Driver_vod__c)) {
+    					driverFlag = true;
+                    }
+    			}	    			
+    		}
+	    	return productFlag && driverFlag;
     	} catch(e) {
 			$('#response').append('<pre>After: filterSuggestionByProductsDrivers : ' + JSON.stringify(e, null, "\t") +'</pre>');
 		}
