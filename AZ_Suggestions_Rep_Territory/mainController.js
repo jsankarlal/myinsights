@@ -270,7 +270,7 @@ $(document).ready(function() {
 	      			//location.hash = '#bootstrap-table';
 	      			$('html, body').animate({
 	      		        scrollTop: $("#bootstrap-table").offset().top
-	      		    }, 2000);
+	      		    }, 1200);
 	      		} catch(e){
 	      			$('#response').append('<pre>error :' + JSON.stringify(e, null, "\t") + '</pre>');
 	      		}
@@ -408,7 +408,7 @@ $(document).ready(function() {
 	        //location.hash = '#bootstrap-table';
 	        $('html, body').animate({
   		        scrollTop: $("#bootstrap-table").offset().top
-  		    }, 2000);
+  		    }, 1200);
 
 	    }
 	}
@@ -1228,8 +1228,8 @@ $(document).ready(function() {
 	                            product_tags_missing = false;
 	                        }
 	                    }
-	                    appData.suggestions[i]['driverTags'] = driverTags;
-	                    appData.suggestions[i]['productTags'] = productTags;
+	                    appData.suggestions[i]['driverTags'] = driverTags.filter(function(n){ return n != '' });
+	                    appData.suggestions[i]['productTags'] = productTags.filter(function(n){ return n != '' });
 	                    
 	                }
 	            }
