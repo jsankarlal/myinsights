@@ -1307,17 +1307,18 @@ $(document).ready(function() {
     	$('#response').append('<pre>inside parseUserNames : ' + JSON.stringify('', null, "\t") +'</pre>');
     	$('#response').append('<pre>before parseUserNames : appData.suggestions.length ' + JSON.stringify(appData.suggestions.length, null, "\t") +'</pre>');
     	try {
-        	var ownerIdLookup = {};
-        	for (var i = 0;i < userNames.length; i++) {
-        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
-        	}
-        	$.extend(appData.ownerIdLookup, ownerIdLookup);
-        	for (var i = 0; i < appData.suggestions.length; i++) {
-        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
-        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
-        	}
-        	$('#response').append('<pre> appData.suggestions length : ' + JSON.stringify(appData.suggestions.length, null, "\t") +'</pre>');
-        	
+    		if (userNames.length > 0) {
+	        	var ownerIdLookup = {};
+	        	for (var i = 0;i < userNames.length; i++) {
+	        		ownerIdLookup[userNames[i].Id.value] = userNames[i].Name.value;
+	        	}
+	        	$.extend(appData.ownerIdLookup, ownerIdLookup);
+	        	for (var i = 0; i < appData.suggestions.length; i++) {
+	        		var temp = appData.ownerIdLookup[appData.suggestions[i].OwnerId] ? appData.ownerIdLookup[appData.suggestions[i].OwnerId] : '';
+	        	    appData.suggestions[i].LastStatusUpdatedBy = appData.suggestions[i].LastStatusUpdatedBy || temp ;
+	        	}
+	        	$('#response').append('<pre> appData.suggestions length : ' + JSON.stringify(appData.suggestions.length, null, "\t") +'</pre>');
+    		}
     	} catch(e){
     		$('#response').append('<pre>error : ' + JSON.stringify(e, null, "\t") +'</pre>');
     	}
