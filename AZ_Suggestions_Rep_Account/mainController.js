@@ -1338,7 +1338,7 @@ $(document).ready(function() {
             //console.log(products_master_set);
             return getRecordTypes();
         }).then(function(rt) {
-            $('#response').append('<div>getRecordTypes - passed </div>');
+            $('#response').append('<pre>getRecordTypes - passed </pre>');
             for (var i = 0; i < rt.length; i++) {
                 $.extend(appData.recordtype_map, {
                     [rt[i].DeveloperName.value]: rt[i].Id.value
@@ -1348,13 +1348,16 @@ $(document).ready(function() {
             console.log(appData.recordtype_map);
             return getSuggestions(appData.accountId);
         }).then(function(suggestions) {
-            $('#response').append('<div>getSuggestions - passed </div>');
+            $('#response').append('<pre>getSuggestions - passed : suggestions.length:'+suggestions.length +' </pre>');
+            if (suggestions.length == 1) {
+            	$('#response').append('<pre>getSuggestions - passed : suggestions.length:'+ JSON.stringify(suggestions, null, "\t") +' </pre>');
+            }
         	return parseSuggestions(suggestions);
         }).then(function() {
-        	$('#response').append('<div>parseSuggestions - passed </div>');
+        	$('#response').append('<pre>parseSuggestions - passed </pre>');
             return getSuggestionTags(appData.suggestions);
         }).then(function(tags) {
-            $('#response').append('<div>getSuggestionTags - passed </div>');
+            $('#response').append('<pre>getSuggestionTags - passed </pre>');
         	return parseSuggestionTags(tags);
         }).then(function() {
         	$('#response').append('<pre>before: getUserNames</pre>');
