@@ -55,21 +55,7 @@ $(document).ready(function() {
          },
          suggestionIds: [],
          accountIds: [],
-         suggestions: [{
-             Id: '',
-             OwnerId: '',
-             Dismissed_vod__c: 0,
-             Marked_As_Complete_vod__c: 0,
-             Actioned_vod__c: 0,
-             CreatedDate: '',
-             RecordTypeId: '',
-             tags: [{
-                 RecordTypeId: '',
-                 Driver_vod__c: '',
-                 Product_Name__c: ''
-             }],
-             IsPending: 0 //if there are zero suggestion feedback records and the other summary fields equal zero as well
-         }],
+         suggestions: [],
          childUserLookup:{},
          ownerIdLookup:{},
          ownerIdList:[],
