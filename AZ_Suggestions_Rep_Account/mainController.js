@@ -1223,7 +1223,9 @@ $(document).ready(function() {
 
         console.log(tags);
         try {
+        	$('#response').append('<pre>inside: parseSuggestionTags : </pre>');
 	        if (tags.length > 0) {
+	        	$('#response').append('<pre>tags.length :'+tags.length+' </pre>');
 	            var product_tags_missing = true;
 	            var driver_tags_missing = true;
 	            //console.log(appData.suggestions);
@@ -1351,6 +1353,8 @@ $(document).ready(function() {
             $('#response').append('<pre>getSuggestions - passed : suggestions.length:'+suggestions.length +' </pre>');
             if (suggestions.length == 1) {
             	$('#response').append('<pre>getSuggestions - passed : suggestions.length:'+ JSON.stringify(suggestions, null, "\t") +' </pre>');
+            
+            
             }
         	return parseSuggestions(suggestions);
         }).then(function() {
