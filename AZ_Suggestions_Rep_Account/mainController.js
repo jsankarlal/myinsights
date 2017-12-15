@@ -1367,7 +1367,7 @@ $(document).ready(function() {
         	$('#response').append('<pre>before: getUserNames</pre>');
            	return getUserNames(appData.ownerIdList);
         }).then(function(userNames) {
-        	$('#response').append('<pre>After: getUserNames : ' + JSON.stringify('', null, "\t") +'</pre>');
+        	$('#response').append('<pre>After: getUserNames : userNames.length ' + JSON.stringify(userNames.length, null, "\t") +'</pre>');
         	return parseUserNames(userNames);
         }).then(function() {
         	$('#response').append('<pre>before: filterSuggestions</pre>');
