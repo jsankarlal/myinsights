@@ -370,7 +370,7 @@ $(document).ready(function() {
 	        }
 	    }
 	
-	    if (data_to_display.length > 0) {//only render the chart if there are meaningful types to break down.
+//	    if (data_to_display.length > 0) {//only render the chart if there are meaningful types to break down.
 	        first_run = false;
 	        var ctx1 = document.getElementById("suggestions_by_type");
 
@@ -446,11 +446,11 @@ $(document).ready(function() {
 	            }
 	        });
 
-	    } else if (first_run){
+/*	    } else if (first_run){
 	        $("#suggestions_by_type_section").remove();
 	        $("#team_continer").removeClass("col-md-6");
 	        $("#team_continer").addClass("col-md-12");
-	    }
+	    }*/
 
 	    
 
@@ -1208,10 +1208,10 @@ $(document).ready(function() {
 			    	}
 		        }
 		        var len = appData.filtered.userObject.usersList.length;
-				appData.filtered.userObject.averageData.pendingSum = (appData.filtered.userObject.averageData.pendingSum / tableDataCount);
-				appData.filtered.userObject.averageData.dismissedSum = (appData.filtered.userObject.averageData.dismissedSum / tableDataCount);
-				appData.filtered.userObject.averageData.completedSum = (appData.filtered.userObject.averageData.completedSum / tableDataCount);
-				appData.filtered.userObject.averageData.actionedSum = (appData.filtered.userObject.averageData.actionedSum / tableDataCount);
+				appData.filtered.userObject.averageData.pendingSum = (appData.filtered.userObject.averageData.pendingSum / len);
+				appData.filtered.userObject.averageData.dismissedSum = (appData.filtered.userObject.averageData.dismissedSum / len);
+				appData.filtered.userObject.averageData.completedSum = (appData.filtered.userObject.averageData.completedSum / len);
+				appData.filtered.userObject.averageData.actionedSum = (appData.filtered.userObject.averageData.actionedSum / len);
 	        }
 	        $('#response').append('<pre>usersFilteredCount: ' + JSON.stringify(usersFilteredCount, null, "\t") +'</pre>');
 	        $('#response').append('<pre>tableDataCount: ' + JSON.stringify(tableDataCount, null, "\t") +'</pre>');

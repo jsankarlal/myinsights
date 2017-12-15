@@ -1179,10 +1179,10 @@ $(document).ready(function() {
 			    	}
 		        }
 		        var len = appData.filtered.userObject.usersList.length;
-				appData.filtered.userObject.averageData.pendingSum = (appData.filtered.userObject.averageData.pendingSum / tableDataCount);
-				appData.filtered.userObject.averageData.dismissedSum = (appData.filtered.userObject.averageData.dismissedSum / tableDataCount);
-				appData.filtered.userObject.averageData.completedSum = (appData.filtered.userObject.averageData.completedSum / tableDataCount);
-				appData.filtered.userObject.averageData.actionedSum = (appData.filtered.userObject.averageData.actionedSum / tableDataCount);
+				appData.filtered.userObject.averageData.pendingSum = (appData.filtered.userObject.averageData.pendingSum / len);
+				appData.filtered.userObject.averageData.dismissedSum = (appData.filtered.userObject.averageData.dismissedSum / len);
+				appData.filtered.userObject.averageData.completedSum = (appData.filtered.userObject.averageData.completedSum / len);
+				appData.filtered.userObject.averageData.actionedSum = (appData.filtered.userObject.averageData.actionedSum / len);
 	        }
 	        
 	        $('#response').append('<pre>appData.filtered.suggestions : first suggestion ' + JSON.stringify(appData.filtered.suggestions[0], null, "\t") +'</pre>');
