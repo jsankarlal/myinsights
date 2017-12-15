@@ -510,18 +510,20 @@ $(document).ready(function() {
         	markup = '';
         $('#response').append('<pre> inside buildTable: statusFilter :' + JSON.stringify(statusFilter, null, "\t") + '</div>');
         $('#response').append('<pre> inside buildTable: typeFilter :' + JSON.stringify(typeFilter, null, "\t") + '</div>');
-        for (var i = 0; i < appData.filtered.suggestions.length; i++) {
-        	row = appData.filtered.suggestions[i];
-        	if (statusFilter && statusFilter === row.status) {
-            	$('#response').append('<pre> inside buildTable: lastStatusUpdatedByFilter && statusFilter Matched :' + JSON.stringify('', null, "\t") + '</div>');
-                rows.push(row);
-            } else if (typeFilter && typeFilter === row.type) {
-            	$('#response').append('<pre> inside buildTable: typeFilter Matched :' + JSON.stringify(typeFilter, null, "\t") + '</div>');
-                rows.push(row);
-            } else if(!statusFilter && !typeFilter) {
-                rows.push(row);
-            }
-
+        if (appData.filtered.suggestions.length > 0) {
+	        for (var i = 0; i < appData.filtered.suggestions.length; i++) {
+	        	row = appData.filtered.suggestions[i];
+	        	if (statusFilter && statusFilter === row.status) {
+	            	$('#response').append('<pre> inside buildTable: statusFilter Matched :' + JSON.stringify('', null, "\t") + '</div>');
+	                rows.push(row);
+	            } else if (typeFilter && typeFilter === row.type) {
+	            	$('#response').append('<pre> inside buildTable: typeFilter Matched :' + JSON.stringify(typeFilter, null, "\t") + '</div>');
+	                rows.push(row);
+	            } else if(!statusFilter && !typeFilter) {
+	                rows.push(row);
+	            }
+	
+	        }
         }
         //$("#tablebody").append(markup);
 
