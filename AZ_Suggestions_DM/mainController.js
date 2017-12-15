@@ -1193,41 +1193,41 @@ $(document).ready(function() {
 	        };
 	        //initialize appData.filtered.suggestions object
 	        appData.filtered.suggestions = [];
-	        
-	        for (var i = 0; i < appData.suggestions.length; i++) {
-	        	thisSuggestion = aggregateTableData(appData.suggestions[i]);
-	        	//apply user filter for suggestions
-		    	if (userFilter && !userFilter.has(thisSuggestion.lastStatusUpdatedBy)) {
-	                //console.log("filtering out a suggestion");
-		    		usersFilteredCount++;
-	                continue;
-	            }
-	            //apply product and driver filters
-		    	if (productFilter || driverFilter) {
-		            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
-		           		countUserStatus(thisSuggestion);
+	        if (appData.suggestions.length > 0) {
+		        for (var i = 0; i < appData.suggestions.length; i++) {
+		        	thisSuggestion = aggregateTableData(appData.suggestions[i]);
+		        	//apply user filter for suggestions
+			    	if (userFilter && !userFilter.has(thisSuggestion.lastStatusUpdatedBy)) {
+		                //console.log("filtering out a suggestion");
+			    		usersFilteredCount++;
+		                continue;
+		            }
+		            //apply product and driver filters
+			    	if (productFilter || driverFilter) {
+			            if (filterSuggestionByProductsDrivers(productFilter, driverFilter, thisSuggestion)) {
+			           		countUserStatus(thisSuggestion);
+			           		calculateMonthsCount(thisSuggestion);
+			           		calculateSuggestionsType(thisSuggestion);
+			           	 	appData.filtered.suggestions.push(thisSuggestion);
+			           	 	tableDataCount++;
+			             }
+			    	} else {
+			    		countUserStatus(thisSuggestion);
 		           		calculateMonthsCount(thisSuggestion);
 		           		calculateSuggestionsType(thisSuggestion);
 		           	 	appData.filtered.suggestions.push(thisSuggestion);
 		           	 	tableDataCount++;
-		             }
-		    	} else {
-		    		countUserStatus(thisSuggestion);
-	           		calculateMonthsCount(thisSuggestion);
-	           		calculateSuggestionsType(thisSuggestion);
-	           	 	appData.filtered.suggestions.push(thisSuggestion);
-	           	 	tableDataCount++;
-		    	}
+			    	}
+		        }
+		        var len = appData.filtered.userObject.usersList.length;
+				appData.filtered.userObject.averageData.pendingSum = (appData.filtered.userObject.averageData.pendingSum / tableDataCount);
+				appData.filtered.userObject.averageData.dismissedSum = (appData.filtered.userObject.averageData.dismissedSum / tableDataCount);
+				appData.filtered.userObject.averageData.completedSum = (appData.filtered.userObject.averageData.completedSum / tableDataCount);
+				appData.filtered.userObject.averageData.actionedSum = (appData.filtered.userObject.averageData.actionedSum / tableDataCount);
 	        }
 	        $('#response').append('<pre>usersFilteredCount: ' + JSON.stringify(usersFilteredCount, null, "\t") +'</pre>');
 	        $('#response').append('<pre>tableDataCount: ' + JSON.stringify(tableDataCount, null, "\t") +'</pre>');
 	        
-	        var len = appData.filtered.userObject.usersList.length;
-			appData.filtered.userObject.averageData.pendingSum = (appData.filtered.userObject.averageData.pendingSum / len);
-			appData.filtered.userObject.averageData.dismissedSum = (appData.filtered.userObject.averageData.dismissedSum / len);
-			appData.filtered.userObject.averageData.completedSum = (appData.filtered.userObject.averageData.completedSum / len);
-			appData.filtered.userObject.averageData.actionedSum = (appData.filtered.userObject.averageData.actionedSum / len);
-			
 			$('#response').append('<pre>appData.filtered.suggestions.length : ' + JSON.stringify(appData.filtered.suggestions.length, null, "\t") +'</pre>'); 
 	        $('#response').append('<pre>appData.filtered.userObject.usersList : ' + JSON.stringify(appData.filtered.userObject.usersList, null, "\t") +'</pre>');
 	        $('#response').append('<pre>appData.filtered.userObject.averageData : ' + JSON.stringify(appData.filtered.userObject.averageData, null, "\t") +'</pre>');
@@ -1309,54 +1309,56 @@ $(document).ready(function() {
     	$('#response').append('<pre>inside: parseSuggestions : </pre>');
     	var accountIds = [];
         appData.ownerIdList = [];
-        for (var i = 0; i < suggestions.length; i++) {
-        	var this_suggestion = {
-                Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
-                Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
-                Actioned_vod__c: suggestions[i].Actioned_vod__c.value,
-                RecordTypeId: suggestions[i].RecordTypeId.value,
-                Id: suggestions[i].Id.value,
-                CreatedDate: suggestions[i].CreatedDate.value,
-                OwnerId: suggestions[i].OwnerId.value,
-                Title_vod__c: suggestions[i].Title_vod__c.value,
-                Reason_vod__c: suggestions[i].Reason_vod__c.value,
-                Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
-				Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
-				Account_vod__c: suggestions[i].Account_vod__c.value,
-				AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
-				Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
-				Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
-				Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,
-				LastStatusUpdatedBy: '',
-				Status: '',
-				productTags: [],
-				driverTags: []
-            };
-        	appData.ownerIdList.push(suggestions[i].OwnerId.value);
-        	
-            appData.suggestionIds[i] = suggestions[i].Id.value;
-            switch (suggestions[i].RecordTypeId.value) {
-                case appData.recordtype_map.Call_vod:
-                	this_suggestion.type = callText;
-                    break;
-                case appData.recordtype_map.Call_Objective_vod:
-                	this_suggestion.type = callObjectiveText;
-                    break;
-                case appData.recordtype_map.Email_vod:
-                	this_suggestion.type = emailText;
-                    break;
-                case appData.recordtype_map.Insight_vod:
-                	this_suggestion.type = insightText;
-                    break;
-        	}
-            this_suggestion.LastStatusUpdatedBy = this_suggestion.Actioned_By_AZ_US__c || this_suggestion.Completed_By_AZ_US__c || this_suggestion.Dismissed_By_AZ_US__c || '';
-            this_suggestion.Status = this_suggestion.Actioned_vod__c ? 'Actioned' : this_suggestion.Marked_As_Complete_vod__c ? 'Marked as Complete' : this_suggestion.Dismissed_vod__c ? 'Dismissed' : 'Pending';
- //           accountIds[i] = suggestions[i].Account_vod__c.value;
-            //console.log(this_suggestion);
-            appData.suggestions[i] = this_suggestion;
+        if (suggestions.length > 0) {
+	        for (var i = 0; i < suggestions.length; i++) {
+	        	var this_suggestion = {
+	                Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
+	                Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
+	                Actioned_vod__c: suggestions[i].Actioned_vod__c.value,
+	                RecordTypeId: suggestions[i].RecordTypeId.value,
+	                Id: suggestions[i].Id.value,
+	                CreatedDate: suggestions[i].CreatedDate.value,
+	                OwnerId: suggestions[i].OwnerId.value,
+	                Title_vod__c: suggestions[i].Title_vod__c.value,
+	                Reason_vod__c: suggestions[i].Reason_vod__c.value,
+	                Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
+					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
+					Account_vod__c: suggestions[i].Account_vod__c.value,
+					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
+					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
+					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
+					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,
+					LastStatusUpdatedBy: '',
+					Status: '',
+					productTags: [],
+					driverTags: []
+	            };
+	        	appData.ownerIdList.push(suggestions[i].OwnerId.value);
+	        	
+	            appData.suggestionIds[i] = suggestions[i].Id.value;
+	            switch (suggestions[i].RecordTypeId.value) {
+	                case appData.recordtype_map.Call_vod:
+	                	this_suggestion.type = callText;
+	                    break;
+	                case appData.recordtype_map.Call_Objective_vod:
+	                	this_suggestion.type = callObjectiveText;
+	                    break;
+	                case appData.recordtype_map.Email_vod:
+	                	this_suggestion.type = emailText;
+	                    break;
+	                case appData.recordtype_map.Insight_vod:
+	                	this_suggestion.type = insightText;
+	                    break;
+	        	}
+	            this_suggestion.LastStatusUpdatedBy = this_suggestion.Actioned_By_AZ_US__c || this_suggestion.Completed_By_AZ_US__c || this_suggestion.Dismissed_By_AZ_US__c || '';
+	            this_suggestion.Status = this_suggestion.Actioned_vod__c ? 'Actioned' : this_suggestion.Marked_As_Complete_vod__c ? 'Marked as Complete' : this_suggestion.Dismissed_vod__c ? 'Dismissed' : 'Pending';
+	 //           accountIds[i] = suggestions[i].Account_vod__c.value;
+	            //console.log(this_suggestion);
+	            appData.suggestions[i] = this_suggestion;
+	        }
+	        appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+	       // $('#response').append('<pre> appData.suggestions[appData.suggestions.length-1] : ' + JSON.stringify(appData.suggestions[appData.suggestions.length-1], null, "\t") +'</pre>');
         }
-        appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-       // $('#response').append('<pre> appData.suggestions[appData.suggestions.length-1] : ' + JSON.stringify(appData.suggestions[appData.suggestions.length-1], null, "\t") +'</pre>');
     }
     
     function parseSuggestionTags(tags) {
