@@ -1,0 +1,148 @@
+body {
+    word-wrap: break-word;
+    line-height: 24px;
+    font-family: LexiaLight, "Georgia", Times, "Times New Roman", serif; 
+    padding:0px;
+    margin:0px;
+}
+
+b, strong {
+    font-family: LexiaBold, Times, "Times New Roman", serif;
+    /*font-weight: bold;*/
+}
+
+.font-weight-bold{
+    font-family: LexiaBold, Times, "Times New Roman", serif;
+    font-weight: bold;
+}
+
+em {
+    font-family: LexiaLightItalic, Times, "Times New Roman", serif;
+    font-style: normal;
+}
+
+a {
+    color: #3c4242;
+    cursor: pointer;
+}
+
+section {
+   /* margin-bottom: 10px; */
+    padding: 15px;
+}
+
+.width-0{
+    width: 0 !important;
+}
+
+.vcenter{
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+    padding:0;
+}
+
+.tool-tip-icon{
+    vertical-align: top;
+    line-height: .75;
+    display: inline-block;
+}
+
+.linked-list .tool-tip-icon{
+    vertical-align:middle;
+}
+
+.full-width{
+    margin-bottom:0px;
+    width:100%;
+}
+
+
+.padding-0 {
+    padding:0px;
+}
+
+.margin-0{
+    margin:0px;
+}
+
+.border-top-0{
+   border-top: 0; 
+}
+
+.border-left-0{
+   border-left: 0; 
+}
+
+.border-right-0{
+   border-right: 0; 
+}
+
+.border-bottom-0{
+   border-bottom: 0; 
+}
+
+.border-0{
+    border:none;
+}
+
+
+
+/* Dashboard Tiles widget start */
+
+.card-section .thumbnail{
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+.card-widget{
+    padding:0px;
+}
+
+.user-detail-section{
+    padding: 20px;
+}
+
+.user-detail-section img{
+    max-width:150px;
+    
+}
+.label-description{
+    margin-bottom: 5px;
+}
+
+.percentage-section{
+    text-align: center;
+}
+
+.percentage-section span{
+    font-size:26px;
+}
+
+/* Dashboard Tiles widget End */
+
+/* List section starts */
+
+
+.list .line, .list.list-hover .line {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    padding-top: 15px;
+}
+
+.list.list-hover .line:hover {
+    cursor: pointer;
+    background: #f9f9f9;
+}
+
+@media (min-width: 768px) {
+    .user-detail-section {
+        padding-top: 80px;
+    }
+}
+
+@media (max-width: 767px) {
+    
+}
+
+/* List section ends */
