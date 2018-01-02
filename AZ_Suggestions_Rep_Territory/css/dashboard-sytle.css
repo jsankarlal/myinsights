@@ -565,6 +565,10 @@ strong em, strong i, em strong, i strong {
     padding-top: 10px;
 }
 
+.list .line:last-child{
+    border-bottom: 0px;
+}
+
 .list.list-hover .line:hover {
     cursor: pointer;
     background: #f9f9f9;
