@@ -455,20 +455,20 @@ strong em, strong i, em strong, i strong {
     font-weight: normal;
 }
 
-.fg-green{
-    
+.fg-yellowgreen{
+    color: yellowgreen;
 }
 
 .fg-yellow{
-    
+    color:yellow;
 }
 
 .fg-orange{
-    
+    color:orange;
 }
 
-.fg-light-blue{
-    
+.fg-aqua{
+    color:aqua;
 }
 
 .fg-color{
@@ -513,6 +513,13 @@ strong em, strong i, em strong, i strong {
     font-size:26px;
 }
 
+.box-shadow-all{
+    box-shadow: 0 0 2px #000;
+}
+
+.border-right-50{
+    border-right: 1px solid rgba(204, 204, 204, .3);
+}
 /*
 .card-container{
     box-shadow: 0 0 2px #000;
