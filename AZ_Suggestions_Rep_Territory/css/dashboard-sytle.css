@@ -454,6 +454,23 @@ strong em, strong i, em strong, i strong {
     font-style: normal;
     font-weight: normal;
 }
+
+.fg-green{
+    
+}
+
+.fg-yellow{
+    
+}
+
+.fg-orange{
+    
+}
+
+.fg-light-blue{
+    
+}
+
 .fg-color{
     color:#d0006f;
 }
@@ -488,7 +505,7 @@ strong em, strong i, em strong, i strong {
     margin-bottom: 5px;
 }
 
-.percentage-section{
+.percentage-section, .card-tile{
     text-align: center;
 }
 
@@ -496,6 +513,25 @@ strong em, strong i, em strong, i strong {
     font-size:26px;
 }
 
+/*
+.card-container{
+    box-shadow: 0 0 2px #000;
+}
+
+.card-tile-divider{
+  position: relative;
+}
+
+.card-tile-divider::after {
+  content:""; 
+  background: black; 
+  position: absolute; 
+  bottom: 0; 
+  top: 0; 
+  height: 40%; 
+  width: 1px;
+}
+*/
 /* Dashboard Tiles widget End */
 
 /* List section starts */
