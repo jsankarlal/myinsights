@@ -574,6 +574,11 @@ strong em, strong i, em strong, i strong {
     background: #f9f9f9;
 }
 
+.short-description{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* List section ends */
 
