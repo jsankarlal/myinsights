@@ -622,6 +622,11 @@ strong em, strong i, em strong, i strong {
     border: 1px solid #d0006f;
     color: #fff;
 }
+.margin-right-left-0{
+    margin-left:0px;
+    margin-right:0px;
+}
+
 .ratings-component .percentage-section span{
     font-size:18px;
 }
