@@ -103,9 +103,12 @@ appData = {
 	            accountIds[i] = suggestions[i].Account_vod__c.value;
 	            appData.suggestions[i] = this_suggestion;
 	        }
-            appData.accountIdList = accountIds.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-	        appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+            /*appData.accountIdList = accountIds.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+	        appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });*/
         }
+        
+        appData.accountIdList = accountIds.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+        appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
     }
     
     MyInsight.prototype.attachAccountIds = function() {
@@ -122,7 +125,7 @@ appData = {
         });
     };
     
-    MyInsight.prototype.getSuggestions = function() {
+   /* MyInsight.prototype.getSuggestions = function() {
 		var _this = this;
         _this.consoleLog('getSuggestions - entering');
         
@@ -130,7 +133,7 @@ appData = {
           appData.suggestions =  suggestions;
        }); 
        _this.consoleLog('appData.suggestions.length - ', appData.suggestions.length);
-	};
+	};*/
     
     MyInsight.prototype.navigateToAccount = function(accountId) {
 		var _this = this;
@@ -143,11 +146,12 @@ appData = {
 		var _this = this;
         _this.consoleLog('mainController - entering');
         _this.bindEvents();
-        _this.getSuggestions().then(function(suggestions) {
+        _this.queryRecord(_this.queryConfig.suggestions).then(function(suggestions){
+             _this.consoleLog('suggestions.length - ', suggestions.length);
             _this.parseSuggestions(suggestions);
             _this.attachAccountIds();
-        });
-        
+       });
+                
 	};
 	
 	$.extend(MyInsight.prototype, Queries.prototype);
