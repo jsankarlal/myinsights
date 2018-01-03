@@ -36,8 +36,10 @@ $q = window.Q;
 		    configObject = {object: object, fields: {Id: id }};
         _this.consoleLog('viewRecord - entering');
         _this.consoleLog('configObject-' , configObject);
+        
+        ds.viewRecord(configObject).then(function (resp) {}, function(err) {});
 
-        ds.viewRecord(configObject).then(function(resp) {
+       /* ds.viewRecord(configObject).then(function(resp) {
            _this.consoleLog('viewRecord resolved - success '+ resp);
            deferred.resolve(resp);
         }, function(err) {
@@ -47,7 +49,8 @@ $q = window.Q;
 	   
         _this.consoleLog('viewRecord returns ');
 	    return deferred.promise;
-	}
+        */
+	};
 	
 	Queries.prototype.queryConfig = {
 		suggestions: {

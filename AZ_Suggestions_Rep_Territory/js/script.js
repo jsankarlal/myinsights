@@ -136,7 +136,7 @@ appData = {
     
     MyInsight.prototype.navigateToAccount = function(accountId) {
 		var _this = this;
-       _this.viewRecord('Account_Plan_vod__c', accountId).then(function(response){
+       _this.viewRecord('Account_vod__c', accountId).then(function(response){
            _this.consoleLog('navigateToAccount - ' + accountId, response);
        });      
 	};
