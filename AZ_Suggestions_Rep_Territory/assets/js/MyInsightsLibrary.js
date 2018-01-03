@@ -1,5 +1,5 @@
 /*
- Veeva MyInsights Library version 172.0.9
+ Veeva MyInsights Library version 173.0.10
  
  http://developer.veevacrm.com/
 
@@ -58,8 +58,32 @@
         veevaUtil.copyObject = function (obj) {
             return JSON.parse(JSON.stringify(obj));
         };
+
+        veevaUtil.deepCopy = function (originalObject) {
+            if(originalObject === null || typeof(originalObject) !== 'object') {
+                return originalObject;
+            }
+
+            var clonedObject;
+            if(originalObject instanceof Date) {
+                clonedObject = new Date(originalObject);
+            } else {
+                clonedObject = originalObject.constructor();
+            }
+
+            for(var key in originalObject) {
+                // Ignore inherited properties
+                if(Object.prototype.hasOwnProperty.call(originalObject, key)) {
+                    //TODO: worse case O(2^n), any better?
+                    clonedObject[key] = veevaUtil.deepCopy(originalObject[key]);
+                }
+            }
+
+            return clonedObject;
+        };
     };
 })();
+
 
 (function (Q) {
     'use strict';
@@ -123,7 +147,7 @@
             }
         }
 
-        function postBridgeMessage(message) {
+        function postMessage(message) {
             window.parent.postMessage(JSON.stringify(message), '*');
         }
 
@@ -133,7 +157,7 @@
             queryConfig.command = command;
             listenerQueue[deferredId] = deferred;
             queryConfig.deferredId = deferredId;
-            postBridgeMessage(queryConfig);
+            postMessage(queryConfig);
             // just pass the query config to the api
             return deferred.promise;
         }
@@ -154,7 +178,7 @@
                 deferredId: deferredId
             };
             listenerQueue[deferredId] = deferred;
-            postBridgeMessage(queryConfig);
+            postMessage(queryConfig);
             return deferred.promise;
         }
 
@@ -198,7 +222,7 @@
 
                 olAPI.queryRunning = true;
                 listenerQueue[deferredId] = deferred;
-                postBridgeMessage(queryConfig);
+                postMessage(queryConfig);
             }
 
             return deferred.promise;
@@ -210,7 +234,7 @@
             queryConfig.deferredId = deferredId;
             listenerQueue[deferredId] = deferred;
             queryConfig.deferredId = deferredId;
-            postBridgeMessage(queryConfig);
+            postMessage(queryConfig);
             // just pass the query config to the api
             return deferred.promise;
         };
@@ -226,7 +250,7 @@
             };
             listenerQueue[deferredId] = deferred;
             queryConfig.deferredId = deferredId;
-            postBridgeMessage(queryConfig);
+            postMessage(queryConfig);
             // just pass the query config to the api
             return deferred.promise;
         };
@@ -246,6 +270,8 @@
                     newLabels.unshift({name: fields[f], display: labels[fields[f]]});
                 }
                 deferred.resolve(newLabels);
+            },function (error) {
+                deferred.reject(error);
             });
             return deferred.promise;
         };
@@ -297,6 +323,28 @@
             return deferred.promise;
         };
 
+        olAPI.newRecord = function(configObject) {
+            var deferred = Q.defer();
+            if(typeof configObject === 'object') {
+                var messageBody = {};
+                messageBody.command = 'newRecord';
+                messageBody.configObject = configObject;
+                postMessage(messageBody);
+            }
+            return deferred.promise;
+        };
+
+        olAPI.viewRecord = function(configObject) {
+            var deferred = Q.defer();
+            if(typeof configObject === 'object') {
+                var messageBody = {};
+                messageBody.command = 'viewRecord';
+                messageBody.configObject = configObject;
+                postMessage(messageBody);
+            }
+            return deferred.promise;
+        };
+
         addMessageListener(queryListener);
     };
 })(window.Q);
@@ -320,59 +368,60 @@
         var dateRE = /date/i;
         var urlRE = /_url_/i;
         var translationsCache = {};
+        var ISO_DATE_REGEX = /[0-9]{4}-[0-9]{2}-[0-9]{2}(T|\s)[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{1,3}Z/;
+        var VALID_DATE_FORMAT_REGEX = /[0-9]{4}.[0-9]{2}.[0-9]{2}(.[0-9]{2})?(.[0-9]{2})?(.[0-9]{2})?(.[0-9]{1,3})?[zZ]?/;
+
+        function isISODateFormat(inputString) {
+            return ISO_DATE_REGEX.test(inputString);
+        }
+
+        function isValidDateFormat(inputString) {
+            return VALID_DATE_FORMAT_REGEX.test(inputString);
+        }
+
+        function normalizeTimeDigits(digitInString) {
+            return digitInString ? parseInt(digitInString, 10) : 0;
+        }
+
+        function extractDateStringToNumbers(inputString) {
+            var parts = inputString.match(/(\d+)/g);
+
+            return {
+                year: normalizeTimeDigits(parts[0]),
+                month: normalizeTimeDigits(parts[1]) - 1,
+                date: normalizeTimeDigits(parts[2]),
+                hours: normalizeTimeDigits(parts[3]),
+                minutes: normalizeTimeDigits(parts[4]),
+                seconds: normalizeTimeDigits(parts[5]),
+                ms: normalizeTimeDigits(parts[6])
+            };
+        }
 
         function parseDate(input) {
-            var hours, minutes, seconds, ms;
-            var parts = input.match(/(\d+)/g);
+            var extractedDigits;
 
-            hours = parts[3] ? parseInt(parts[3], 10) : 0;
-            minutes = parts[4] ? parseInt(parts[4], 10) : 0;
-            seconds = parts[5] ? parseInt(parts[5], 10) : 0;
-            ms = parts[6] ? parseInt(parts[6], 10) : 0;
-
-            if (!veevaUtil.isOnline() && veevaUtil.isWin8()) {   // to parse date in winModern only
-                return new Date(parts[2], parts[0]-1, parts[1], hours, minutes, seconds, ms); // 'MM-DD-YYYY' months are 0-based
+            if (isISODateFormat(input)) {
+                return new Date(input);
             }else {
-                return new Date(parts[0], parts[1]-1, parts[2], hours, minutes, seconds, ms); // 'YYYY-MM-DD' months are 0-based
+                extractedDigits = extractDateStringToNumbers(input);
+
+                return new Date(
+                    extractedDigits.year, extractedDigits.month, extractedDigits.date,
+                    extractedDigits.hours, extractedDigits.minutes, extractedDigits.seconds,
+                    extractedDigits.ms
+                );
             }
         }
 
         function getCRMDate(dateString) {
-            var newDate = null, dtArr;
-            var dateAndTimeArray;
-            var timePortion, digits;
-            var hours, minutes, seconds, ms;
-            if (dateString) {
-                if (!isNaN((new Date(dateString)).getDate())) {
-                    newDate = parseDate(dateString);
-                }
-                else if (dateString.length && dateString.split) { // if the date is a dash delimited date string
-                    dtArr = dateString.split('-');
-                    // Special handler because the windows WebView cant figure out that this is a date.
-                    dateAndTimeArray = dtArr[2].split(' ');
+            var newDate;
 
-                    if (dateAndTimeArray.length > 1) {
-                        timePortion = dateAndTimeArray[1];
-
-                        digits = timePortion.match(/(\d+)/g);
-
-                        hours = digits[0] ? parseInt(digits[0], 10) : 0;
-                        minutes = digits[1] ? parseInt(digits[1], 10) : 0;
-                        seconds = digits[2] ? parseInt(digits[2], 10) : 0;
-                        ms = digits[3] ? parseInt(digits[3], 10) : 0;
-
-                        newDate = new Date(dtArr[0], dtArr[1]-1, dateAndTimeArray[0], hours, minutes, seconds, ms);
-                    }else {
-                        newDate = new Date(dtArr[0], dtArr[1]-1, dtArr[2]);
-                    }
-
-                    if (isNaN(newDate.getDate())) {
-                        newDate = null;
-                    }
-                }
+            if (isISODateFormat(dateString) || isValidDateFormat(dateString)) {
+                newDate = parseDate(dateString);
             }
+
             if (!newDate) {
-                console.warn('bad date', dateString, newDate);
+                console.warn('bad date: ', dateString, newDate);
             }
 
             return newDate;
@@ -585,6 +634,29 @@
             return request.join('),');
         }
 
+        function sendLinkingRequest(command, configObject) {
+            var deferred = Q.defer();
+            var req = constructLinkingRequest(command, configObject);
+
+            query(req).then(function(resp) {
+                deferred.resolve(resp);
+            }, function(error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        }
+
+        function constructLinkingRequest(command, configObject) {
+            var request = [];
+            if(typeof command === 'string' && command.length && typeof configObject === 'object') {
+                request.push('veeva:' + command + '(' + configObject.object + ')');
+                request.push('fields(' + JSON.stringify(configObject.fields) + ')');
+                request.push('');
+            }
+            return request.join(',');
+        }
+
         function query(request) {
             var deferred = Q.defer();
             var uniqueCallbackName = 'com_veeva_queryRecordReturn' + (+new Date());
@@ -595,10 +667,14 @@
                         result = JSON.parse(result);
                     }
                     catch (e) {
+                        var win8PareseError = veevaUtil.isWin8();
                         console.warn('query result returned as non-parseable string', e, result);
                     }
                 }
-                if (result.success) {
+                if(typeof win8PareseError !== 'undefined' && win8PareseError){
+                    result = formatResult(result);
+                }
+                if ((typeof result === 'object' && result && result.success) || result === null) {
                     deferred.resolve(wrapResult('query', formatResult(result)));
                 }
                 else {
@@ -644,43 +720,17 @@
             }
         }
 
-        /**
-         * This function standardize the response differences(if there is any) across iPad/WM
-         * @param resp Response from queryRecord
-         * @param queryObject The query config object
-         * @returns resp The standardize response
-         */
-        function standardizeQueryRecordResponse(resp, queryObject) {
-            if(veevaUtil.isWin8() || veevaUtil.isOnline()) {
-                var responseData = resp[queryObject.object];
-                if(responseData) {
-                    for(var row in responseData) {
-                        for(var field in responseData[row]) {
-                            if(responseData[row].hasOwnProperty(field)) {
-
-                                // Standardize date format
-                                if(dateRE.test(field)) {
-                                    var tempDate = responseData[row][field];
-                                    var realDate = getCRMDate(tempDate);
-                                    if(realDate) {
-                                        var year = realDate.getFullYear();
-                                        var month = realDate.getMonth() + 1 + '';
-                                        if(month.length === 1) {
-                                            month = '0' + month;
-                                        }
-                                        var date = realDate.getDate() + '';
-                                        if(date.length === 1) {
-                                            date = '0' + date;
-                                        }
-                                        responseData[row][field] = [year, month, date].join('-');
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return resp;
+        function delegateQueryRequest(request, deferred) {
+            ds.queryRunning = true;
+            query(request).then(function(resp) {
+                deferred.resolve(resp);
+                ds.queryRunning = false;
+                ds.checkQueryQueue();
+            }, function(error) {
+                deferred.reject(error);
+                ds.queryRunning = false;
+                ds.checkQueryQueue();
+            });
         }
 
         /**
@@ -712,16 +762,7 @@
                 });
             } else {
                 var req = constructRequest('queryObject', queryObject.object, queryObject.fields, queryObject.where, queryObject.sort, queryObject.limit);
-                ds.queryRunning = true;
-                query(req).then(function(resp) {
-                    deferred.resolve(standardizeQueryRecordResponse(resp, queryObject));
-                    ds.queryRunning = false;
-                    ds.checkQueryQueue();
-                }, function(error) {
-                    deferred.reject(error);
-                    ds.queryRunning = false;
-                    ds.checkQueryQueue();
-                });
+                delegateQueryRequest(req, deferred);
             }
 
             return deferred.promise;
@@ -740,6 +781,24 @@
             else {
                 queryObject(newQuery);
             }
+            return deferred.promise;
+        };
+
+        ds.querySalesData = function(queryObject) {
+            var deferred = Q.defer();
+
+            if(ds.queryRunning) {
+                ds.queriesQueue.push({
+                    config: queryObject,
+                    deferred: deferred,
+                    type: 'querySalesData'
+                });
+            } else {
+                // we will use queryObject method from the platform to handle sales data for now
+                var req = constructRequest('queryObject', queryObject.object, queryObject.fields, queryObject.where, queryObject.sort, queryObject.limit);
+                delegateQueryRequest(req, deferred);
+            }
+
             return deferred.promise;
         };
 
@@ -824,7 +883,7 @@
 
         /*
          Returns the value of a field for a specific record related to the current call
-         object -   Limited to the following keywords: Account, TSF, User, Address, Call, Presentation, KeyMessage, and CallObjective.
+         object -	Limited to the following keywords: Account, TSF, User, Address, Call, Presentation, KeyMessage, and CallObjective.
          field - field api name to return a value for
          callback - call back function which will be used to return the information
          @public
@@ -861,9 +920,9 @@
                         newLabels.unshift({name: fields[f], display: labels[fields[f]]});
                     }
                     deferred.resolve(newLabels);
-                },
-                function () {
+                }, function (error) {
                     console.error('query field labels failed', arguments);
+                    deferred.reject(error);
                 });
             return deferred.promise;
         };
@@ -937,10 +996,22 @@
                     ds.queryRecord(next.config).then(function(resp) {
                         next.deferred.resolve(resp);
                     });
+                } else if(next.type === 'querySalesData') {
+                    ds.querySalesData(next.config).then(function(resp) {
+                        next.deferred.resolve(resp);
+                    });
                 } else {
                     queryObject(next);
                 }
             }
+        };
+
+        ds.newRecord = function(configObject) {
+            return sendLinkingRequest('newRecord', configObject);
+        };
+
+        ds.viewRecord = function(configObject) {
+            return sendLinkingRequest('viewRecord', configObject);
         };
 
         // switch in here for the different overrides?
