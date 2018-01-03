@@ -116,12 +116,11 @@ appData = {
             $suggestionElements = $('.suggestion-item');
         
         _this.consoleLog('attachAccountIds - entering');
-        _this.consoleLog('appData.accountIdList - ', appData.accountIdList);
+        _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
         
         $suggestionElements.each(function(index, element) {
             var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index;
-           _this.consoleLog(' $(element) - ',  $(element));
-           $(element).attr('data-account-id', appData.accountIdList[temp]); 
+            $(element).attr('data-account-id', appData.accountIdList[temp]); 
         });
     };
     

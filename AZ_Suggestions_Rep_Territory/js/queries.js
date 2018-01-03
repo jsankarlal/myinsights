@@ -37,9 +37,12 @@ $q = window.Q;
         _this.consoleLog('viewRecord - entering');
         _this.consoleLog('configObject-' , configObject);
 
-        ds.viewRecord(configObject).then(function(result) {
-           _this.consoleLog('viewRecord resolved');
-           deferred.resolve(result);
+        ds.viewRecord(configObject).then(function(resp) {
+           _this.consoleLog('viewRecord resolved - success '+ resp);
+           deferred.resolve(resp);
+        }, function(err) {
+            _this.consoleLog('viewRecord resolved - error' , err);
+           deferred.resolve(err);
         });
 	   
         _this.consoleLog('viewRecord returns ');
