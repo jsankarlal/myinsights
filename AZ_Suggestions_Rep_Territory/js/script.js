@@ -119,9 +119,9 @@ appData = {
         _this.consoleLog('appData.accountIdList - ', appData.accountIdList);
         
         $suggestionElements.each(function(index, element) {
-            index = index => appData.accountIdList.length ? appData.accountIdList.length - 1 : index;
+            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index;
            _this.consoleLog(' $(element) - ',  $(element));
-           $(element).attr('data-account-id', appData.accountIdList[index]); 
+           $(element).attr('data-account-id', appData.accountIdList[temp]); 
         });
     };
     
