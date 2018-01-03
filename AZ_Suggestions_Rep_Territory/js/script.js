@@ -112,8 +112,12 @@ appData = {
 		var _this = this,
             $suggestionElements = $('.suggestion-item');
         
+        _this.consoleLog('attachAccountIds - entering');
+        _this.consoleLog('appData.accountIdList - ', appData.accountIdList);
+        
         $suggestionElements.each(function(index, element) {
-            index = index > appData.accountIdList.length ? appData.accountIdList.length : index;
+            index = index => appData.accountIdList.length ? appData.accountIdList.length - 1 : index;
+           _this.consoleLog(' $(element) - ',  $(element));
            $(element).attr('data-account-id', appData.accountIdList[index]); 
         });
     };
@@ -121,10 +125,11 @@ appData = {
     MyInsight.prototype.getSuggestions = function() {
 		var _this = this;
         _this.consoleLog('getSuggestions - entering');
-         _this.consoleLog('_this.queryConfig.suggestions', _this.queryConfig.suggestions);
+        
        _this.queryRecord(_this.queryConfig.suggestions).then(function(suggestions){
           appData.suggestions =  suggestions;
-       });      
+       }); 
+       _this.consoleLog('appData.suggestions.length - ', appData.suggestions.length);
 	};
     
     MyInsight.prototype.navigateToAccount = function(accountId) {
