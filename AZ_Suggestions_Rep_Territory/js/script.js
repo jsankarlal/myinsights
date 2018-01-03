@@ -47,14 +47,7 @@ appData = {
 	function MyInsight() {
 		
 	};
-	MyInsight.prototype.consoleLog = function(message, object) {
-        if (object) {
-            $('#response').append('<pre>' + message +' - '+ JSON.stringify(userId, null, "\t") +' </pre>');
-        } else {
-            $('#response').append('<pre>' + message + '</pre>');
-        }
-        
-    };
+	
     
     MyInsight.prototype.bindEvents = function() {
         var _this = this;
@@ -127,6 +120,7 @@ appData = {
     
     MyInsight.prototype.getSuggestions = function() {
 		var _this = this;
+        _this.consoleLog('getSuggestions - entering');
        _this.queryRecord(_this.queryConfig.suggestions).then(function(suggestions){
           appData.suggestions =  suggestions;
        });      

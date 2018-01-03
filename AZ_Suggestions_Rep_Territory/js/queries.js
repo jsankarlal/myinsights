@@ -11,6 +11,9 @@ $q = window.Q;
 	Queries.prototype.queryRecord = function(queryObject, field, fieldValue, collections, condition) {
 		var _this = this,
 		    deferred = $q.defer();
+        _this.consoleLog('queryRecord - entering');
+        _this.consoleLog('queryObject-' , queryObject);
+        
 		if (collections) {
 			queryObject.where += ds.getInStatement(collection); //where: 'TerritoryId IN ' + inTerr //where: 'Account_vod__c =\''+ accountId +'\''
 		}
@@ -31,7 +34,9 @@ $q = window.Q;
     Queries.prototype.viewRecord = function(object, id) {
 		var _this = this,
 		    deferred = $q.defer(),
-		    configObject = {object: object, fields: {Id: id }}
+		    configObject = {object: object, fields: {Id: id }};
+        _this.consoleLog('viewRecord - entering');
+        _this.consoleLog('configObject-' , configObject);
 
         ds.viewRecord(configObject).then(function(result) {
            deferred.resolve(result);
