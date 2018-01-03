@@ -121,6 +121,7 @@ appData = {
     MyInsight.prototype.getSuggestions = function() {
 		var _this = this;
         _this.consoleLog('getSuggestions - entering');
+         _this.consoleLog('_this.queryConfig.suggestions', _this.queryConfig.suggestions);
        _this.queryRecord(_this.queryConfig.suggestions).then(function(suggestions){
           appData.suggestions =  suggestions;
        });      

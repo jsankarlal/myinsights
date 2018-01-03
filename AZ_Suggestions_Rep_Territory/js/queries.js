@@ -12,7 +12,7 @@ $q = window.Q;
 		var _this = this,
 		    deferred = $q.defer();
         _this.consoleLog('queryRecord - entering');
-        _this.consoleLog('queryObject-' , queryObject);
+        _this.consoleLog('queryObject :', queryObject);
         
 		if (collections) {
 			queryObject.where += ds.getInStatement(collection); //where: 'TerritoryId IN ' + inTerr //where: 'Account_vod__c =\''+ accountId +'\''
