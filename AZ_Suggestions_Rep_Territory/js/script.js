@@ -53,14 +53,8 @@ appData = {
         var _this = this;
         
         $(document).on('click', '.suggestion-item', function(event){
-            var $element = $(this),
-                accountId = $element.attr('data-account-id');
             event.preventDefault();
-            if (accountId != '') {
-                _this.navigateToAccount(accountId);
-            } else {
-                _this.consoleLog('Null account Id');
-            }
+            _this.navigateToAccount($(this));
             
         });
         
@@ -119,20 +113,31 @@ appData = {
         _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
         
         $suggestionElements.each(function(index, element) {
-            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index;
-            $(element).attr('data-account-id', appData.accountIdList[temp]); 
+            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index,
+                type = (index + 1) % 2 == 1 ? 'call' : 'view';
+            $(element).attr('data-account-id', appData.accountIdList[temp]);
+            $(element).attr('data-suggestion-type', type);
+            
         });
     };
     
-   /* MyInsight.prototype.getSuggestions = function() {
-		var _this = this;
-        _this.consoleLog('getSuggestions - entering');
-        
-       _this.queryRecord(_this.queryConfig.suggestions).then(function(suggestions){
-          appData.suggestions =  suggestions;
-       }); 
-       _this.consoleLog('appData.suggestions.length - ', appData.suggestions.length);
-	};*/
+    MyInsight.prototype.navigateToAccount = function($element) {
+		var _this = this,
+            accountId = $element.attr('data-account-id'),
+            type = $element.attr('data-suggestion-type');
+        if (accountId != '') {
+                if (type == 'view') {
+                    _this.viewRecord('Account', accountId).then(function(response){
+                    });
+                } else if (type == 'call') {
+                    _this.newRecord('Call2_vod__c', accountId).then(function(response){
+                    });
+                }
+            } else {
+                _this.consoleLog('Null account Id');
+            }
+             
+	};
     
     MyInsight.prototype.navigateToAccount = function(accountId) {
 		var _this = this;

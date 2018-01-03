@@ -47,9 +47,9 @@ $q = window.Q;
         _this.consoleLog('viewRecord - entering');
         _this.consoleLog('configObject' , configObject);
         
-        ds.viewRecord(configObject).then(function (resp) {}, function(err) {});
+      //  ds.viewRecord(configObject).then(function (resp) {}, function(err) {});
 
-       /* ds.viewRecord(configObject).then(function(resp) {
+        ds.viewRecord(configObject).then(function(resp) {
            _this.consoleLog('viewRecord resolved - success '+ resp);
            deferred.resolve(resp);
         }, function(err) {
@@ -59,7 +59,27 @@ $q = window.Q;
 	   
         _this.consoleLog('viewRecord returns ');
 	    return deferred.promise;
-        */
+	};
+    
+    Queries.prototype.newRecord = function(object, id) {
+		var _this = this,
+		    deferred = $q.defer(),
+		    configObject = {object: object, fields: {Account: id }};
+        _this.consoleLog('newRecord - entering');
+        _this.consoleLog('configObject' , configObject);
+        
+      //  ds.viewRecord(configObject).then(function (resp) {}, function(err) {});
+
+        ds.newRecord(configObject).then(function(resp) {
+           _this.consoleLog('newRecord resolved - success '+ resp);
+           deferred.resolve(resp);
+        }, function(err) {
+            _this.consoleLog('newRecord resolved - error' , err);
+           deferred.resolve(err);
+        });
+	   
+        _this.consoleLog('newRecord returns ');
+	    return deferred.promise;
 	};
 	
 	Queries.prototype.queryConfig = {
