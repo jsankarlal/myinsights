@@ -8,11 +8,21 @@ $q = window.Q;
 		
 	};
 	
+    Queries.prototype.getCurrentObjectId = function(objectName, id) {
+        var deferred = $q.defer();
+
+        ds.getDataForCurrentObject(objectName, id).then(function(result) {
+            deferred.resolve(result);
+        });
+
+        return deferred.promise;
+    };
+    
 	Queries.prototype.queryRecord = function(queryObject, field, fieldValue, collections, condition) {
 		var _this = this,
 		    deferred = $q.defer();
         _this.consoleLog('queryRecord - entering');
-        _this.consoleLog('queryObject :', queryObject);
+        _this.consoleLog('queryObject', queryObject);
         
 		if (collections) {
 			queryObject.where += ds.getInStatement(collection); //where: 'TerritoryId IN ' + inTerr //where: 'Account_vod__c =\''+ accountId +'\''
@@ -35,7 +45,7 @@ $q = window.Q;
 		    deferred = $q.defer(),
 		    configObject = {object: object, fields: {Id: id }};
         _this.consoleLog('viewRecord - entering');
-        _this.consoleLog('configObject-' , configObject);
+        _this.consoleLog('configObject' , configObject);
         
         ds.viewRecord(configObject).then(function (resp) {}, function(err) {});
 
@@ -56,8 +66,8 @@ $q = window.Q;
 		suggestions: {
 	        object: 'Suggestion_vod__c',
 	        fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Owner_District_AZ_US__c', 'Actioned_By_AZ_US__c', 'Completed_By_AZ_US__c', 'Dismissed_By_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c'],
-	        where: '' 
-            //where: 'Account_vod__c =\''+ accountId +'\''
+	      //  where: '' 
+            where: 'OwnerId =\''
 	    },
 	    recordTypes: {
 	        object: 'RecordType',
