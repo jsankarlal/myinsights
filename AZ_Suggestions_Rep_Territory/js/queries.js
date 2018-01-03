@@ -22,12 +22,11 @@ $q = window.Q;
 			queryObject.where += condition + '\'';  //where: "UserId = '" + userId + "'"
 		} 
 		
-	    ds.runQuery(queryObject)
-	        .then(function(result) {
-	            //console.log(result);
+	    ds.runQuery(queryObject).then(function(result) {
+	       _this.consoleLog('queryRecord resolved ');
 	            deferred.resolve(result.data);
 	        });
-	
+	   _this.consoleLog('queryRecord returns ');
 	    return deferred.promise;
 	}
     
@@ -39,9 +38,11 @@ $q = window.Q;
         _this.consoleLog('configObject-' , configObject);
 
         ds.viewRecord(configObject).then(function(result) {
+           _this.consoleLog('viewRecord resolved');
            deferred.resolve(result);
         });
-	
+	   
+        _this.consoleLog('viewRecord returns ');
 	    return deferred.promise;
 	}
 	
