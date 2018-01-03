@@ -139,13 +139,6 @@ appData = {
              
 	};
     
-    MyInsight.prototype.navigateToAccount = function(accountId) {
-		var _this = this;
-       _this.viewRecord('Account', accountId).then(function(response){
-           _this.consoleLog('navigateToAccount - ' + accountId, response);
-       });      
-	};
-	
 	MyInsight.prototype.init = function() {
 		var _this = this;
         _this.consoleLog('mainController - entering');
