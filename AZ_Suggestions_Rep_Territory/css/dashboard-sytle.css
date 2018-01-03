@@ -26,6 +26,10 @@ a {
     cursor: pointer;
 }
 
+.navbar-toggle .icon-bar {
+    border: 1px solid #ccc;
+}
+
 section {
    /* margin-bottom: 10px; */
     padding: 10px;
