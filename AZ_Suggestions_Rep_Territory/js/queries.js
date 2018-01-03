@@ -64,7 +64,7 @@ $q = window.Q;
     Queries.prototype.newRecord = function(object, id) {
 		var _this = this,
 		    deferred = $q.defer(),
-		    configObject = {object: object, fields: {Account: id }};
+		    configObject = {object: object, fields: {Account_vod__c: id }};
         _this.consoleLog('newRecord - entering');
         _this.consoleLog('configObject' , configObject);
         
