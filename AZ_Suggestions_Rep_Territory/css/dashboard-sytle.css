@@ -475,33 +475,7 @@ strong em, strong i, em strong, i strong {
     font-weight: normal;
 }
 
-.fg-yellowgreen{
-    color: yellowgreen;
-}
 
-.fg-yellow{
-    color:yellow;
-}
-
-.fg-orange{
-    color:orange;
-}
-
-.fg-aqua{
-    color:aqua;
-}
-
-.fg-color{
-    color:#d0006f;
-}
-.bg-color{
-    background:#d0006f;
-}
-.az-theme{
-    color:#fff;
-    background:#d0006f;
-    
-}
 /* Dashboard Tiles widget start */
 
 .card-section .thumbnail{
@@ -575,7 +549,7 @@ strong em, strong i, em strong, i strong {
     border-bottom: 0px;
 }
 
-.list.list-hover .line:hover {
+.list.list-hover .line:hover, .list.list-hover .line.active {
     cursor: pointer;
     background: #f9f9f9;
 }
@@ -690,6 +664,102 @@ strong em, strong i, em strong, i strong {
 }
 
 
+/* Branding */
+
+.gold-theme{
+    background:#F0AB00;
+    color:#fff;
+    /*color:rgba(240, 171, 0, 1.00);*/
+}
+
+.graphite-theme{
+    background:#3C4242;
+    color:#fff;
+    /*color:rgba(62, 67, 67, 1.00);*/
+}
+
+.navy-theme{
+    background:#003865;
+    color:#fff;
+    /*color:rgba(0, 57, 102, 1.00);*/
+}
+
+.light-blue-theme{
+    background:#68D2DF;
+    color:#fff;
+    /*color:rgba(105, 210, 222, 1.00);*/
+}
 
 
+.purple-theme{
+    background:#3C1053;
+    color:#fff;
+    /*color:rgba(62, 16, 85, 1.00);*/
+}
+
+.platinum-theme{
+    background:#9DB0AC;
+    color:#fff;
+    /*color:rgba(159, 176, 171, 1.00);*/
+}
+
+.fg-gold{
+    color:rgba(240, 171, 0, 1.00);
+}
+
+.fg-graphite{
+    color:rgba(62, 67, 67, 1.00);
+}
+
+.fg-navy{
+    color:rgba(0, 57, 102, 1.00);
+}
+
+.fg-light-blue{
+    color:rgba(105, 210, 222, 1.00);
+}
+
+
+.fg-purple{
+    color:rgba(62, 16, 85, 1.00);
+}
+
+.fg-platinum{
+    color:rgba(159, 176, 171, 1.00);
+}
+
+
+.fg-yellowgreen{
+    color: yellowgreen;
+}
+
+.fg-yellow{
+    color:yellow;
+}
+
+.fg-orange{
+    color:orange;
+}
+
+.fg-aqua{
+    color:aqua;
+}
+
+.fg-magenta{
+    color:#d0006f;
+}
+
+.fg-color{
+    color:#d0006f;
+}
+
+.bg-color{
+    background:#d0006f;
+}
+
+.magenta-theme{
+    color:#fff;
+    background:#d0006f;
+    
+}
 
