@@ -52,7 +52,7 @@ appData = {
     MyInsight.prototype.bindEvents = function() {
         var _this = this;
         
-        $(document).on('click', '.suggestion-item', function(event){
+        $(document).on('click', '.navigate-to-native', function(event){
             event.preventDefault();
             _this.navigateToAccount($(this));
             
@@ -107,7 +107,7 @@ appData = {
     
     MyInsight.prototype.attachAccountIds = function() {
 		var _this = this,
-            $suggestionElements = $('.suggestion-item');
+            $suggestionElements = $('.navigate-to-native');
         
         _this.consoleLog('attachAccountIds - entering');
         _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
