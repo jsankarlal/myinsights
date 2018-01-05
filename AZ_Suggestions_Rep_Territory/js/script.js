@@ -58,7 +58,7 @@ appData = {
             
         });
         
-         $(document).on('click', '#targetted-users .line', function(event){
+         $(document).on('click', '#targetted-users .line, #suggestions .line', function(event){
             $(this).addClass('active');
             $(this).siblings().removeClass('active');
             
