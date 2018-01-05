@@ -783,3 +783,14 @@ strong em, strong i, em strong, i strong {
 .section-title{
     color:rgb(51, 51, 51);
 }
+
+.console-button{
+    top: 3px;
+    position: fixed;
+    display: block!important;
+    margin-top: 0px;
+    z-index: 10;
+    cursor: pointer;
+    border: 2px solid #ccc;
+    right: 250px;
+}

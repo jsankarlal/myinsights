@@ -58,6 +58,12 @@ appData = {
             
         });
         
+         $(document).on('click', '#targetted-users .line', function(event){
+            $(this).addClass('active');
+            $(this).siblings().removeClass('active');
+            
+        });
+        
     };
     
     MyInsight.prototype.parseSuggestions = function(suggestions) {
