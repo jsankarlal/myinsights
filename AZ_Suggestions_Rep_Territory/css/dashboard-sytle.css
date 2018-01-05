@@ -700,17 +700,23 @@ strong em, strong i, em strong, i strong {
 }
 
 
-.purple-theme{
+.purple-theme, .purple-theme a{
     background:#3C1053;
     color:#fff;
     /*color:rgba(62, 16, 85, 1.00);*/
 }
 
-.platinum-theme{
+.platinum-theme, .platinum-theme a{
     background:#9DB0AC;
     color:#fff;
     /*color:rgba(159, 176, 171, 1.00);*/
 }
+
+.magenta-theme, .magenta-theme a{
+    color:#fff;
+    background:#d0006f;
+}
+
 
 .fg-gold{
     color:rgba(240, 171, 0, 1.00);
@@ -763,11 +769,6 @@ strong em, strong i, em strong, i strong {
 }
 
 .bg-color{
-    background:#d0006f;
-}
-
-.magenta-theme{
-    color:#fff;
     background:#d0006f;
 }
 
