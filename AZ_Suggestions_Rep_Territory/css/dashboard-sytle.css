@@ -672,7 +672,7 @@ strong em, strong i, em strong, i strong {
     transition: transform 250ms ease;
 }
 
-.collapse-panel-heading.collapsed>span.fa {
+.collapse-panel-heading.collapsed:not(.fa-right)>span.fa {
     transform: rotate(180deg);
 }
 
