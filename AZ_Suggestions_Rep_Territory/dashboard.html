@@ -29,24 +29,16 @@
                   <li class="active">Link 1 a</li>
               </ul>
             </section>-->
-            
-            <section class="card-section"> <!-- Card Section starts-->
-                <!--<h3> My Account</h3>-->
+            <!--<section class="card-view profile-section">
+                <div class="border-0">
+                    <img src="images/person-placeholder.png" alt="..." style="height:40px;">
+                </div>
+            </section>-->
+
+            <section class="card-view kpi-section"> <!-- Card Section starts-->
+                <h4 class="margin-0 padding-bottom-10 padding-top-5">Key Performance Indicators <span class="welcome-text pull-right">Welcome. FirstName LastName </span></h4>
                 <div class="row margin-0">
-                    <!--<div class="col-xs-12 col-sm-4 col-md-4 padding-0"> 
-                        <div class="thumbnail border-0 user-detail-section text-center">
-                            <img src="images/person-placeholder.png" alt="...">
-                            <div class="caption">
-                                <p><span>Label 1: </span><span class=""> 150 </span></p>
-                                <p><span>Label 2 : </span><span class=""> 120 </span></p>
-                                <p><span>Label 1: </span><span class=""> 150 </span></p>
-                                <p><span>Label 2 : </span><span class=""> 120 </span></p> 
-                            </div>
-                        </div>
-                    </div>-->
-                    <!--<div class="col-xs-12 col-sm-8 col-md-8 padding-0">-->
-                        <!--<div class="row margin-0">-->
-                     <div class="card-container col-xs-4 col-sm-4 padding-left-0">
+                     <div class="card-container col-xs-4 col-sm-4 padding-horizontal-2 padding-left-0">
                          <div class="row margin-0 box-shadow-all">
                             <div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0 border-right-50">
                                  <div class="card-tile">
@@ -79,7 +71,7 @@
                          </div>
                     </div>
                     
-                    <div class="card-container col-xs-4 col-sm-4">
+                    <div class="card-container col-xs-4 col-sm-4 padding-horizontal-2">
                          <div class="row margin-0 box-shadow-all">
                             <div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0 border-right-50">
                                  <div class="card-tile">
@@ -110,7 +102,7 @@
                          </div>
                     </div>
                     
-                    <div class="card-container col-xs-4 col-sm-4 padding-right-0">
+                    <div class="card-container col-xs-4 col-sm-4 padding-horizontal-2 padding-right-0">
                          <div class="row margin-0 box-shadow-all">
                             <div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0 border-right-50">
                                  <div class="card-tile">
@@ -155,24 +147,27 @@
                     
                 </div>
             </section> <!-- Card Section Ends-->
+            
+            
             <button type="button" style="top: 140px;position: fixed; right: 0; display: block!important;margin-top: 0px;z-index: 10;cursor: pointer;border: 2px solid #ccc;"class="navbar-toggle collapsed pull-left"           data-toggle="modal" data-target="#exampleModal" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <section class="list-section padding-top-0"> <!-- List Section starts-->
+            <section class="card-view myinsight-section padding-top-0"> <!-- List Section starts-->
                 <!--<h3> Targetted Users and Suggestions List</h3>-->
                 <!--<div class="row">
                     <div class="col-xs-12 col-sm-6">-->
                         <!--  Tab Component-->
                         <ul class="nav nav-pills margin-bottom-0" role="tablist">
-                            <li class="active"> <a href="#targetted-users" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">Targetted HCP's <span class="badge">6</span></a> </li>
-                            <li class=""> <a href="#suggestions" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="fg-color false">Suggestions List<span class="badge">8</span></a> </li>
+                            <li class="pull-left"> <a class="padding-left-0" style="padding-left:0px;"><span class="h4 margin-0 section-title">My Insights</span></a></li>
+                            <li class="pull-right active"> <a href="#targetted-users" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">Targetted HCP's <span class="badge">6</span></a> </li>
+                            <li class="pull-right"> <a href="#suggestions" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="fg-color false">Suggestions List<span class="badge">8</span></a> </li>
                         </ul>
 
                         <div class="tab-content box-shadow-all padding-10">
-                            <div class="tab-pane fg-color fade active in" id="targetted-users">
+                            <div class="tab-pane fade active in" id="targetted-users">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-6 border-right-50">
                                         <!-- List Component-->
@@ -289,18 +284,36 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-6">
                                         <!--<h3> User Details Section</h3>-->
+                                        <div class="row purple-theme margin-right-left-0 margin-bottom-10">
+                                            <div class="col-xs-10 col-sm-10 padding-0">
+                                                <div class="row padding-10">
+                                                    <div class="col-xs-3 col-sm-3 text-center padding-top-30">
+                                                        <img src="images/person-placeholder.png" style="height: 70px;">
+                                                    </div>
+                                                    <div class="col-xs-7 col-sm-7">
+                                                        <p> <b> First Name</b> <span>Last Name</span></p>
+                                                        <p> Placeholder Placeholder Placeholder</p>
+                                                        <p> Placeholder Placeholder Placeholder</p>
+                                                        <p> Placeholder Placeholder Placeholder</p>
+                                                    </div>
 
-                                        <div class="row purple-theme margin-bottom-10 padding-top-10 padding-bottom-10 margin-right-left-0">
-                                            <div class="col-xs-4 col-sm-4 text-center padding-top-30">
-                                                <img src="images/person-placeholder.png" style="height: 70px;">
+                                                </div>
                                             </div>
-                                            <div class="col-xs-8 col-sm-8">
-                                                <p> <b> First Name</b> <span>Last Name</span></p>
-                                                <p> Placeholder Placeholder Placeholder</p>
-                                                <p> Placeholder Placeholder Placeholder</p>
-                                                <p> Placeholder Placeholder Placeholder</p>
+                                            <div class="col-xs-2 col-sm-2 padding-0">
+                                                <div class="full-width text-center padding-10">
+                                                    <a class="navigate-to-native purple-theme" data-account-id="" data-type="view">
+                                                        <i class="fa fa-3x padding-10 fa-external-link box-shadow-all-white" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="full-width text-center padding-10">
+                                                    <a class="navigate-to-native purple-theme" data-account-id="" data-type="call">
+                                                        <i class="fa fa-3x padding-10 fa-calendar-plus-o box-shadow-all-white" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
+
+                                        
 
                                         <div class="ratings-component">
                                             <div class="row margin-right-left-0">
@@ -436,7 +449,7 @@
                                                     <i class="fa fa-2x fg-color fa-bell" aria-hidden="true"></i>
                                                 </div>
                                                 <div class="col-xs-10 col-sm-11">
-                                                    <p>Record a call</p>
+                                                    <p>Suggestion to record a call</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -449,7 +462,7 @@
                                                     <i class="fa fa-2x fg-color fa-bell" aria-hidden="true"></i>
                                                 </div>
                                                 <div class="col-xs-10 col-sm-11">
-                                                    <p>View Account</p>
+                                                    <p>Suggestion to Record call</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -462,7 +475,7 @@
                                                     <i class="fa fa-2x fg-color fa-bell" aria-hidden="true"></i>
                                                 </div>
                                                 <div class="col-xs-10 col-sm-11">
-                                                    <p>Record a call</p>
+                                                    <p>Suggestion to record a call</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -474,7 +487,7 @@
                                                     <i class="fa fa-2x fg-color fa-bell" aria-hidden="true"></i>
                                                 </div>
                                                 <div class="col-xs-10 col-sm-11">
-                                                    <p>View Account</p>
+                                                    <p>Suggestion to Record call</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -486,7 +499,7 @@
                                                     <i class="fa fa-2x fg-color fa-bell" aria-hidden="true"></i>
                                                 </div>
                                                 <div class="col-xs-10 col-sm-11">
-                                                    <p>Record a call</p>
+                                                    <p>Suggestion to record a call</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -498,7 +511,7 @@
                                                     <i class="fa fa-2x fg-color fa-bell" aria-hidden="true"></i>
                                                 </div>
                                                 <div class="col-xs-10 col-sm-11">
-                                                    <p>View Account</p>
+                                                    <p>Suggestion to Record call</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -510,7 +523,7 @@
                                                     <i class="fa fa-2x fg-color fa-bell" aria-hidden="true"></i>
                                                 </div>
                                                 <div class="col-xs-10 col-sm-11">
-                                                    <p>Record a call</p>
+                                                    <p>Suggestion to record a call</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -522,7 +535,7 @@
                                                     <i class="fa fa-2x fg-color fa-bell" aria-hidden="true"></i>
                                                 </div>
                                                 <div class="col-xs-10 col-sm-11">
-                                                    <p>View Account</p>
+                                                    <p>Suggestion to Record call</p>
                                                 </div>
                                             </div>
                                         </a>
@@ -566,6 +579,23 @@
 		
 		</footer>
         <!-- Modal -->
+        <div class="modal fade" id="popup-modal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="popupModalLabel">Modal Title</h5>
+              </div>
+              <div class="modal-body">
+                    
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Console Log Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">

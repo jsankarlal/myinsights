@@ -3,6 +3,7 @@ body {
     line-height: 24px;
     padding:0px;
     margin:0px;
+    font-size: 12px;
 }
 
 b, strong {
@@ -351,6 +352,10 @@ h4, .h4{
     padding-left: 20px;
 }
 
+.padding-horizontal-2{
+    padding-right: 2px;
+    padding-left: 2px;
+}
 @media (min-width: 1200px) {
     .lg-padding-top-0 {
         padding-top: 0 !important;
@@ -509,6 +514,10 @@ strong em, strong i, em strong, i strong {
 }
 .box-shadow-all{
     box-shadow: 0 0 2px #000;
+}
+
+.box-shadow-all-white{
+    box-shadow: 0 0 2px #fff;
 }
 
 .border-right-50{
@@ -760,6 +769,17 @@ strong em, strong i, em strong, i strong {
 .magenta-theme{
     color:#fff;
     background:#d0006f;
-    
 }
 
+.kpi-section{
+    height:24%;
+}
+
+.myinsight-section{
+    max-height:74%;
+    overflow:hidden;
+}
+
+.section-title{
+    color:rgb(51, 51, 51);
+}
