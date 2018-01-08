@@ -40,10 +40,9 @@ $q = window.Q;
 	    return deferred.promise;
 	}
     
-    Queries.prototype.viewRecord = function(object, id) {
+    Queries.prototype.viewRecord = function(configObject) {
 		var _this = this,
-		    deferred = $q.defer(),
-		    configObject = {object: object, fields: {Id: id }};
+		    deferred = $q.defer();
         _this.consoleLog('viewRecord - entering');
         _this.consoleLog('configObject' , configObject);
         
@@ -61,10 +60,9 @@ $q = window.Q;
 	    return deferred.promise;
 	};
     
-    Queries.prototype.newRecord = function(object, id) {
+    Queries.prototype.newRecord = function(configObject) {
 		var _this = this,
-		    deferred = $q.defer(),
-		    configObject = {object: object, fields: {Account_vod__c: id }};
+		    deferred = $q.defer();
         _this.consoleLog('newRecord - entering');
         _this.consoleLog('configObject' , configObject);
         

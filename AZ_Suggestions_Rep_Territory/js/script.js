@@ -118,7 +118,7 @@ appData = {
         
         $suggestionElements.each(function(index, element) {
             var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index,
-                type = (index + 1) % 2 == 1 ? 'call' : 'view';
+                type = (index + 1) % 2 == 1 ? 'view' : 'call';
             $(element).attr('data-account-id', appData.accountIdList[temp]);
             $(element).attr('data-suggestion-type', type);
             
@@ -128,13 +128,16 @@ appData = {
     MyInsight.prototype.navigateToAccount = function($element) {
 		var _this = this,
             accountId = $element.attr('data-account-id'),
+            configObject = {},
             type = $element.attr('data-suggestion-type');
         if (accountId != '') {
                 if (type == 'view') {
-                    _this.viewRecord('Account', accountId).then(function(response){
+                    configObject = {object: object, fields: {Id: id }};
+                    _this.viewRecord(configObject).then(function(response){
                     });
                 } else if (type == 'call') {
-                    _this.newRecord('Call2_vod__c', accountId).then(function(response){
+                    configObject = {object: object, fields: {Account_vod__c: id }};
+                    _this.newRecord(configObject).then(function(response){
                     });
                 }
             } else {
