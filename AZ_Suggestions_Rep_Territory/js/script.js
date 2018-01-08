@@ -87,10 +87,10 @@ appData = {
 	                Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
 					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
 					Account_vod__c: suggestions[i].Account_vod__c.value,
-					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
+/*					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
 					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
 					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
-					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,
+					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,*/
 					LastStatusUpdatedBy: '',
 					Status: '',
 					productTags: [],
@@ -98,7 +98,7 @@ appData = {
 	            };
 	        	appData.ownerIdList.push(suggestions[i].OwnerId.value);
 	        		            
-	            this_suggestion.LastStatusUpdatedBy = this_suggestion.Actioned_By_AZ_US__c || this_suggestion.Completed_By_AZ_US__c || this_suggestion.Dismissed_By_AZ_US__c || '';
+//	            this_suggestion.LastStatusUpdatedBy = this_suggestion.Actioned_By_AZ_US__c || this_suggestion.Completed_By_AZ_US__c || this_suggestion.Dismissed_By_AZ_US__c || '';
 	            this_suggestion.Status = this_suggestion.Actioned_vod__c ? 'Actioned' : this_suggestion.Marked_As_Complete_vod__c ? 'Marked as Complete' : this_suggestion.Dismissed_vod__c ? 'Dismissed' : 'Pending';
 	            accountIds[i] = suggestions[i].Account_vod__c.value;
 	            appData.suggestions[i] = this_suggestion;
