@@ -103,8 +103,6 @@ appData = {
 	            accountIds[i] = suggestions[i].Account_vod__c.value;
 	            appData.suggestions[i] = this_suggestion;
 	        }
-            /*appData.accountIdList = accountIds.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-	        appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });*/
         }
         
         appData.accountIdList = accountIds.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
