@@ -132,11 +132,11 @@ appData = {
             type = $element.attr('data-suggestion-type');
         if (accountId != '') {
                 if (type == 'view') {
-                    configObject = {object: object, fields: {Id: id }};
+                    configObject = {object: 'Account', fields: {Id: accountId }};
                     _this.viewRecord(configObject).then(function(response){
                     });
                 } else if (type == 'call') {
-                    configObject = {object: object, fields: {Account_vod__c: id }};
+                    configObject = {object: 'Call2_vod__c', fields: {Account_vod__c: accountId }};
                     _this.newRecord(configObject).then(function(response){
                     });
                 }
