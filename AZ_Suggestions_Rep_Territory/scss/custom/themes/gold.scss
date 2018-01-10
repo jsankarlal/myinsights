@@ -1,0 +1,7 @@
+@import "../variables";
+$gold-color: #F0AB00;
+$gold-color-80: #F3BC33;
+$gold-color-60: #F6CD66;
+$gold-color-40: #F9DD99;
+$gold-color-20: #FCEECC;
+@include theme-structure($gold-color, $gold-color-80, $gold-color-60, $gold-color-40, $gold-color-20);

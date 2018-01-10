@@ -1,0 +1,7 @@
+@import "../variables";
+$brilique-color: #5f256b;
+$brilique-color-80: #5f256b;
+$brilique-color-60: #5f256b;
+$brilique-color-40: #5f256b;
+$brilique-color-20: #5f256b;
+@include theme-structure($brilique-color, $brilique-color-80, $brilique-color-60, $brilique-color-40, $brilique-color-20);

@@ -1,0 +1,7 @@
+@import "../variables";
+$citanest-color: #231f20;
+$citanest-color-80: #231f20;
+$citanest-color-60: #231f20;
+$citanest-color-40: #231f20;
+$citanest-color-20: #231f20;
+@include theme-structure($citanest-color, $citanest-color-80, $citanest-color-60, $citanest-color-40, $citanest-color-20);

@@ -1,0 +1,7 @@
+@import "../variables";
+$zomig-color: #025291;
+$zomig-color-80: #025291;
+$zomig-color-60: #025291;
+$zomig-color-40: #025291;
+$zomig-color-20: #025291;
+@include theme-structure($zomig-color, $zomig-color-80, $zomig-color-60, $zomig-color-40, $zomig-color-20);

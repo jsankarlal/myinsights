@@ -1,0 +1,7 @@
+@import "../variables";
+$zoladex-color: #563679;
+$zoladex-color-80: #563679;
+$zoladex-color-60: #563679;
+$zoladex-color-40: #563679;
+$zoladex-color-20: #563679;
+@include theme-structure($zoladex-color, $zoladex-color-80, $zoladex-color-60, $zoladex-color-40, $zoladex-color-20);

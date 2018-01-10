@@ -1,0 +1,7 @@
+@import "../variables";
+$diprivan-color: #0f653c;
+$diprivan-color-80: #0f653c;
+$diprivan-color-60: #0f653c;
+$diprivan-color-40: #0f653c;
+$diprivan-color-20: #0f653c;
+@include theme-structure($diprivan-color, $diprivan-color-80, $diprivan-color-60, $diprivan-color-40, $diprivan-color-20);

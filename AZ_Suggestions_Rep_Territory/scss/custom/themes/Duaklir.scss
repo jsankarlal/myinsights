@@ -1,0 +1,7 @@
+@import "../variables";
+$duaklir-color: #f37021;
+$duaklir-color-80: #f37021;
+$duaklir-color-60: #f37021;
+$duaklir-color-40: #f37021;
+$duaklir-color-20: #f37021;
+@include theme-structure($duaklir-color, $duaklir-color-80, $duaklir-color-60, $duaklir-color-40, $duaklir-color-20);

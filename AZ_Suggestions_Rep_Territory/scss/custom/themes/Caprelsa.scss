@@ -1,0 +1,7 @@
+@import "../variables";
+$caprelsa-color: #512e8c;
+$caprelsa-color-80: #512e8c;
+$caprelsa-color-60: #512e8c;
+$caprelsa-color-40: #512e8c;
+$caprelsa-color-20: #512e8c;
+@include theme-structure($caprelsa-color, $caprelsa-color-80, $caprelsa-color-60, $caprelsa-color-40, $caprelsa-color-20);

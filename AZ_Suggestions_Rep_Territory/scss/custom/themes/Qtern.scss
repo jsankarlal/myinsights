@@ -1,0 +1,7 @@
+@import "../variables";
+$qtern-color: #764199;
+$qtern-color-80: #764199;
+$qtern-color-60: #764199;
+$qtern-color-40: #764199;
+$qtern-color-20: #764199;
+@include theme-structure($qtern-color, $qtern-color-80, $qtern-color-60, $qtern-color-40, $qtern-color-20);

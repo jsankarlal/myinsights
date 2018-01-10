@@ -1,0 +1,7 @@
+@import "../variables";
+$bydureon-color: #00703c;
+$bydureon-color-80: #00703c;
+$bydureon-color-60: #00703c;
+$bydureon-color-40: #00703c;
+$bydureon-color-20: #00703c;
+@include theme-structure($bydureon-color, $bydureon-color-80, $bydureon-color-60, $bydureon-color-40, $bydureon-color-20);

@@ -1,0 +1,7 @@
+@import "../variables";
+$bricanyl-color: #5684bc;
+$bricanyl-color-80: #5684bc;
+$bricanyl-color-60: #5684bc;
+$bricanyl-color-40: #5684bc;
+$bricanyl-color-20: #5684bc;
+@include theme-structure($bricanyl-color, $bricanyl-color-80, $bricanyl-color-60, $bricanyl-color-40, $bricanyl-color-20);

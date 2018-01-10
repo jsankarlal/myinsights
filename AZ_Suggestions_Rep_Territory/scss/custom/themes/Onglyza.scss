@@ -1,0 +1,7 @@
+@import "../variables";
+$onglyza-color: #068e7c;
+$onglyza-color-80: #068e7c;
+$onglyza-color-60: #068e7c;
+$onglyza-color-40: #068e7c;
+$onglyza-color-20: #068e7c;
+@include theme-structure($onglyza-color, $onglyza-color-80, $onglyza-color-60, $onglyza-color-40, $onglyza-color-20);

@@ -1,0 +1,7 @@
+@import "../variables";
+$rhinocort-color: #02857a;
+$rhinocort-color-80: #02857a;
+$rhinocort-color-60: #02857a;
+$rhinocort-color-40: #02857a;
+$rhinocort-color-20: #02857a;
+@include theme-structure($rhinocort-color, $rhinocort-color-80, $rhinocort-color-60, $rhinocort-color-40, $rhinocort-color-20);

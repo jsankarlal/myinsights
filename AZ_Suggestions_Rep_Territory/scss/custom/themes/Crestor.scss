@@ -1,0 +1,7 @@
+@import "../variables";
+$crestor-color: #efa000;
+$crestor-color-80: #efa000;
+$crestor-color-60: #efa000;
+$crestor-color-40: #efa000;
+$crestor-color-20: #efa000;
+@include theme-structure($crestor-color, $crestor-color-80, $crestor-color-60, $crestor-color-40, $crestor-color-20);

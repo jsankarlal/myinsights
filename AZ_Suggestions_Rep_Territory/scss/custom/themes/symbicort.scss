@@ -1,0 +1,7 @@
+@import "../variables";
+$symbicort-color: #d71f18;
+$symbicort-color-80: #d71f18;
+$symbicort-color-60: #d71f18;
+$symbicort-color-40: #d71f18;
+$symbicort-color-20: #d71f18;
+@include theme-structure($symbicort-color, $symbicort-color-80, $symbicort-color-60, $symbicort-color-40, $symbicort-color-20);

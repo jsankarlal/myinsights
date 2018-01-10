@@ -1,0 +1,7 @@
+@import "../variables";
+$lynparza-color: #a6c139;
+$lynparza-color-80: #a6c139;
+$lynparza-color-60: #a6c139;
+$lynparza-color-40: #a6c139;
+$lynparza-color-20: #a6c139;
+@include theme-structure($lynparza-color, $lynparza-color-80, $lynparza-color-60, $lynparza-color-40, $lynparza-color-20);

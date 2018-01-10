@@ -1,0 +1,7 @@
+@import "../variables";
+$atacand-color: #231f20;
+$atacand-color-80: #231f20;
+$atacand-color-60: #231f20;
+$atacand-color-40: #231f20;
+$atacand-color-20: #231f20;
+@include theme-structure($atacand-color, $atacand-color-80, $atacand-color-60, $atacand-color-40, $atacand-color-20);

@@ -1,0 +1,7 @@
+@import "../variables";
+$nexium-color: #482986;
+$nexium-color-80: #482986;
+$nexium-color-60: #482986;
+$nexium-color-40: #482986;
+$nexium-color-20: #482986;
+@include theme-structure($nexium-color, $nexium-color-80, $nexium-color-60, $nexium-color-40, $nexium-color-20);

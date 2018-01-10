@@ -1,0 +1,7 @@
+@import "../variables";
+$bambec-color: #2e1b41;
+$bambec-color-80: #2e1b41;
+$bambec-color-60: #2e1b41;
+$bambec-color-40: #2e1b41;
+$bambec-color-20: #2e1b41;
+@include theme-structure($bambec-color, $bambec-color-80, $bambec-color-60, $bambec-color-40, $bambec-color-20);

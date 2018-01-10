@@ -1,0 +1,7 @@
+@import "../variables";
+$pulmicort-color: #b15928;
+$pulmicort-color-80: #b15928;
+$pulmicort-color-60: #b15928;
+$pulmicort-color-40: #b15928;
+$pulmicort-color-20: #b15928;
+@include theme-structure($pulmicort-color, $pulmicort-color-80, $pulmicort-color-60, $pulmicort-color-40, $pulmicort-color-20);

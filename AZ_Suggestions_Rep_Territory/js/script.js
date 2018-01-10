@@ -1,3 +1,4 @@
+//jscs:disable
 appData = {
      product_map: [{
          Id: '',
@@ -38,7 +39,7 @@ appData = {
         tableData:[],
         suggestions:[]
      },
-     months_to_date: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+     months_to_date: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
  };
 
 
@@ -133,11 +134,11 @@ appData = {
         if (accountId != '') {
                 if (type == 'view') {
                     configObject = {object: 'Account', fields: {Id: accountId }};
-                    _this.viewRecord(configObject).then(function(response){
+                    _this.viewRecord(configObject).then(function(response) {
                     });
                 } else if (type == 'call') {
                     configObject = {object: 'Call2_vod__c', fields: {Account_vod__c: accountId }};
-                    _this.newRecord(configObject).then(function(response){
+                    _this.newRecord(configObject).then(function(response) {
                     });
                 }
             } else {

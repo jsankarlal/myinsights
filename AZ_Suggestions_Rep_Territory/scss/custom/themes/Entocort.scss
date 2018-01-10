@@ -1,0 +1,7 @@
+@import "../variables";
+$entocort-color: #2c2b44;
+$entocort-color-80: #2c2b44;
+$entocort-color-60: #2c2b44;
+$entocort-color-40: #2c2b44;
+$entocort-color-20: #2c2b44;
+@include theme-structure($entocort-color, $entocort-color-80, $entocort-color-60, $entocort-color-40, $entocort-color-20);

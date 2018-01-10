@@ -1,0 +1,7 @@
+@import "../variables";
+$betaloc-color: #321d43;
+$betaloc-color-80: #321d43;
+$betaloc-color-60: #321d43;
+$betaloc-color-40: #321d43;
+$betaloc-color-20: #321d43;
+@include theme-structure($betaloc-color, $betaloc-color-80, $betaloc-color-60, $betaloc-color-40, $betaloc-color-20);

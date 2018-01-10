@@ -1,0 +1,101 @@
+//Font definition
+@font-face{
+	font-family:LexiaLight;
+	src:url($font-path+"/lexiafont/lexialight-webfont.eot");
+	src:url($font-path+"/lexiafont/lexialight-webfont.eot?#iefix") format("embedded-opentype"),
+	url($font-path+"/lexiafont/lexialight-webfont.woff2") format("woff2"),
+	url($font-path+"/lexiafont/lexialight-webfont.woff") format("woff"),
+	url($font-path+"/lexiafont/lexialight-webfont.ttf") format("truetype");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaLight;
+	src:url($font-path+"/lexiafont/lexialight-webfont.eot");
+	src:url($font-path+"/lexiafont/lexialight-webfont.eot?#iefix") format("embedded-opentype"),
+	url($font-path+"/lexiafont/lexialight-webfont.woff2") format("woff2"),
+	url($font-path+"/lexiafont/lexialight-webfont.woff") format("woff"),
+	url($font-path+"/lexiafont/lexialight-webfont.ttf") format("truetype");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaThin;
+	src:url($font-path+"/lexiafont/lexiathin-webfont.eot");
+	src:url($font-path+"/lexiafont/lexiathin-webfont.eot?#iefix") format("embedded-opentype"),
+	url($font-path+"/lexiafont/lexiathin-webfont.woff2") format("woff2"),url($font-path+"/lexiafont/lexiathin-webfont.woff") format("woff"),
+	url($font-path+"/lexiafont/lexiathin-webfont.ttf") format("truetype"),url($font-path+"/lexiafont/lexiathin-webfont.svg#wf") format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaItalic;
+	src:url($font-path+"/lexiafont/lexiaitalic-webfont.eot");
+	src:url($font-path+"/lexiafont/lexiaitalic-webfont.eot?#iefix") format("embedded-opentype"),
+	url($font-path+"/lexiafont/lexiaitalic-webfont.woff2") format("woff2"),
+	url($font-path+"/lexiafont/lexiaitalic-webfont.woff") format("woff"),
+	url($font-path+"/lexiafont/lexiaitalic-webfont.ttf") format("truetype"),
+	url($font-path+"/lexiafont/lexiaitalic-webfont.svg#wf") format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaBold;
+	src:url($font-path+"/lexiafont/lexiabold-webfont.eot");
+	src:url($font-path+"/lexiafont/lexiabold-webfont.eot?#iefix") format("embedded-opentype"),
+	url($font-path+"/lexiafont/lexiabold-webfont.woff2") format("woff2"),
+	url($font-path+"/lexiafont/lexiabold-webfont.woff") format("woff"),
+	url($font-path+"/lexiafont/lexiabold-webfont.ttf") format("truetype"),
+	url($font-path+"/lexiafont/lexiabold-webfont.svg#wf") format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaBoldItalic;
+	src:url($font-path+"/lexiafont/lexiabolditalic-webfont.eot");
+	src:url($font-path+"/lexiafont/lexiabolditalic-webfont.eot?#iefix") format("embedded-opentype"),
+	url($font-path+"/lexiafont/lexiabolditalic-webfont.woff2") format("woff2"),
+	url($font-path+"/lexiafont/lexiabolditalic-webfont.woff") format("woff"),
+	url($font-path+"/lexiafont/lexiabolditalic-webfont.ttf") format("truetype"),
+	url($font-path+"/lexiafont/lexiabolditalic-webfont.svg#wf") format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaLightItalic;
+	src:url($font-path+"/lexiafont/lexialightitalic-webfont.eot");
+	src:url($font-path+"/lexiafont/lexialightitalic-webfont.eot?#iefix") format("embedded-opentype"),
+	url($font-path+"/lexiafont/lexialightitalic-webfont.woff2") format("woff2"),
+	url($font-path+"/lexiafont/lexialightitalic-webfont.woff") format("woff"),
+	url($font-path+"/lexiafont/lexialightitalic-webfont.ttf") format("truetype"),
+	url($font-path+"/lexiafont/lexialightitalic-webfont.svg#wf") format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaThinItalic;
+	src:url($font-path+"/lexiafont/lexiathinitalic-webfont.eot");
+	src:url($font-path+"/lexiafont/lexiathinitalic-webfont.eot?#iefix") format("embedded-opentype"),
+	url($font-path+"/lexiafont/lexiathinitalic-webfont.woff2") format("woff2"),
+	url($font-path+"/lexiafont/lexiathinitalic-webfont.woff") format("woff"),
+	url($font-path+"/lexiafont/lexiathinitalic-webfont.ttf") format("truetype"),
+	url($font-path+"/lexiafont/lexiathinitalic-webfont.svg#wf") format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:az-webfont;
+	src:url($font-path+"/lexiafont/az-webfont.eot?aa018cd527d95b009ea58953541f0d95");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:az-webfont;
+	src:url($font-path+"/lexiafont/az-webfont.eot?#iefix") format("embedded-opentype"),
+	url($font-path+"/lexiafont/az-webfont.woff2?aa018cd527d95b009ea58953541f0d95") format("woff2"),
+	url($font-path+"/lexiafont/az-webfont.woff?aa018cd527d95b009ea58953541f0d95") format("woff"),
+	url($font-path+"/lexiafont/az-webfont.ttf?aa018cd527d95b009ea58953541f0d95") format("truetype"),
+	url($font-path+"/lexiafont/az-webfont.svg?aa018cd527d95b009ea58953541f0d95#az-webfont") format("svg");
+	font-weight:400;
+	font-style:normal
+}

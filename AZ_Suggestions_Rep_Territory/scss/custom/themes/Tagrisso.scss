@@ -1,0 +1,7 @@
+@import "../variables";
+$tagrisso-color: #008c95;
+$tagrisso-color-80: #008c95;
+$tagrisso-color-60: #008c95;
+$tagrisso-color-40: #008c95;
+$tagrisso-color-20: #008c95;
+@include theme-structure($tagrisso-color, $tagrisso-color-80, $tagrisso-color-60, $tagrisso-color-40, $tagrisso-color-20);

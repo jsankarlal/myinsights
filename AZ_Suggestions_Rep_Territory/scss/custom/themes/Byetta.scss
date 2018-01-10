@@ -1,0 +1,7 @@
+@import "../variables";
+$byetta-color: #057c92;
+$byetta-color-80: #057c92;
+$byetta-color-60: #057c92;
+$byetta-color-40: #057c92;
+$byetta-color-20: #057c92;
+@include theme-structure($byetta-color, $byetta-color-80, $byetta-color-60, $byetta-color-40, $byetta-color-20);

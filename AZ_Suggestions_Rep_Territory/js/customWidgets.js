@@ -1,3 +1,4 @@
+//jscs:disable
 function createTeamChart(myData, chartContainer, messages) {
     console.log('inside chart')
 

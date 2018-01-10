@@ -1,0 +1,7 @@
+@import "../variables";
+$casodex-color: #0852a3;
+$casodex-color-80: #0852a3;
+$casodex-color-60: #0852a3;
+$casodex-color-40: #0852a3;
+$casodex-color-20: #0852a3;
+@include theme-structure($casodex-color, $casodex-color-80, $casodex-color-60, $casodex-color-40, $casodex-color-20);

@@ -1,0 +1,383 @@
+/* Stylesheet for the AstraZeneca Digital Experience
+   for use with Twitter Bootstrap 3.3.6 or later and Adobe Responsive UI on AEM 6.2 or later
+
+   Contributors:
+   Adam Japak
+*/
+
+/* BEGIN fonts */
+@font-face{
+	font-family:LexiaLight;
+	src:url(../assets/lexiafonts/lexialight-webfont.eot);
+	src:url(../assets/lexiafonts/lexialight-webfont.eot?#iefix) format("embedded-opentype"),
+	url(../assets/lexiafonts/lexialight-webfont.woff2) format("woff2"),
+	url(../assets/lexiafonts/lexialight-webfont.woff) format("woff"),
+	url(../assets/lexiafonts/lexialight-webfont.ttf) format("truetype");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaThin;
+	src:url(../assets/lexiafonts/lexiathin-webfont.eot);
+	src:url(../assets/lexiafonts/lexiathin-webfont.eot?#iefix) format("embedded-opentype"),
+	url(../assets/lexiafonts/lexiathin-webfont.woff2) format("woff2"),url(../assets/lexiafonts/lexiathin-webfont.woff) format("woff"),
+	url(../assets/lexiafonts/lexiathin-webfont.ttf) format("truetype"),url(../assets/lexiafonts/lexiathin-webfont.svg#wf) format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaItalic;
+	src:url(../assets/lexiafonts/lexiaitalic-webfont.eot);
+	src:url(../assets/lexiafonts/lexiaitalic-webfont.eot?#iefix) format("embedded-opentype"),
+	url(../assets/lexiafonts/lexiaitalic-webfont.woff2) format("woff2"),
+	url(../assets/lexiafonts/lexiaitalic-webfont.woff) format("woff"),
+	url(../assets/lexiafonts/lexiaitalic-webfont.ttf) format("truetype"),
+	url(../assets/lexiafonts/lexiaitalic-webfont.svg#wf) format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaBold;
+	src:url(../assets/lexiafonts/lexiabold-webfont.eot);
+	src:url(../assets/lexiafonts/lexiabold-webfont.eot?#iefix) format("embedded-opentype"),
+	url(../assets/lexiafonts/lexiabold-webfont.woff2) format("woff2"),
+	url(../assets/lexiafonts/lexiabold-webfont.woff) format("woff"),
+	url(../assets/lexiafonts/lexiabold-webfont.ttf) format("truetype"),
+	url(../assets/lexiafonts/lexiabold-webfont.svg#wf) format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaBoldItalic;
+	src:url(../assets/lexiafonts/lexiabolditalic-webfont.eot);
+	src:url(../assets/lexiafonts/lexiabolditalic-webfont.eot?#iefix) format("embedded-opentype"),
+	url(../assets/lexiafonts/lexiabolditalic-webfont.woff2) format("woff2"),
+	url(../assets/lexiafonts/lexiabolditalic-webfont.woff) format("woff"),
+	url(../assets/lexiafonts/lexiabolditalic-webfont.ttf) format("truetype"),
+	url(../assets/lexiafonts/lexiabolditalic-webfont.svg#wf) format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaLightItalic;
+	src:url(../assets/lexiafonts/lexialightitalic-webfont.eot);
+	src:url(../assets/lexiafonts/lexialightitalic-webfont.eot?#iefix) format("embedded-opentype"),
+	url(../assets/lexiafonts/lexialightitalic-webfont.woff2) format("woff2"),
+	url(../assets/lexiafonts/lexialightitalic-webfont.woff) format("woff"),
+	url(../assets/lexiafonts/lexialightitalic-webfont.ttf) format("truetype"),
+	url(../assets/lexiafonts/lexialightitalic-webfont.svg#wf) format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:LexiaThinItalic;
+	src:url(../assets/lexiafonts/lexiathinitalic-webfont.eot);
+	src:url(../assets/lexiafonts/lexiathinitalic-webfont.eot?#iefix) format("embedded-opentype"),
+	url(../assets/lexiafonts/lexiathinitalic-webfont.woff2) format("woff2"),
+	url(../assets/lexiafonts/lexiathinitalic-webfont.woff) format("woff"),
+	url(../assets/lexiafonts/lexiathinitalic-webfont.ttf) format("truetype"),
+	url(../assets/lexiafonts/lexiathinitalic-webfont.svg#wf) format("svg");
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:az-webfont;
+	src:url(../assets/lexiafonts/az-webfont.eot?aa018cd527d95b009ea58953541f0d95);
+	font-weight:400;
+	font-style:normal
+}
+@font-face{
+	font-family:az-webfont;
+	src:url(../assets/lexiafonts/az-webfont.eot?#iefix) format("embedded-opentype"),
+	url(../assets/lexiafonts/az-webfont.woff2?aa018cd527d95b009ea58953541f0d95) format("woff2"),
+	url(../assets/lexiafonts/az-webfont.woff?aa018cd527d95b009ea58953541f0d95) format("woff"),
+	url(../assets/lexiafonts/az-webfont.ttf?aa018cd527d95b009ea58953541f0d95) format("truetype"),
+	url(../assets/lexiafonts/az-webfont.svg?aa018cd527d95b009ea58953541f0d95#az-webfont) format("svg");
+	font-weight:400;
+	font-style:normal
+}
+/* END fonts */
+
+/* BEGIN Body Styles
+   These are the globally applied styles for the page contents
+*/
+body {
+    line-height: 1.25;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+/* END Body Styles */
+
+/* BEGIN Headings */
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: LexiaLight, Times, "Times New Roman", serif;
+}
+/* END Headings */
+
+/* BEGIN Section */
+section {
+    margin-bottom: 50px;
+}
+/* END Section */
+
+/* BEGIN Buttons */
+.btn {
+    border-radius: 2px;
+    font-style: italic;
+    font-family: LexiaLight, Times, "Times New Roman", serif;
+    background: transparent;
+}
+/* END Buttons */
+
+/* BEGIN Accordion */
+.accordion .panel-default {
+    border: 0 none;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.accordion .panel-heading {
+    background: transparent;
+}
+
+.accordion .panel-heading a {
+    display: block;
+    font-family: LexiaBold, Times, "Times New Roman", serif;
+    font-style: italic;
+}
+
+.accordion .panel-body {
+    border-top: 0 none !important;
+}
+/* END Accordion */
+
+/* BEGIN Components */
+/* BEGIN Header and Primary Navigation
+   This is the top header and primary navigation styles
+*/
+.navbar-default {
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.top-header {
+    border-bottom: 1px solid #eeeeee;
+}
+
+.top-header .navbar-nav {
+    margin: inherit;
+}
+
+.top-header .navbar-header {
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    .top-header {
+        border: 0 none;
+    }
+
+    .top-header .navbar-header {
+        width: auto;
+    }
+}
+
+.top-header .navbar-brand {
+    padding: 15px 15px 2px 0;
+    height: 44px;
+    font-family: LexiaLight, Times, "Times New Roman", serif;
+}
+
+.top-header .header-actions>li>a {
+    font-size: 11px;
+    color: #000000 !important;
+    padding: 12px 15px;
+}
+
+.top-header .header-actions .search a {
+    font-size: medium !important;
+}
+
+.top-header .navbar-toggle {
+    border: 0 none;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.primary-navigation {
+    line-height: 1.42857 !important;
+    font-family: LexiaLight, Times, "Times New Roman", serif;
+    letter-spacing: 1px;
+}
+
+.primary-navigation .nav>li>a:hover,
+.primary-navigation .nav>li.active>a:hover {
+    background: #ffffff;
+    border-bottom: 4px solid rgb(217, 51, 140);
+}
+
+.primary-navigation .nav>li>a {
+    padding: 15px 15px 5px 15px;
+    font-size: medium;
+}
+
+.primary-navigation .nav>li.active>a {
+    background: #ffffff;
+    border-bottom: 4px solid rgb(217, 51, 140);
+}
+/* END Header and Primary Navigation */
+
+/* BEGIN Secondary Navigation */
+.nav-pills.side-nav {
+    margin-top: 20px;
+}
+
+.nav-pills>li {
+    border-bottom: 1px solid #ddd;
+}
+
+.nav-pills>li>a {
+    font-family: LexiaBold, Times, "Times New Roman", serif;
+    font-style: italic;
+    font-size: medium;
+    color: #666666;
+    border-radius: 0;
+}
+
+.nav-pills>li.active>a,
+.nav-pills>li.active>a:focus,
+.nav-pills>li.active>a:hover {
+    background: transparent;
+    color: #000000;
+    font-weight: bold;
+}
+
+.nav-pills>li>a:hover,
+.nav-pills>li.active>a:hover {
+    background: transparent;
+    text-decoration: underline;
+}
+
+.nav-pills.sub-pills>li.sub-pill {
+    border-bottom: 0 none;
+}
+
+.nav-pills.sub-pills>li.sub-pill>a {
+    font-family: LexiaLight, Times, "Times New Roman", serif;
+    border-bottom: 0 none;
+    padding-left: 50px;
+}
+
+.nav-pills.affix {
+    margin-top: -372px;
+}
+
+@media (min-width: 1200px) {
+    .nav-pills.affix {
+        width: 277px;
+        padding-right: 15px;
+        display: inline-block;
+    }
+}
+/* END Secondary Navigation */
+
+/* BEGIN Brand Navigation */
+.nav-pills.brand-nav>li {
+    border-bottom: 0 none;
+}
+
+.nav-pills.brand-nav>li>a {
+    color: #dddddd;
+}
+/* END Brand Navigation */
+
+/* BEGIN Hero */
+.hero {
+    background-size: cover;
+    background: #eeeeee;
+    margin-bottom: 15px;
+}
+
+.hero .title {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-left: 4px solid #F0AB00;
+    padding-left: 5px;
+}
+
+.hero h1.brand-title,
+.hero h1.generic-title {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.hero h1.generic-title {
+    font-weight: 300;
+}
+
+.hero .action {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.hero .description {
+    font-size: medium;
+}
+/* END Hero */
+
+/* BEGIN Page Heading */
+.page-heading {
+    margin-bottom: 30px;
+}
+
+.page-heading h1.title {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+/* END Page Heading */
+
+/* BEGIN Gray Section */
+.gray-section {
+    background: #eee;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+/* END Gray Section */
+
+/* BEGIN Sub Heading */
+.sub-heading {
+    margin-top: 20px;
+}
+
+.sub-heading h3.title {
+    margin-top: 0;
+}
+/* END Sub Heading */
+
+/* BEGIN Footer */
+.footer {
+    color: #ffffff;
+    background: rgb(27, 27, 27);
+    margin-top: 30px;
+    padding-top: 20px;
+    padding-bottom: 30px;
+}
+
+.footer a {
+    color: #ffffff;
+}
+
+.footer .notices {
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.footer .notices a {
+    color: #cccccc;
+}
+/* END Footer */
+/* END Components */

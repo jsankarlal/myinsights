@@ -1,0 +1,31 @@
+.default-theme{
+     color: #3e3e3c;
+}
+.default-theme .card-view {
+    background-color: white;
+    border: 1px solid #E6EAEE;
+    color: #354052;
+    padding: 0px;
+    border-radius: 5px;
+}
+
+.card-view {
+    background-color: #ffffff;
+    border: 3px solid #dbddec;
+    border-radius: 5px;
+/*    display: -ms-flexbox;
+    display: flex;*/
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.card-title{
+    padding: 15px;
+    border-bottom: 1px solid rgba(151, 151, 151, 0.2);
+    color: #9FA9BA;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 1.2px;
+    
+}

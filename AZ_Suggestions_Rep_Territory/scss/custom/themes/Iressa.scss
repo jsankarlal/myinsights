@@ -1,0 +1,7 @@
+@import "../variables";
+$iressa-color: #034732;
+$iressa-color-80: #034732;
+$iressa-color-60: #034732;
+$iressa-color-40: #034732;
+$iressa-color-20: #034732;
+@include theme-structure($iressa-color, $iressa-color-80, $iressa-color-60, $iressa-color-40, $iressa-color-20);

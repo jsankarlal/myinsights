@@ -1,0 +1,7 @@
+@import "../variables";
+$emla-color: #677cb4;
+$emla-color-80: #677cb4;
+$emla-color-60: #677cb4;
+$emla-color-40: #677cb4;
+$emla-color-20: #677cb4;
+@include theme-structure($emla-color, $emla-color-80, $emla-color-60, $emla-color-40, $emla-color-20);

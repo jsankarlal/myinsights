@@ -1,0 +1,7 @@
+@import "../variables";
+$accolate-color: #008abf;
+$accolate-color-80: #008abf;
+$accolate-color-60: #008abf;
+$accolate-color-40: #008abf;
+$accolate-color-20: #008abf;
+@include theme-structure($accolate-color, $accolate-color-80, $accolate-color-60, $accolate-color-40, $accolate-color-20);

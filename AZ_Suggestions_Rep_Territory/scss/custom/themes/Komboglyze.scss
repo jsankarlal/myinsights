@@ -1,0 +1,7 @@
+@import "../variables";
+$komboglyze-color: #7a2b85;
+$komboglyze-color-80: #7a2b85;
+$komboglyze-color-60: #7a2b85;
+$komboglyze-color-40: #7a2b85;
+$komboglyze-color-20: #7a2b85;
+@include theme-structure($komboglyze-color, $komboglyze-color-80, $komboglyze-color-60, $komboglyze-color-40, $komboglyze-color-20);

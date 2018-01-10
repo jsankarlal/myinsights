@@ -776,6 +776,61 @@ strong em, strong i, em strong, i strong {
     background:#d0006f;
 }
 
+.bg-theme1{
+    background-color: #F2F5F8;
+}
+
+.bg-white{
+    background-color: white;
+}
+
+.bg-gold{
+    background-color:rgba(240, 171, 0, 1.00);
+}
+
+.bg-graphite{
+    background-color:rgba(62, 67, 67, 1.00);
+}
+
+.bg-navy{
+    background-color:rgba(0, 57, 102, 1.00);
+}
+
+.bg-light-blue{
+    background-color:rgba(105, 210, 222, 1.00);
+}
+
+
+.bg-purple{
+    background-color:rgba(62, 16, 85, 1.00);
+}
+
+.bg-platinum{
+    background-color:rgba(159, 176, 171, 1.00);
+}
+
+
+.bg-yellowgreen{
+    background-color: yellowgreen;
+}
+
+.bg-yellow{
+    background-color:yellow;
+}
+
+.bg-orange{
+    background-color:orange;
+}
+
+.bg-aqua{
+    background-color:aqua;
+}
+
+.bg-magenta{
+    background-color:#d0006f;
+}
+
+/* colour theme ends */
 .kpi-section{
     height:24%;
 }

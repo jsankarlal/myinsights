@@ -1,0 +1,7 @@
+@import "../variables";
+$xigduo-color: #f04e3e;
+$xigduo-color-80: #f04e3e;
+$xigduo-color-60: #f04e3e;
+$xigduo-color-40: #f04e3e;
+$xigduo-color-20: #f04e3e;
+@include theme-structure($xigduo-color, $xigduo-color-80, $xigduo-color-60, $xigduo-color-40, $xigduo-color-20);

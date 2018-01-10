@@ -1,0 +1,7 @@
+@import "../variables";
+$forxiga-color: #e84133;
+$forxiga-color-80: #e84133;
+$forxiga-color-60: #e84133;
+$forxiga-color-40: #e84133;
+$forxiga-color-20: #e84133;
+@include theme-structure($forxiga-color, $forxiga-color-80, $forxiga-color-60, $forxiga-color-40, $forxiga-color-20);
