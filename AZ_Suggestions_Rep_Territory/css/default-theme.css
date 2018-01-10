@@ -16,7 +16,7 @@
 /*    display: -ms-flexbox;
     display: flex;*/
     padding: 10px;
-    margin-bottom: 15px;
+/*    margin-bottom: 15px;*/
     width: 100%;
 }
 
@@ -28,4 +28,16 @@
     line-height: 1.2;
     letter-spacing: 1.2px;
     
+}
+.card-title .main-title{
+    font-size:15px;
+}
+
+ .card-title .sub-title{
+    padding-top: 3px;
+}
+
+.page-title{
+    line-height: 1.2;
+    font-weight: 500;
 }

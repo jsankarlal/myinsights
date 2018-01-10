@@ -587,7 +587,7 @@ strong em, strong i, em strong, i strong {
 .nav-pills>li>a {
     font-family: LexiaBold,Times,"Times New Roman",serif;
     font-size: medium;
-    color: #666;
+    color: #9FA9BA;
     border-radius: 0;
     border-bottom: 3px solid transparent;
     margin-bottom: -3px;
@@ -595,20 +595,20 @@ strong em, strong i, em strong, i strong {
 
 .nav-pills>li.active>a:hover, .nav-pills>li>a:hover {
     background: 0 0;
-    border-bottom: 3px solid #000;
+    border-bottom: 3px solid rgba(0, 57, 102, 1.00);
     text-decoration: none;
 }
 
 .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
     background: 0 0;
-    color: #000;
+    color:rgba(0, 57, 102, 1.00);
     font-weight: 700;
-    border-bottom: 3px solid #d0006f;
+    border-bottom: 3px solid rgba(0, 57, 102, 1.00);
 }
 
 .list-group-item.active>.badge, .nav-pills>.active>a>.badge {
-    background: #d0006f;
-    border: 1px solid #d0006f;
+    background: rgba(0, 57, 102, 1.00);
+    border: 1px solid rgba(0, 57, 102, 1.00);
     color: #fff;
 }
 /* Tab Component - Ends */
