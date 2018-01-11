@@ -3,7 +3,7 @@ var app = express();
 app.set('port', (process.env.PORT || 9000));
 
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/login.html');
+  res.sendFile(__dirname + '/dashboard.html');
 });
 
 app.use('/', express.static(__dirname + '/'));

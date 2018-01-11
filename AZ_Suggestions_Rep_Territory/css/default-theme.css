@@ -41,3 +41,9 @@
     line-height: 1.2;
     font-weight: 500;
 }
+
+.container-height{
+    max-height: 55vh;
+    overflow-y: auto;
+    overflow-x:hidden;
+}
