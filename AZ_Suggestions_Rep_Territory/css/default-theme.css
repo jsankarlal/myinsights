@@ -43,7 +43,8 @@
 }
 
 .container-height{
-    max-height: 59vh;
+    max-height: 58vh;
     overflow-y: auto;
     overflow-x:hidden;
+    min-height: 40vh;
 }

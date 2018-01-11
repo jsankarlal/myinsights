@@ -151,11 +151,14 @@ appData = {
 		var _this = this;
         _this.consoleLog('mainController - entering');
         _this.bindEvents();
-        _this.queryRecord(_this.queryConfig.suggestions).then(function(suggestions){
-             _this.consoleLog('suggestions.length - ', suggestions.length);
-            _this.parseSuggestions(suggestions);
-            _this.attachAccountIds();
-       });
+        _this.setDataAdapter();
+        if (_this.application == 'iRep') {
+            _this.queryRecord(_this.queryConfig.suggestions).then(function(suggestions){
+                 _this.consoleLog('suggestions.length - ', suggestions.length);
+                _this.parseSuggestions(suggestions);
+                _this.attachAccountIds();
+           });
+        }
                 
 	};
 	

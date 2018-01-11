@@ -1,0 +1,21 @@
+<div class="list list-hover">
+    <% _.each(result,function(hcp, index) { %>       
+        <div class="line <%= index == 1 ? 'active': ''%>">
+            <a href="#user-<%= hcp.id %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">
+                <div class="row">
+                    <div class="col-xs-2 col-sm-2">
+                        <img src="assets/images/placeholder-<%= hcp.gender == 'male' ? 'male' : 'female' %>.png" style="height: 60px;">
+                    </div>
+                    <div class="col-xs-7 col-sm-8">
+                        <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>
+                        <p class="short-description"> <%= hcp.address %></p>
+                    </div>
+                    <div class="col-xs-3 col-sm-2">
+                        <p> <%= hcp.product %> </p>
+                        <p> <%= hcp.therapyArea %></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    <% }) %>
+</div>

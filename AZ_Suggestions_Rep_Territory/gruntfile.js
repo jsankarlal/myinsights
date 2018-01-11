@@ -5,13 +5,16 @@
     production build --> grunt prod
 */
 
-module.exports = function(grunt){
+module.exports = function(grunt) {
     var scriptPath = 'js/';
     var customScript = [
         scriptPath + 'util.js',
         scriptPath + 'queries.js',
  //       scriptPath + 'customWidgets.js',
-        scriptPath + 'script.js'
+        scriptPath + 'script.js',
+        scriptPath + 'suggestion.js',
+        scriptPath + 'hcp.js'
+        
     ];
     
     var libJs = [

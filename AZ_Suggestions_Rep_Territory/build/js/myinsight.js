@@ -30402,18 +30402,70 @@ $(document).on('click', function (e) {
   }
 }.call(this));
 
+var resource = {};
 //Util Object
 (function(global) {
 	function Util() {
-
+        
     };
+    
+    Util.prototype.addSpinner = function(container) {
+        container.html('<div class="ab-pos-center text-center"><div><span class="fa fa-spinner fa-pulse fa-3x fa-fw"></span></div><div class="loading-txt"></div></div>');
+    };
+    
+    Util.prototype.setDataAdapter = function() {
+        var _this = this;
+        _this.application = window.location.host.indexOf('localhost:') == 0 ? 'localhost' : 'iRep';
+        _this.consoleLog('Current Application', _this.application);
+    };
+    
+    Util.prototype.fetchResource = function(path, type) {
+        var _this = this,
+         deferred = $q.defer();
+        _this.consoleLog('fetchResource - entering');
+        _this.consoleLog('path', path);
 
+        $.ajax({
+            method: 'GET',
+            url: path,
+            type: type,
+            success: function(data) {
+                var path = this.url;
+                resource[this.url] = data;
+                deferred.resolve(data);
+            },
+
+            error: function(err) {
+                deferred.resolve(err);
+            }
+        });
+        
+        return deferred.promise;
+    }
+    
+    Util.prototype.fillTemplate = function(container, templateObj, object, appendFlag, callback) {
+         var _this = this,
+            template = _.template(templateObj.trim()),
+            markup = template({result: object});
+        if (_this.appendFlag) {
+            container.append(markup);
+        } else {
+            container.html(markup);
+        }
+        
+        if (callback) {
+           callback(); 
+        }
+        
+    }   
+        
     Util.prototype.consoleLog = function(message, object) {
         if (object) {
             $('#response').append('<pre>' + message + ' - ' + JSON.stringify(object, null, '\t') + ' </pre>');
         } else {
             $('#response').append('<pre>' + message + '</pre>');
         }
+        
     };
  
     global.Util = Util;
@@ -30686,11 +30738,14 @@ appData = {
 		var _this = this;
         _this.consoleLog('mainController - entering');
         _this.bindEvents();
-        _this.queryRecord(_this.queryConfig.suggestions).then(function(suggestions){
-             _this.consoleLog('suggestions.length - ', suggestions.length);
-            _this.parseSuggestions(suggestions);
-            _this.attachAccountIds();
-       });
+        _this.setDataAdapter();
+        if (_this.application == 'iRep') {
+            _this.queryRecord(_this.queryConfig.suggestions).then(function(suggestions){
+                 _this.consoleLog('suggestions.length - ', suggestions.length);
+                _this.parseSuggestions(suggestions);
+                _this.attachAccountIds();
+           });
+        }
                 
 	};
 	
@@ -30705,4 +30760,118 @@ $(function() {
     $('#response').append('<pre>document-ready</pre>');
     
 	myInsight.init();
+});
+
+(function(global) {
+    function Suggestions() {
+     // Constructor
+    };
+    
+    Suggestions.prototype.bindSuggestionsEvents = function() {
+        var _this = this,
+            $document = $(document);
+        $document.on('click', '[data-account-id]', function(e) {
+            var $this = $(this);
+               
+        });
+    }
+    
+    Suggestions.prototype.renderSuggestions = function() {
+        var _this = this;
+        //fillTemplate(container, templateObj, object, appendFlag, callback)
+        _this.fillTemplate(_this.suggestion.listContainer, resource[_this.suggestionListTemplatePath], resource[ _this.suggestionDataPath], false);
+        _this.fillTemplate(_this.suggestion.detailsContainer, resource[_this.suggestionDetailTemplatePath], resource[ _this.suggestionDataPath], false);
+        
+    }
+    
+    Suggestions.prototype.buildSuggestions = function() {
+        var _this = this;
+            _this.suggestionListTemplatePath = '/templates/components/suggestionslist.html';
+            _this.suggestionDetailTemplatePath = '/templates/components/suggestiondetail.html';
+            _this.suggestionDataPath = '/staticJson/suggestions.json';
+        _this.fetchResource(_this.suggestionListTemplatePath, 'html').then(function() {
+            return _this.fetchResource(_this.suggestionDetailTemplatePath, 'html');
+        }).then(function() {
+            return _this.fetchResource(_this.suggestionDataPath, 'json');
+        }).then(function() {
+            _this.renderSuggestions();
+        });
+    }
+    
+    Suggestions.prototype.init = function() {
+        var _this = this;
+        _this.suggestion = {};
+        _this.suggestion.listContainer = $('#suggestions-list');
+        _this.suggestion.detailsContainer = $('#suggestion-details');
+        _this.addSpinner(_this.suggestion.listContainer);
+        _this.addSpinner(_this.suggestion.detailsContainer);
+        if (_this.application != 'iRep') {
+            _this.buildSuggestions();
+        }
+            
+    }
+    
+    _.extend(Suggestions.prototype, Util.prototype);
+    global.Suggestions = Suggestions;
+}(this));
+
+$(function() {
+    var suggestions = new Suggestions();
+    suggestions.init();
+});
+(function(global) {
+    function Hcp() {
+     // Constructor
+    };
+    
+    Hcp.prototype.bindHcpEvents = function() {
+        var _this = this,
+            $document = $(document);
+        $document.on('click', '[data-account-id]', function(e) {
+            var $this = $(this);
+               
+        });
+    }
+    
+    Hcp.prototype.renderHcp = function() {
+        var _this = this;
+        //fillTemplate(container, templateObj, object, appendFlag, callback)
+        _this.fillTemplate(_this.hcp.detailsContainer, resource[_this.hcpDetailTemplatePath], resource[ _this.hcpDataPath], false);
+        _this.fillTemplate(_this.hcp.listContainer, resource[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
+    }
+    
+    Hcp.prototype.buildHcp = function() {
+        var _this = this;
+            _this.hcpListTemplatePath = '/templates/components/hcplist.html';
+            _this.hcpDetailTemplatePath = '/templates/components/hcpdetail.html';
+            _this.hcpDataPath = '/staticJson/hcp.json';
+        return _this.fetchResource(_this.hcpDataPath, 'json').then(function() {
+            return _this.fetchResource(_this.hcpDetailTemplatePath, 'html');
+        }).then(function() {
+            _this.fetchResource(_this.hcpListTempatePath, 'html')
+        }).then(function() {
+            _this.renderHcp();
+        });
+    }
+    
+    Hcp.prototype.init = function() {
+        var _this = this;
+        _this.hcp = {};
+        _this.hcp.listContainer = $('#hcp-list');
+        _this.hcp.detailsContainer = $('#hcp-details');
+        _this.addSpinner(_this.hcp.listContainer);
+        _this.addSpinner(_this.hcp.detailsContainer);
+        if (_this.application != 'iRep') {
+            _this.buildHcp();
+        }
+            
+    }
+    
+    _.extend(Hcp.prototype, Util.prototype);
+    global.Hcp = Hcp;
+}(this));
+
+$(function() {
+    var hcp = new Hcp();
+    hcp.init();
 });
