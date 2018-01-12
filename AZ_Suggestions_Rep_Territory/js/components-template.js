@@ -223,10 +223,10 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                <div class="panel panel-default">' +
 '                    <div class="panel-heading">' +
 '                        <h4 class="panel-title">' +
-'                            <a class="collapse-panel-heading collapsed" data-toggle="collapse" data-parent="#accordion" href="#user5-collapseTwo"><span>Suggested Topics </span><span class="fa fa-chevron-up pull-right"></span></a>' +
+'                            <a class="collapse-panel-heading collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse1-<%= hcp.id %>"><span>Suggested Topics </span><span class="fa fa-chevron-up pull-right"></span></a>' +
 '                        </h4>' +
 '                    </div>' +
-'                    <div id="user5-collapseTwo" class="panel-collapse collapse">' +
+'                    <div id="collapse1-<%= hcp.id %>" class="panel-collapse collapse">' +
 '                        <div class="panel-body">' +
 '                            <p>Content for suggested topics</p>' +
 '                        </div>' +
@@ -236,10 +236,10 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                <div class="panel panel-default">' +
 '                    <div class="panel-heading">' +
 '                        <h4 class="panel-title">' +
-'                            <a class="collapse-panel-heading collapsed"  data-toggle="collapse" data-parent="#accordion" href="#user5-collapseThree"><span>Basic information </span><span class="fa fa-chevron-up pull-right"></span></a>' +
+'                            <a class="collapse-panel-heading collapsed"  data-toggle="collapse" data-parent="#accordion" href="#collapse2-<%= hcp.id %>"><span>Basic information </span><span class="fa fa-chevron-up pull-right"></span></a>' +
 '                        </h4>' +
 '                    </div>' +
-'                    <div id="user5-collapseThree" class="panel-collapse collapse">' +
+'                    <div id="collapse2-<%= hcp.id %>" class="panel-collapse collapse">' +
 '                        <div class="panel-body">' +
 '                            <p>Content for basic Information</p>' +
 '                            <div class="list list-hover"> ' +
