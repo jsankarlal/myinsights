@@ -209,7 +209,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '' +
 '            </div>' +
 '' +
-'            <div class="panel-group" id="accordion">' +
+'            <div class="panel-group" id="accordion-<%= hcp.id %>">' +
 '' +
 '                <div class="panel panel-default">' +
 '                    <div class="panel-heading">' +
@@ -223,7 +223,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                <div class="panel panel-default">' +
 '                    <div class="panel-heading">' +
 '                        <h4 class="panel-title">' +
-'                            <a class="collapse-panel-heading collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse1-<%= hcp.id %>"><span>Suggested Topics </span><span class="fa fa-chevron-up pull-right"></span></a>' +
+'                            <a class="collapse-panel-heading collapsed" data-toggle="collapse" data-parent="#accordion-<%= hcp.id %>" href="#collapse1-<%= hcp.id %>"><span>Suggested Topics </span><span class="fa fa-chevron-up pull-right"></span></a>' +
 '                        </h4>' +
 '                    </div>' +
 '                    <div id="collapse1-<%= hcp.id %>" class="panel-collapse collapse">' +
@@ -236,7 +236,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                <div class="panel panel-default">' +
 '                    <div class="panel-heading">' +
 '                        <h4 class="panel-title">' +
-'                            <a class="collapse-panel-heading collapsed"  data-toggle="collapse" data-parent="#accordion" href="#collapse2-<%= hcp.id %>"><span>Basic information </span><span class="fa fa-chevron-up pull-right"></span></a>' +
+'                            <a class="collapse-panel-heading collapsed"  data-toggle="collapse" data-parent="#accordion-<%= hcp.id %>" href="#collapse2-<%= hcp.id %>"><span>Basic information </span><span class="fa fa-chevron-up pull-right"></span></a>' +
 '                        </h4>' +
 '                    </div>' +
 '                    <div id="collapse2-<%= hcp.id %>" class="panel-collapse collapse">' +
