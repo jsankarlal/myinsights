@@ -11,15 +11,15 @@
     "therapyArea": "Diabeties",
     "metric":{
         "academic":{
-            "rating": 5,
+            "rating": 3,
             "percentage": "85"
         },
         "internet":{
-            "rating": 4,
+            "rating": 5,
             "percentage": "15"
         },
         "society":{
-            "rating": 3,
+            "rating": 2,
             "percentage": "9"
         }
     }
