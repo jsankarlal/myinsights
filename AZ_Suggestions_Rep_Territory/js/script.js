@@ -130,20 +130,20 @@ appData = {
 		var _this = this,
             accountId = $element.attr('data-account-id'),
             configObject = {},
-            type = $element.attr('data-suggestion-type');
+            type = $element.attr('data-type');
         if (accountId != '') {
-                if (type == 'view') {
-                    configObject = {object: 'Account', fields: {Id: accountId }};
-                    _this.viewRecord(configObject).then(function(response) {
-                    });
-                } else if (type == 'call') {
-                    configObject = {object: 'Call2_vod__c', fields: {Account_vod__c: accountId }};
-                    _this.newRecord(configObject).then(function(response) {
-                    });
-                }
-            } else {
-                _this.consoleLog('Null account Id');
+            if (type == 'view') {
+                configObject = {object: 'Account', fields: {Id: accountId }};
+                _this.viewRecord(configObject).then(function(response) {
+                });
+            } else if (type == 'call') {
+                configObject = {object: 'Call2_vod__c', fields: {Account_vod__c: accountId }};
+                _this.newRecord(configObject).then(function(response) {
+                });
             }
+        } else {
+            _this.consoleLog('Null account Id');
+        }
              
 	};
     

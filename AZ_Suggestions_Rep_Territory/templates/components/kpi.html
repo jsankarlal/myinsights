@@ -5,19 +5,21 @@
     </div>
      <div class="card-container">
          <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0 border-right-50">
-                 <div class="card-tile">
-                    <h6><%= metric.title %></h6>
-                    <div class="percentage-section fg-aqua">
-                        <span> <%= metric.value %></span> 
-                        <i class="fa fa-percent" aria-hidden="true"></i>
-                    </div>
-                    <div class="caption">
-                        <p class="label-description"><span><%= field.labelName %>: </span><span class=""> <%= field.value %></span></p>
-                        <p class="label-description"><span><%= field.labelName %> : </span><span class=""> <%= field.value %> </span></p>
+             <% _.each(result.metric, function(metric, index) { %>  
+                <div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0 <%= index == 0 ? 'border-right-50': '' %> ">
+                     <div class="card-tile">
+                        <h6><%= metric.title %></h6>
+                        <div class="percentage-section fg-aqua">
+                            <span> <%= metric.value %></span> 
+                            <i class="fa fa-percent" aria-hidden="true"></i>
+                        </div>
+                        <div class="caption">
+                            <p class="label-description"><span><%= field.labelName %>: </span><span class=""> <%= field.value %></span></p>
+                            <p class="label-description"><span><%= field.labelName %> : </span><span class=""> <%= field.value %> </span></p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <% }) %>
 
            <!--<div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0">
                 <div class="card-tile">
