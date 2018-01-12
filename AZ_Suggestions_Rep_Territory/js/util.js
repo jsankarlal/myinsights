@@ -5,7 +5,15 @@
     };
     
     Util.prototype.addSpinner = function(container) {
-        container.html('<div class="ab-pos-center text-center"><div><span class="fa fa-spinner fa-pulse fa-3x fa-fw"></span></div><div class="loading-txt"></div></div>');
+        var _this = this;
+        if (container) {
+            container.html('<div class="ab-pos-center text-center"><div><span class="fa fa-spinner fa-pulse fa-3x fa-fw"></span></div><div class="loading-txt"></div></div>');
+        } else {
+            $('.myinsight-component').each(function(index, element) {
+                $(element).html('<div class="ab-pos-center text-center"><div><span class="fa fa-spinner fa-pulse fa-3x fa-fw"></span></div><div class="loading-txt"></div></div>');
+            });
+        }
+        
     };
     
     Util.prototype.setDataAdapter = function() {
@@ -66,3 +74,8 @@
     global.Util = Util;
 	
 })(this);
+
+$(function() {
+	var util = new Util();
+    util.addSpinner();
+});

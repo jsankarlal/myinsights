@@ -3,74 +3,74 @@
         "title" : "Sales Rate",
         "subTitle": "Details",
         "metric": [{
-            "title": "Metric Title",
+            "title": "Completed",
             "value": "150",
             "fields":[{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"20"
             },{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"20"
             }]
         },{
-            "title": "Metric Title",
-            "value": "150",
+            "title": "Leads ",
+            "value": "80",
             "fields":[{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"20"
             },{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"20"
             }]
         }]
     },
     "callsNumber": {
-        "title" : "Sales Rate",
+        "title" : "Calls Number",
         "subTitle": "Details",
         "metric": [{
-            "title": "Metric Title",
-            "value": "150",
+            "title": "Completed",
+            "value": "10",
             "fields":[{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"20"
             },{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"20"
             }]
         },{
-            "title": "Metric Title",
-            "value": "150",
+            "title": "Failure",
+            "value": "45",
             "fields":[{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"12"
             },{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"Test"
             }]
         }]
     },
     "customerCoverage":{
-        "title" : "Sales Rate",
+        "title" : "Customer Coverage Rate",
         "subTitle": "Details",
         "metric":[{
-            "title": "Metric Title",
-            "value": "150",
+            "title": "Completed",
+            "value": "33",
             "fields":[{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"45"
             },{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"label value"
             }]
         },{
-            "title": "Metric Title",
-            "value": "150",
+            "title": "Feedback",
+            "value": "75",
             "fields":[{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"Label Number"
             },{
-                "fieldLabel":"label-1",
-                "fieldValue":"20",
+                "name":"label-1",
+                "value":"20"
             }]
         }]
     }

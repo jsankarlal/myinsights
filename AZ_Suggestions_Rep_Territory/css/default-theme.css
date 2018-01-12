@@ -48,3 +48,6 @@
     overflow-x:hidden;
     min-height: 40vh;
 }
+.kpi-container {
+    min-height: 20vh;
+}

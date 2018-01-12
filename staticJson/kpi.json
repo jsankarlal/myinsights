@@ -1,13 +1,77 @@
 {
-    "sales":{
-        "title" : "title",
-        "subTitle": "subTitle",
-        "value": "150"
+    "salesRate": {
+        "title" : "Sales Rate",
+        "subTitle": "Details",
+        "metric": [{
+            "title": "Completed",
+            "value": "150",
+            "fields":[{
+                "name":"label-1",
+                "value":"20"
+            },{
+                "name":"label-1",
+                "value":"20"
+            }]
+        },{
+            "title": "Leads ",
+            "value": "80",
+            "fields":[{
+                "name":"label-1",
+                "value":"20"
+            },{
+                "name":"label-1",
+                "value":"20"
+            }]
+        }]
     },
-    "calls": {
-    
+    "callsNumber": {
+        "title" : "Calls Number",
+        "subTitle": "Details",
+        "metric": [{
+            "title": "Completed",
+            "value": "10",
+            "fields":[{
+                "name":"label-1",
+                "value":"20"
+            },{
+                "name":"label-1",
+                "value":"20"
+            }]
+        },{
+            "title": "Failure",
+            "value": "45",
+            "fields":[{
+                "name":"label-1",
+                "value":"12"
+            },{
+                "name":"label-1",
+                "value":"Test"
+            }]
+        }]
     },
     "customerCoverage":{
-        
+        "title" : "Customer Coverage Rate",
+        "subTitle": "Details",
+        "metric":[{
+            "title": "Completed",
+            "value": "33",
+            "fields":[{
+                "name":"label-1",
+                "value":"45"
+            },{
+                "name":"label-1",
+                "value":"label value"
+            }]
+        },{
+            "title": "Feedback",
+            "value": "75",
+            "fields":[{
+                "name":"label-1",
+                "value":"Label Number"
+            },{
+                "name":"label-1",
+                "value":"20"
+            }]
+        }]
     }
  }

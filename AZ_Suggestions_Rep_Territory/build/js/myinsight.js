@@ -30409,7 +30409,15 @@ $(document).on('click', function (e) {
     };
     
     Util.prototype.addSpinner = function(container) {
-        container.html('<div class="ab-pos-center text-center"><div><span class="fa fa-spinner fa-pulse fa-3x fa-fw"></span></div><div class="loading-txt"></div></div>');
+        var _this = this;
+        if (container) {
+            container.html('<div class="ab-pos-center text-center"><div><span class="fa fa-spinner fa-pulse fa-3x fa-fw"></span></div><div class="loading-txt"></div></div>');
+        } else {
+            $('.myinsight-component').each(function(index, element) {
+                $(element).html('<div class="ab-pos-center text-center"><div><span class="fa fa-spinner fa-pulse fa-3x fa-fw"></span></div><div class="loading-txt"></div></div>');
+            });
+        }
+        
     };
     
     Util.prototype.setDataAdapter = function() {
@@ -30470,6 +30478,12 @@ $(document).on('click', function (e) {
     global.Util = Util;
 	
 })(this);
+
+$(function() {
+	var util = new Util();
+    util.addSpinner();
+});
+
 //initialize the promise library
 $q = window.Q;
 //console.log("q.js initialized");
@@ -30863,6 +30877,32 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '    ' +
 '</div>';
 
+componentsTemplate['kpi-list'] = '<div class="card-view kpi-section"> ' +
+'    <div class="card-title">' +
+'        <span class="main-title"> <%= result.title %></span>' +
+'        <span class="sub-title pull-right" data-kpi-id="<%= result.id %> "> <%= result.subTitle %> <i class="fa fa-chevron-right"></i></span>' +
+'    </div>' +
+'     <div class="card-container">' +
+'         <div class="row">' +
+'             <% _.each(result.metric, function(metric, index) { %>  ' +
+'                <div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0 <%= index == 0 ? \'border-right-50\': \'\' %> ">' +
+'                     <div class="card-tile">' +
+'                        <h6><%= metric.title %></h6>' +
+'                        <div class="percentage-section <%= result.title == \'Calls Number\' ? \'fg-yellowgreen\' : \'fg-aqua\' %>">' +
+'                            <span> <%= metric.value %></span> ' +
+'                            <i class="fa <%= result.title == \'Calls Number\' ? \'fa-arrow-up\' : \'fa-percent\' %>" aria-hidden="true"></i>' +
+'                        </div>' +
+'                        <div class="caption">' +
+'                            <% _.each(metric.fields, function(field, pointer) { %>' +
+'                                <p class="label-description"><span><%= field.name %>: </span><span class=""> <%= field.value %></span></p>' +
+'                            <% }) %>' +
+'                        </div>' +
+'                    </div>' +
+'                </div>' +
+'            <% }) %>' +
+'         </div>' +
+'    </div>' +
+'</div>';
 //jscs:disable
 appData = {
      product_map: [{
@@ -31172,4 +31212,65 @@ $(function() {
 $(function() {
     var suggestions = new Suggestions();
     suggestions.init();
+});
+(function(global) {
+    function KeyPerformanceIndicator() {
+     // Constructor
+    };
+    
+    KeyPerformanceIndicator.prototype.bindKpiEvents = function() {
+        var _this = this,
+            $document = $(document);
+        $document.on('click', '[data-account-id]', function(e) {
+            var $this = $(this);
+               
+        });
+    }
+    
+    KeyPerformanceIndicator.prototype.renderKpi = function(container, kpiName) {
+        var _this = this;
+        //fillTemplate(container, templateObj, object, appendFlag, callback)
+        _this.fillTemplate(container, componentsTemplate[_this.kpiListTemplatePath], resource[_this.kpiDataPath][kpiName], false);
+    }
+    
+    KeyPerformanceIndicator.prototype.buildKpi = function() {
+        var _this = this;
+            _this.kpiListTemplatePath = 'kpi-list';
+            _this.kpiDataPath = '/staticJson/kpi.json';
+        
+        $.ajax({
+            method: 'GET',
+            url: _this.kpiDataPath,
+            type: 'json',
+            success: function(data) {
+                var path = this.url;
+                resource[this.url] = data;
+                _this.kpi.kpiContainer.each(function(index, element) {
+                    var $container = $(element);
+                    _this.addSpinner($container);
+                    _this.renderKpi($container, $container.attr('data-kpi-name'));
+                });
+                
+            },
+
+            error: function(err) {
+            }
+        });
+    }
+    
+    KeyPerformanceIndicator.prototype.init = function() {
+        var _this = this;
+        _this.kpi = {};
+        _this.kpi.kpiContainer = $('.kpi-container');
+        _this.buildKpi();
+            
+    }
+    
+    _.extend(KeyPerformanceIndicator.prototype, Util.prototype);
+    global.KeyPerformanceIndicator = KeyPerformanceIndicator;
+}(this));
+
+$(function() {
+    var Kpi = new KeyPerformanceIndicator();
+    Kpi.init();
 });

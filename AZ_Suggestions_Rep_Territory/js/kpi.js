@@ -1,9 +1,9 @@
 (function(global) {
-    function Hcp() {
+    function KeyPerformanceIndicator() {
      // Constructor
     };
     
-    Hcp.prototype.bindHcpEvents = function() {
+    KeyPerformanceIndicator.prototype.bindKpiEvents = function() {
         var _this = this,
             $document = $(document);
         $document.on('click', '[data-account-id]', function(e) {
@@ -12,31 +12,30 @@
         });
     }
     
-    Hcp.prototype.renderHcp = function() {
+    KeyPerformanceIndicator.prototype.renderKpi = function(container, kpiName) {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource[_this.hcpDataPath], false);
-        _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
+        _this.fillTemplate(container, componentsTemplate[_this.kpiListTemplatePath], resource[_this.kpiDataPath][kpiName], false);
     }
     
-    Hcp.prototype.buildHcp = function() {
+    KeyPerformanceIndicator.prototype.buildKpi = function() {
         var _this = this;
-            _this.hcpListTemplatePath = 'hcp-list';
-            _this.hcpDetailTemplatePath = 'hcp-detail';
-            _this.hcpDataPath = '/staticJson/hcp.json';
-       /* _this.fetchResource(_this.hcpDataPath, 'json').then(function() {
-            _this.renderHcp();
-        });
-        */
+            _this.kpiListTemplatePath = 'kpi-list';
+            _this.kpiDataPath = '/staticJson/kpi.json';
         
         $.ajax({
             method: 'GET',
-            url: _this.hcpDataPath,
+            url: _this.kpiDataPath,
             type: 'json',
             success: function(data) {
                 var path = this.url;
                 resource[this.url] = data;
-                _this.renderHcp();
+                _this.kpi.kpiContainer.each(function(index, element) {
+                    var $container = $(element);
+                    _this.addSpinner($container);
+                    _this.renderKpi($container, $container.attr('data-kpi-name'));
+                });
+                
             },
 
             error: function(err) {
@@ -44,24 +43,19 @@
         });
     }
     
-    Hcp.prototype.init = function() {
+    KeyPerformanceIndicator.prototype.init = function() {
         var _this = this;
-        _this.hcp = {};
-        _this.hcp.listContainer = $('#hcp-list');
-        _this.hcp.detailsContainer = $('#hcp-details');
-        _this.addSpinner(_this.hcp.listContainer);
-        _this.addSpinner(_this.hcp.detailsContainer);
-        if (_this.application != 'iRep') {
-            _this.buildHcp();
-        }
+        _this.kpi = {};
+        _this.kpi.kpiContainer = $('.kpi-container');
+        _this.buildKpi();
             
     }
     
-    _.extend(Hcp.prototype, Util.prototype);
-    global.Hcp = Hcp;
+    _.extend(KeyPerformanceIndicator.prototype, Util.prototype);
+    global.KeyPerformanceIndicator = KeyPerformanceIndicator;
 }(this));
 
 $(function() {
-    var hcp = new Hcp();
-    hcp.init();
+    var Kpi = new KeyPerformanceIndicator();
+    Kpi.init();
 });

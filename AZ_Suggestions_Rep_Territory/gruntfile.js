@@ -14,8 +14,8 @@ module.exports = function(grunt) {
         scriptPath + 'components-template.js',
         scriptPath + 'script.js',
         scriptPath + 'hcp.js',
-        scriptPath + 'suggestion.js'
-        
+        scriptPath + 'suggestion.js',
+        scriptPath + 'kpi.js'
     ];
     
     var libJs = [

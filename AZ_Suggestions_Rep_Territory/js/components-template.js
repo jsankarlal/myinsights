@@ -276,3 +276,30 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '    <% }) %>' +
 '    ' +
 '</div>';
+
+componentsTemplate['kpi-list'] = '<div class="card-view kpi-section"> ' +
+'    <div class="card-title">' +
+'        <span class="main-title"> <%= result.title %></span>' +
+'        <span class="sub-title pull-right" data-kpi-id="<%= result.id %> "> <%= result.subTitle %> <i class="fa fa-chevron-right"></i></span>' +
+'    </div>' +
+'     <div class="card-container">' +
+'         <div class="row">' +
+'             <% _.each(result.metric, function(metric, index) { %>  ' +
+'                <div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0 <%= index == 0 ? \'border-right-50\': \'\' %> ">' +
+'                     <div class="card-tile">' +
+'                        <h6><%= metric.title %></h6>' +
+'                        <div class="percentage-section <%= result.title == \'Calls Number\' ? \'fg-yellowgreen\' : \'fg-aqua\' %>">' +
+'                            <span> <%= metric.value %></span> ' +
+'                            <i class="fa <%= result.title == \'Calls Number\' ? \'fa-arrow-up\' : \'fa-percent\' %>" aria-hidden="true"></i>' +
+'                        </div>' +
+'                        <div class="caption">' +
+'                            <% _.each(metric.fields, function(field, pointer) { %>' +
+'                                <p class="label-description"><span><%= field.name %>: </span><span class=""> <%= field.value %></span></p>' +
+'                            <% }) %>' +
+'                        </div>' +
+'                    </div>' +
+'                </div>' +
+'            <% }) %>' +
+'         </div>' +
+'    </div>' +
+'</div>';
