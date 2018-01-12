@@ -30402,7 +30402,6 @@ $(document).on('click', function (e) {
   }
 }.call(this));
 
-var resource = {};
 //Util Object
 (function(global) {
 	function Util() {
@@ -30585,6 +30584,285 @@ $q = window.Q;
     global.Queries = Queries;
 
 })(this);
+var componentsTemplate = {},
+    resource = {};
+
+componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
+'   <% _.each(result, function(suggestion) { %>       ' +
+'        <div class="line">' +
+'            <a href="#suggestion-<%= suggestion.id %>" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="true" class="suggestion-item" data-account-id="">' +
+'                <div class="row">' +
+'                    <div class="col-xs-2 col-sm-1">' +
+'                        <i class="fa fa-2x fg-navy fa-bell" aria-hidden="true"></i>' +
+'                    </div>' +
+'                    <div class="col-xs-10 col-sm-11">' +
+'                        <p><%= suggestion.title %></p>' +
+'                    </div>' +
+'                </div>' +
+'            </a>' +
+'        </div>' +
+'     <% }) %>' +
+' </div>';
+
+componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
+'   <% _.each(result,function(suggestion, index) { %>       ' +
+'         <div class="tab-pane fade <%= index == 2 ? \'in active\': \'\'%> " id="suggestion-<%= suggestion.id %>">' +
+'             <div class="row  margin-right-left-0 margin-bottom-10">' +
+'                <div class="col-xs-12 col-sm-12 padding-0">' +
+'                    <div class="padding-10 padding-bottom-0">' +
+'                        <h4><span> Target Account :  </span> <span class=""> <%= suggestion.accountName %></span> </h4>' +
+'                        <h4><span> Title :  </span> <span class=""> <%= suggestion.title %></span> </h4>' +
+'                    </div>' +
+'                </div>' +
+'                <div class="col-xs-12 col-sm-12 padding-0">' +
+'                    <div class="text-center padding-10 padding-top-0">' +
+'                        <a class="action-link fg-navy navigate-to-native" data-account-id="<%= suggestion.accountId %>" data-type="view">' +
+'                            View Account' +
+'                            <i class="fa padding-10 fa-external-link " aria-hidden="true"></i>' +
+'                        </a>' +
+'                        <a class="action-link fg-navy navigate-to-native " data-account-id="<%= suggestion.accountId %>" data-type="call">' +
+'                            Record a Call' +
+'                            <i class="fa padding-10 fa-calendar-plus-o " aria-hidden="true"></i>' +
+'                        </a>' +
+'                    </div>' +
+'                </div>' +
+'             </div>' +
+'             <p><span class="fg-navy"> Reason : </span> <span> <%= suggestion.reason %></span></p>' +
+'             <p><span class="fg-navy"> Posted Date : </span> <span> <%= suggestion.postedDate %></span></p>' +
+'             <p><span class="fg-navy"> Expiry Date  :</span> <span> <%= suggestion.expiryDate %></span></p>' +
+'             <p><span class="fg-navy"> Status  :</span> <span> <%= suggestion.status %></span></p>' +
+'             <p><span class="fg-navy"> Last Status Updated By :</span> <span> <%= suggestion.lastStatusUpdatedBy %></span></p>' +
+'         </div>' +
+'    <% }) %>' +
+' </div>';
+
+componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
+'    <% _.each(result,function(hcp, index) { %>       ' +
+'        <div class="line <%= index == 1 ? \'active\': \'\'%>">' +
+'            <a href="#user-<%= hcp.id %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">' +
+'                <div class="row">' +
+'                    <div class="col-xs-2 col-sm-2">' +
+'                        <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 60px;">' +
+'                    </div>' +
+'                    <div class="col-xs-7 col-sm-8">' +
+'                        <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
+'                        <p class="short-description"> <%= hcp.address %></p>' +
+'                    </div>' +
+'                    <div class="col-xs-3 col-sm-2">' +
+'                        <p> <%= hcp.product %> </p>' +
+'                        <p> <%= hcp.therapyArea %></p>' +
+'                    </div>' +
+'                </div>' +
+'            </a>' +
+'        </div>' +
+'    <% }) %>' +
+'</div>';
+	
+componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
+'    <% _.each(result,function(hcp, index) { %>    ' +
+'        <div class="tab-pane fade <%= index == 1 ? \'in active\': \'\'%>" id="user-<%= hcp.id %>">' +
+'' +
+'            <div class="row  margin-right-left-0 margin-bottom-10">' +
+'                <div class="col-xs-12 col-sm-12 padding-0">' +
+'                    <div class="row padding-10">' +
+'                        <div class="col-xs-3 col-sm-3 text-center padding-top-30">' +
+'                            <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 70px;">' +
+'                        </div>' +
+'                        <div class="col-xs-9 col-sm-9">' +
+'                            <p> <b> <%= hcp.firstName %></b> <span><%= hcp.firstNlastname %></span></p>' +
+'                            <p> <%= hcp.address %></p>' +
+'                            <div class="action-link-list">' +
+'                                <a class="navigate-to-native fg-navy action-link" data-account-id="" data-type="view">' +
+'                                    <i class="fa padding-10 box-shadow-all-white fa-external-link" aria-hidden="true"></i>' +
+'                                     View Account' +
+'                                </a>' +
+'                                <a class="navigate-to-native fg-navy action-link" data-account-id="" data-type="call">' +
+'                                    <i class="fa padding-10 box-shadow-all-white fa-calendar-plus-o " aria-hidden="true"></i>' +
+'                                    Record a Call' +
+'                                </a>' +
+'                            </div>' +
+'                        </div>' +
+'                    </div>' +
+'                </div>' +
+'' +
+'            </div> ' +
+'' +
+'            <div class="ratings-component">' +
+'                <div class="row margin-right-left-0">' +
+'                    <div class="col-xs-4 padding-bottom-10">' +
+'                        <span class="label navy-theme label-lg full-width">Academic</span>' +
+'                    </div>' +
+'                    <div class="col-xs-5 padding-top-5 fg-gold">' +
+'                        <% if (hcp.metric.academic.rating >= 1) { %> ' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.academic.rating >= 2) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.academic.rating >= 3) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.academic.rating >= 4) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.academic.rating >= 5) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } %>' +
+'                    </div>' +
+'                    <div class="col-xs-3">' +
+'                        <div class="percentage-section">' +
+'                            <span> <%= hcp.metric.academic.percentage %> </span> ' +
+'                            <i class="fa fa-percent" aria-hidden="true"></i>' +
+'                        </div>' +
+'                    </div>' +
+'                </div>' +
+'' +
+'                <div class="row margin-right-left-0">' +
+'                    <div class="col-xs-4 padding-bottom-10">' +
+'                        <span class="label navy-theme label-lg full-width">Internet</span>' +
+'                    </div>' +
+'                    <div class="col-xs-5 padding-top-5 fg-gold">' +
+'                        <% if (hcp.metric.internet.rating >= 1) { %> ' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.internet.rating >= 2) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.internet.rating >= 3) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.internet.rating >= 4) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.internet.rating >= 5) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } %>' +
+'                    </div>' +
+'                    <div class="col-xs-3">' +
+'                        <div class="percentage-section">' +
+'                            <span> <%= hcp.metric.internet.percentage %></span> ' +
+'                            <i class="fa fa-percent" aria-hidden="true"></i>' +
+'                        </div>' +
+'                    </div>' +
+'                </div>' +
+'' +
+'                <div class="row margin-right-left-0">' +
+'                    <div class="col-xs-4 padding-bottom-10">' +
+'                        <span class="label navy-theme label-lg full-width">Society</span>' +
+'                    </div>' +
+'                    <div class="col-xs-5 padding-top-5 fg-gold">' +
+'                        <% if (hcp.metric.society.rating >= 1) { %> ' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.society.rating >= 2) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.society.rating >= 3) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.society.rating >= 4) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } if (hcp.metric.society.rating >= 5) { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
+'                        <% } else { %>' +
+'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
+'                        <% } %>' +
+'                    </div>' +
+'                    <div class="col-xs-3">' +
+'                        <div class="percentage-section">' +
+'                            <span> <%= hcp.metric.society.percentage %> </span> ' +
+'                            <i class="fa fa-percent" aria-hidden="true"></i>' +
+'                        </div>' +
+'                    </div>' +
+'                </div>' +
+'' +
+'            </div>' +
+'' +
+'            <div class="panel-group" id="accordion">' +
+'' +
+'                <div class="panel panel-default">' +
+'                    <div class="panel-heading">' +
+'                        <h4 class="panel-title">' +
+'                            <a class="collapse-panel-heading collapsed fa-right" data-toggle="modal" data-target="#popup-modal" href="#">' +
+'                                <span>Relationship Charts </span><span class="fa fa-chevron-right pull-right"></span></a>' +
+'                        </h4>' +
+'                    </div>' +
+'                </div>' +
+'' +
+'                <div class="panel panel-default">' +
+'                    <div class="panel-heading">' +
+'                        <h4 class="panel-title">' +
+'                            <a class="collapse-panel-heading collapsed" data-toggle="collapse" data-parent="#accordion" href="#user5-collapseTwo"><span>Suggested Topics </span><span class="fa fa-chevron-up pull-right"></span></a>' +
+'                        </h4>' +
+'                    </div>' +
+'                    <div id="user5-collapseTwo" class="panel-collapse collapse">' +
+'                        <div class="panel-body">' +
+'                            <p>Content for suggested topics</p>' +
+'                        </div>' +
+'                    </div>' +
+'                </div>' +
+'' +
+'                <div class="panel panel-default">' +
+'                    <div class="panel-heading">' +
+'                        <h4 class="panel-title">' +
+'                            <a class="collapse-panel-heading collapsed"  data-toggle="collapse" data-parent="#accordion" href="#user5-collapseThree"><span>Basic information </span><span class="fa fa-chevron-up pull-right"></span></a>' +
+'                        </h4>' +
+'                    </div>' +
+'                    <div id="user5-collapseThree" class="panel-collapse collapse">' +
+'                        <div class="panel-body">' +
+'                            <p>Content for basic Information</p>' +
+'                            <div class="list list-hover"> ' +
+'                                <div class="line">' +
+'                                    <p><span class="fg-navy"> First Name  </span> <span class="pull-right"> <%= hcp.firstName %></span></p>' +
+'                                </div>' +
+'                                <div class="line">' +
+'                                    <p><span class="fg-navy"> Last Name  </span> <span class="pull-right"> <%= hcp.lastName %></span></p>' +
+'                                </div>' +
+'                                <div class="line">' +
+'                                    <p><span class="fg-navy"> Address  </span> <span class="pull-right"> <%= hcp.address %></span></p>' +
+'                                </div>' +
+'                                <div class="line">' +
+'                                    <p><span class="fg-navy"> Account Name  </span> <span class="pull-right"> <%= hcp.accountName %></span></p>' +
+'                                </div>' +
+'                                <div class="line">' +
+'                                    <p><span class="fg-navy"> Therapy Area  </span> <span class="pull-right"> <%= hcp.therapyArea %></span></p>' +
+'                                </div>' +
+'                                <div class="line">' +
+'                                    <p><span class="fg-navy"> Product </span> <span class="pull-right"> <%= hcp.product %></span></p>' +
+'                                </div>' +
+'                                ' +
+'                                <div class="line">' +
+'                                    <p><span class="fg-navy"> Language </span> <span class="pull-right"> <%= hcp.language %></span></p>' +
+'                                </div>' +
+'                                ' +
+'                            </div>' +
+'                        </div>' +
+'                    </div>' +
+'                </div>' +
+'' +
+'            </div>' +
+'        </div>' +
+'    <% }) %>' +
+'    ' +
+'</div>';
+
 //jscs:disable
 appData = {
      product_map: [{
@@ -30779,22 +31057,32 @@ $(function() {
     Hcp.prototype.renderHcp = function() {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(_this.hcp.detailsContainer, resource[_this.hcpDetailTemplatePath], resource[ _this.hcpDataPath], false);
-        _this.fillTemplate(_this.hcp.listContainer, resource[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
-        
+        _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource[_this.hcpDataPath], false);
+        _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
     }
     
     Hcp.prototype.buildHcp = function() {
         var _this = this;
-            _this.hcpListTemplatePath = '/templates/components/hcplist.html';
-            _this.hcpDetailTemplatePath = '/templates/components/hcpdetail.html';
+            _this.hcpListTemplatePath = 'hcp-list';
+            _this.hcpDetailTemplatePath = 'hcp-detail';
             _this.hcpDataPath = '/staticJson/hcp.json';
-        _this.fetchResource(_this.hcpDataPath, 'json').then(function() {
-            return _this.fetchResource(_this.hcpDetailTemplatePath, 'html');
-        }).then(function() {
-            _this.fetchResource(_this.hcpListTemplatePath, 'html')
-        }).then(function() {
+       /* _this.fetchResource(_this.hcpDataPath, 'json').then(function() {
             _this.renderHcp();
+        });
+        */
+        
+        $.ajax({
+            method: 'GET',
+            url: _this.hcpDataPath,
+            type: 'json',
+            success: function(data) {
+                var path = this.url;
+                resource[this.url] = data;
+                _this.renderHcp();
+            },
+
+            error: function(err) {
+            }
         });
     }
     
@@ -30836,22 +31124,31 @@ $(function() {
     Suggestions.prototype.renderSuggestions = function() {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(_this.suggestion.listContainer, resource[_this.suggestionListTemplatePath], resource[ _this.suggestionDataPath], false);
-        _this.fillTemplate(_this.suggestion.detailsContainer, resource[_this.suggestionDetailTemplatePath], resource[ _this.suggestionDataPath], false);
-        
+        _this.fillTemplate(_this.suggestion.listContainer, componentsTemplate[_this.suggestionListTemplatePath], resource[_this.suggestionDataPath], false);
+        _this.fillTemplate(_this.suggestion.detailsContainer, componentsTemplate[_this.suggestionDetailTemplatePath], resource[_this.suggestionDataPath], false);
     }
     
     Suggestions.prototype.buildSuggestions = function() {
         var _this = this;
-            _this.suggestionListTemplatePath = '/templates/components/suggestionslist.html';
-            _this.suggestionDetailTemplatePath = '/templates/components/suggestiondetail.html';
+            _this.suggestionListTemplatePath = 'suggestion-list';
+            _this.suggestionDetailTemplatePath = 'suggestion-detail';
             _this.suggestionDataPath = '/staticJson/suggestions.json';
-        _this.fetchResource(_this.suggestionListTemplatePath, 'html').then(function() {
-            return _this.fetchResource(_this.suggestionDetailTemplatePath, 'html');
-        }).then(function() {
-            return _this.fetchResource(_this.suggestionDataPath, 'json');
-        }).then(function() {
+        /*_this.fetchResource(_this.suggestionDataPath, 'json').then(function() {
             _this.renderSuggestions();
+        });*/
+        
+        $.ajax({
+            method: 'GET',
+            url: _this.suggestionDataPath,
+            type: 'json',
+            success: function(data) {
+                var path = this.url;
+                resource[this.url] = data;
+                _this.renderSuggestions();
+            },
+
+            error: function(err) {
+            }
         });
     }
     

@@ -1,4 +1,3 @@
-var resource = {};
 //Util Object
 (function(global) {
 	function Util() {

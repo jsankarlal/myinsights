@@ -9,7 +9,7 @@
     "address": "34, 12th cross street , Taramani, chenai-113",
     "product": "Forxiga",
     "therapyArea": "Diabeties",
-    "metrics":{
+    "metric":{
         "academic":{
             "rating": 5,
             "percentage": "85"
@@ -34,7 +34,7 @@
     "lastName": "ADELEKE",
     "product": "Lynparza",
     "therapyArea": "Oncology",
-     "metrics":{
+     "metric":{
         "academic":{
             "rating": 5,
             "percentage": "90"

@@ -15,22 +15,32 @@
     Hcp.prototype.renderHcp = function() {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(_this.hcp.detailsContainer, resource[_this.hcpDetailTemplatePath], resource[ _this.hcpDataPath], false);
-        _this.fillTemplate(_this.hcp.listContainer, resource[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
-        
+        _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource[_this.hcpDataPath], false);
+        _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
     }
     
     Hcp.prototype.buildHcp = function() {
         var _this = this;
-            _this.hcpListTemplatePath = '/templates/components/hcplist.html';
-            _this.hcpDetailTemplatePath = '/templates/components/hcpdetail.html';
+            _this.hcpListTemplatePath = 'hcp-list';
+            _this.hcpDetailTemplatePath = 'hcp-detail';
             _this.hcpDataPath = '/staticJson/hcp.json';
-        _this.fetchResource(_this.hcpDataPath, 'json').then(function() {
-            return _this.fetchResource(_this.hcpDetailTemplatePath, 'html');
-        }).then(function() {
-            _this.fetchResource(_this.hcpListTemplatePath, 'html')
-        }).then(function() {
+       /* _this.fetchResource(_this.hcpDataPath, 'json').then(function() {
             _this.renderHcp();
+        });
+        */
+        
+        $.ajax({
+            method: 'GET',
+            url: _this.hcpDataPath,
+            type: 'json',
+            success: function(data) {
+                var path = this.url;
+                resource[this.url] = data;
+                _this.renderHcp();
+            },
+
+            error: function(err) {
+            }
         });
     }
     

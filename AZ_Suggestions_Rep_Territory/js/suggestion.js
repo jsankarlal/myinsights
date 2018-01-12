@@ -15,22 +15,31 @@
     Suggestions.prototype.renderSuggestions = function() {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(_this.suggestion.listContainer, resource[_this.suggestionListTemplatePath], resource[ _this.suggestionDataPath], false);
-        _this.fillTemplate(_this.suggestion.detailsContainer, resource[_this.suggestionDetailTemplatePath], resource[ _this.suggestionDataPath], false);
-        
+        _this.fillTemplate(_this.suggestion.listContainer, componentsTemplate[_this.suggestionListTemplatePath], resource[_this.suggestionDataPath], false);
+        _this.fillTemplate(_this.suggestion.detailsContainer, componentsTemplate[_this.suggestionDetailTemplatePath], resource[_this.suggestionDataPath], false);
     }
     
     Suggestions.prototype.buildSuggestions = function() {
         var _this = this;
-            _this.suggestionListTemplatePath = '/templates/components/suggestionslist.html';
-            _this.suggestionDetailTemplatePath = '/templates/components/suggestiondetail.html';
+            _this.suggestionListTemplatePath = 'suggestion-list';
+            _this.suggestionDetailTemplatePath = 'suggestion-detail';
             _this.suggestionDataPath = '/staticJson/suggestions.json';
-        _this.fetchResource(_this.suggestionListTemplatePath, 'html').then(function() {
-            return _this.fetchResource(_this.suggestionDetailTemplatePath, 'html');
-        }).then(function() {
-            return _this.fetchResource(_this.suggestionDataPath, 'json');
-        }).then(function() {
+        /*_this.fetchResource(_this.suggestionDataPath, 'json').then(function() {
             _this.renderSuggestions();
+        });*/
+        
+        $.ajax({
+            method: 'GET',
+            url: _this.suggestionDataPath,
+            type: 'json',
+            success: function(data) {
+                var path = this.url;
+                resource[this.url] = data;
+                _this.renderSuggestions();
+            },
+
+            error: function(err) {
+            }
         });
     }
     
