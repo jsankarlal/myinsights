@@ -17,6 +17,7 @@
         //fillTemplate(container, templateObj, object, appendFlag, callback)
         _this.fillTemplate(_this.hcp.detailsContainer, resource[_this.hcpDetailTemplatePath], resource[ _this.hcpDataPath], false);
         _this.fillTemplate(_this.hcp.listContainer, resource[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
+        
     }
     
     Hcp.prototype.buildHcp = function() {
@@ -24,10 +25,10 @@
             _this.hcpListTemplatePath = '/templates/components/hcplist.html';
             _this.hcpDetailTemplatePath = '/templates/components/hcpdetail.html';
             _this.hcpDataPath = '/staticJson/hcp.json';
-        return _this.fetchResource(_this.hcpDataPath, 'json').then(function() {
+        _this.fetchResource(_this.hcpDataPath, 'json').then(function() {
             return _this.fetchResource(_this.hcpDetailTemplatePath, 'html');
         }).then(function() {
-            _this.fetchResource(_this.hcpListTempatePath, 'html')
+            _this.fetchResource(_this.hcpListTemplatePath, 'html')
         }).then(function() {
             _this.renderHcp();
         });

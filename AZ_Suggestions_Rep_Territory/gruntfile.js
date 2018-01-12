@@ -12,8 +12,8 @@ module.exports = function(grunt) {
         scriptPath + 'queries.js',
  //       scriptPath + 'customWidgets.js',
         scriptPath + 'script.js',
-        scriptPath + 'suggestion.js',
-        scriptPath + 'hcp.js'
+        scriptPath + 'hcp.js',
+        scriptPath + 'suggestion.js'
         
     ];
     

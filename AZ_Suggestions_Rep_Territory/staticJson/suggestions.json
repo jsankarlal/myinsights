@@ -6,7 +6,7 @@
     "accountName": "Tomas Robert",
     "accountId": "123asd21",
     "status": "completed",
-    "lastUpdatedBy": "Peter Parker",
+    "lastStatusUpdatedBy": "Peter Parker",
     "expiryDate": "asfsd",
     "postedDate": "asfsd"
 },{
@@ -17,7 +17,7 @@
     "accountName": "Tomas Robert",
     "accountId": "123asd21",
     "status": "completed",
-    "lastUpdatedBy": "Peter Parker",
+    "lastStatusUpdatedBy": "Peter Parker",
     "expiryDate": "asfsd",
     "postedDate": "asfsd"
 },{
@@ -28,7 +28,7 @@
     "accountName": "Tomas Robert",
     "accountId": "123asd21",
     "status": "completed",
-    "lastUpdatedBy": "Peter Parker",
+    "lastStatusUpdatedBy": "Peter Parker",
     "expiryDate": "asfsd",
     "postedDate": "asfsd"
 },{
@@ -39,7 +39,7 @@
     "accountName": "Tomas Robert",
     "accountId": "123asd21",
     "status": "completed",
-    "lastUpdatedBy": "Peter Parker",
+    "lastStatusUpdatedBy": "Peter Parker",
     "expiryDate": "asfsd",
     "postedDate": "asfsd"
 },{
@@ -50,7 +50,7 @@
     "accountName": "Tomas Robert",
     "accountId": "123asd21",
     "status": "completed",
-    "lastUpdatedBy": "Peter Parker",
+    "lastStatusUpdatedBy": "Peter Parker",
     "expiryDate": "asfsd",
     "postedDate": "asfsd"
 },{
@@ -61,7 +61,7 @@
     "accountName": "Tomas Robert",
     "accountId": "123asd21",
     "status": "completed",
-    "lastUpdatedBy": "Peter Parker",
+    "lastStatusUpdatedBy": "Peter Parker",
     "expiryDate": "asfsd",
     "postedDate": "asfsd"
 },{
@@ -72,7 +72,7 @@
     "accountName": "Tomas Robert",
     "accountId": "123asd21",
     "status": "completed",
-    "lastUpdatedBy": "Peter Parker",
+    "lastStatusUpdatedBy": "Peter Parker",
     "expiryDate": "asfsd",
     "postedDate": "asfsd"
 },{
@@ -83,7 +83,7 @@
     "accountName": "Tomas Robert",
     "accountId": "123asd21",
     "status": "completed",
-    "lastUpdatedBy": "Peter Parker",
+    "lastStatusUpdatedBy": "Peter Parker",
     "expiryDate": "asfsd",
     "postedDate": "asfsd"
 },{
@@ -94,7 +94,7 @@
     "accountName": "Tomas Robert",
     "accountId": "123asd21",
     "status": "completed",
-    "lastUpdatedBy": "Peter Parker",
+    "lastStatusUpdatedBy": "Peter Parker",
     "expiryDate": "asfsd",
     "postedDate": "asfsd"
 }]
