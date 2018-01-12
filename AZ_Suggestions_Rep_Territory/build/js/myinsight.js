@@ -30672,11 +30672,11 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                            <p> <b> <%= hcp.firstName %></b> <span><%= hcp.firstNlastname %></span></p>' +
 '                            <p> <%= hcp.address %></p>' +
 '                            <div class="action-link-list">' +
-'                                <a class="navigate-to-native fg-navy action-link" data-account-id="" data-type="view">' +
+'                                <a class="navigate-to-native fg-navy action-link" data-account-id="<%= hcp.id %>" data-type="view">' +
 '                                    <i class="fa padding-10 box-shadow-all-white fa-external-link" aria-hidden="true"></i>' +
 '                                     View Account' +
 '                                </a>' +
-'                                <a class="navigate-to-native fg-navy action-link" data-account-id="" data-type="call">' +
+'                                <a class="navigate-to-native fg-navy action-link" data-account-id="<%= hcp.id %>" data-type="call">' +
 '                                    <i class="fa padding-10 box-shadow-all-white fa-calendar-plus-o " aria-hidden="true"></i>' +
 '                                    Record a Call' +
 '                                </a>' +
