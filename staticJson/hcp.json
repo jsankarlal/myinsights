@@ -47,5 +47,10 @@
             "rating": 3,
             "percentage": "8"
         }
-    }
+    },
+     "labels":{
+         "academic":"",
+         "society":"",
+         "internet":""
+     }
  }]

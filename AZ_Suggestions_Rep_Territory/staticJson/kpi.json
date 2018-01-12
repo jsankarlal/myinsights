@@ -1,0 +1,38 @@
+{
+    "sales": {
+        "title" : "title",
+        "subTitle": "subTitle",
+        "value": "150",
+        "fields":[{
+            "fieldLabel":"label-1",
+            "fieldValue":"20",
+        },{
+            "fieldLabel":"label-1",
+            "fieldValue":"20",
+        }]
+    },
+    "calls": {
+        "title" : "title",
+        "subTitle": "subTitle",
+        "value": "150",
+        "fields":[{
+            "fieldLabel":"label-1",
+            "fieldValue":"20",
+        },{
+            "fieldLabel":"label-1",
+            "fieldValue":"20",
+        }]
+    },
+    "customerCoverage":{
+        "title" : "title",
+        "subTitle": "subTitle",
+        "value": "150",
+        "fields":[{
+            "fieldLabel":"label-1",
+            "fieldValue":"20",
+        },{
+            "fieldLabel":"label-1",
+            "fieldValue":"20",
+        }]
+    }
+ }
