@@ -1,0 +1,51 @@
+[{
+    "firstName": "Yates",
+    "gender": "female",
+    "hcmSpeciality": "Ortho",
+    "id": "0013D00000LLPB1QAP",
+    "jobTitle": "Medical officer",
+    "language": "French",
+    "lastName": "",
+    "address": "34, 12th cross street , Taramani, chenai-113",
+    "product": "Forxiga",
+    "therapyArea": "Diabeties",
+    "metrics":{
+        "academic":{
+            "rating": 5,
+            "percentage": "85"
+        },
+        "internet":{
+            "rating": 4,
+            "percentage": "15"
+        },
+        "society":{
+            "rating": 3,
+            "percentage": "9"
+        }
+    }
+ }, {
+    "firstName": "Kamar",
+    "gender": "male",
+    "hcmSpeciality": "INTERNAL MEDICINE - CARDIOVASCULAR DISEASE",
+    "id": "0013D00000LNcYCQA1",
+    "jobTitle": "Medical Officer",
+    "language": "English",
+    "address": "123, church street , chennai",
+    "lastName": "ADELEKE",
+    "product": "Lynparza",
+    "therapyArea": "Oncology",
+     "metrics":{
+        "academic":{
+            "rating": 5,
+            "percentage": "90"
+        },
+        "internet":{
+            "rating": 4,
+            "percentage": "24"
+        },
+        "society":{
+            "rating": 3,
+            "percentage": "8"
+        }
+    }
+ }]
