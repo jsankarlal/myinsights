@@ -31327,6 +31327,10 @@ $(function() {
         _this.clm = com.veeva.clm;
         _this.consoleLog('CLM Testing::INI');
         _this.getCurrentAccount();
+        _this.getAccounts();
+        _this.queryRecord(_this.queryConfig.accounts).then(function(accounts) {
+            _this.consoleLog('My Accounts', accounts);
+        });
     }
     
     _.extend(Account.prototype, Queries.prototype);
