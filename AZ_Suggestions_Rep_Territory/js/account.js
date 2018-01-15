@@ -20,7 +20,7 @@
     
     Account.prototype.getCurrentAccount = function() {
         var _this = this;
-        _this.getDataForCurrentObject('Account', 'Id', updateAccount);
+        _this.clm.getDataForCurrentObject('Account', 'Id', _this.updateAccount);
     }
     
     Account.prototype.updateAccount = function(response) {
