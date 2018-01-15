@@ -3,7 +3,7 @@
      // Constructor
     };
     
-    Account.prototype.bindKpiEvents = function() {
+    Account.prototype.bindAccountEvents = function() {
         var _this = this,
             $document = $(document);
         $document.on('click', '[data-account-id]', function(e) {
@@ -12,14 +12,26 @@
         });
     }
     
-    Account.prototype.renderKpi = function(container, kpiName) {
+    Account.prototype.renderAccount = function(container, kpiName) {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
         _this.fillTemplate(container, componentsTemplate[_this.kpiListTemplatePath], resource[_this.kpiDataPath][kpiName], false);
     }
     
+    Account.prototype.getAccounts = function() {
+        var _this = this,
+            objectName = 'Account',
+            fields = ['Id', 'Name'],
+            whereClause = 'WHERE Specialty_1_vod__c = "Cardiology"',
+            sortClause = ['Name, ASC'],
+            limit = '10';
+        _this.consoleLog('getAccounts::Entering');
+       _this.clm.queryRecord(objectName, fields, _this.updateAccount);
+    }
+    
     Account.prototype.getCurrentAccount = function() {
         var _this = this;
+        _this.consoleLog('getCurrentAccount:: Entering');
         _this.clm.getDataForCurrentObject('Account', 'Id', _this.updateAccount);
     }
     
@@ -37,6 +49,7 @@
     Account.prototype.init = function() {
         var _this = this;
         _this.clm = com.veeva.clm;
+        _this.consoleLog('CLM Testing::INI');
         _this.getCurrentAccount();
     }
     
