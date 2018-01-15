@@ -30683,7 +30683,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                            <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 70px;">' +
 '                        </div>' +
 '                        <div class="col-xs-9 col-sm-9">' +
-'                            <p> <b> <%= hcp.firstName %></b> <span><%= hcp.firstNlastname %></span></p>' +
+'                            <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
 '                            <p> <%= hcp.address %></p>' +
 '                            <div class="action-link-list">' +
 '                                <a class="navigate-to-native fg-navy action-link" data-account-id="<%= hcp.id %>" data-type="view">' +
