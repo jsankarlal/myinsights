@@ -18,34 +18,26 @@
         _this.fillTemplate(container, componentsTemplate[_this.kpiListTemplatePath], resource[_this.kpiDataPath][kpiName], false);
     }
     
-    Account.prototype.buildKpi = function() {
+    Account.prototype.getCurrentAccount = function() {
         var _this = this;
-            _this.kpiListTemplatePath = 'kpi-list';
-            _this.kpiDataPath = '/staticJson/kpi.json';
-        
-        $.ajax({
-            method: 'GET',
-            url: _this.kpiDataPath,
-            type: 'json',
-            success: function(data) {
-                var path = this.url;
-                resource[this.url] = data;
-                _this.kpi.kpiContainer.each(function(index, element) {
-                    var $container = $(element);
-                    _this.addSpinner($container);
-                    _this.renderKpi($container, $container.attr('data-kpi-name'));
-                });
-                
-            },
-
-            error: function(err) {
-            }
-        });
+        _this.getDataForCurrentObject('Account', 'Id', updateAccount);
+    }
+    
+    Account.prototype.updateAccount = function(response) {
+        var _this = this;
+        _this.consoleLog('CLM Testing', response);
+       /* if (result.success == true) {
+            var newValues = {};
+            newValues.My_Custom_Field__c = 'new value';
+            newValues.Number_Field_1__c = 42;
+            com.veeva.clm.updateRecord('Account', 'Id', result.Account.Id,callBack);
+        }*/
     }
     
     Account.prototype.init = function() {
         var _this = this;
-            
+        _this.clm = com.veeva.clm;
+        _this.getCurrentAccount();
     }
     
     _.extend(Account.prototype, Queries.prototype);
