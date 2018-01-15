@@ -30589,7 +30589,7 @@ $q = window.Q;
         accounts: {
             object: 'Account',
             fields: ['Name', 'Id'],
-            where: 'Id IN '
+            where: ' '
         }
 	};
     //jscs:enable
