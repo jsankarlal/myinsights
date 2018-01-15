@@ -3,7 +3,7 @@ var app = express();
 app.set('port', (process.env.PORT || 9000));
 
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/dashboard.html');
+  res.sendFile(__dirname + '/AZ_Suggestions_Rep_Territory/dashboard-dynamic.html');
 });
 
 app.use('/', express.static(__dirname + '/'));
