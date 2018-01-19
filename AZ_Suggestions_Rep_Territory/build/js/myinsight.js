@@ -30944,6 +30944,7 @@ appData = {
         tableData:[],
         suggestions:[]
      },
+     accountIdList:[],
      months_to_date: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
  };
 
@@ -30971,7 +30972,9 @@ appData = {
         });
         
         $(document).on('hcp-loaded suggestion-loaded', function(event){
-            _this.attachAccountIds();
+       //     _this.attachAccountIds();
+            _this.consoleLog('hcp-loaded suggestion-loaded EVENT');
+            
         });
         
     };

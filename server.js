@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-app.set('port', (process.env.PORT || 9000));
+app.set('port', (process.env.PORT || 7000));
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/AZ_Suggestions_Rep_Territory/dashboard-dynamic.html');
