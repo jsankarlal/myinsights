@@ -45,22 +45,6 @@
         });
     }
     
-    Hcp.prototype.attachAccountIds = function() {
-		var _this = this,
-            $suggestionElements = $('.navigate-to-native');
-        
-        _this.consoleLog('attachAccountIds - entering');
-        _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
-        
-        $suggestionElements.each(function(index, element) {
-            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index,
-                type = (index + 1) % 2 == 1 ? 'view' : 'call';
-            $(element).attr('data-account-id', appData.accountIdList[temp]);
-            $(element).attr('data-suggestion-type', type);
-            
-        });
-    };
-    
     Hcp.prototype.init = function() {
         var _this = this;
         _this.hcp = {};
@@ -74,7 +58,7 @@
             
     }
     
-    _.extend(Hcp.prototype, Util.prototype);
+    _.extend(Hcp.prototype, Queries.prototype);
     global.Hcp = Hcp;
 }(this));
 

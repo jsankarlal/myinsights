@@ -31131,22 +31131,6 @@ $(function() {
         });
     }
     
-    Hcp.prototype.attachAccountIds = function() {
-		var _this = this,
-            $suggestionElements = $('.navigate-to-native');
-        
-        _this.consoleLog('attachAccountIds - entering');
-        _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
-        
-        $suggestionElements.each(function(index, element) {
-            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index,
-                type = (index + 1) % 2 == 1 ? 'view' : 'call';
-            $(element).attr('data-account-id', appData.accountIdList[temp]);
-            $(element).attr('data-suggestion-type', type);
-            
-        });
-    };
-    
     Hcp.prototype.init = function() {
         var _this = this;
         _this.hcp = {};
@@ -31160,7 +31144,7 @@ $(function() {
             
     }
     
-    _.extend(Hcp.prototype, Util.prototype);
+    _.extend(Hcp.prototype, Queries.prototype);
     global.Hcp = Hcp;
 }(this));
 
@@ -31214,22 +31198,6 @@ $(function() {
         });
     }
     
-    Suggestions.prototype.attachAccountIds = function() {
-		var _this = this,
-            $suggestionElements = $('.navigate-to-native');
-        
-        _this.consoleLog('attachAccountIds - entering');
-        _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
-        
-        $suggestionElements.each(function(index, element) {
-            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index,
-                type = (index + 1) % 2 == 1 ? 'view' : 'call';
-            $(element).attr('data-account-id', appData.accountIdList[temp]);
-            $(element).attr('data-suggestion-type', type);
-            
-        });
-    };
-    
     Suggestions.prototype.init = function() {
         var _this = this;
         _this.suggestion = {};
@@ -31243,7 +31211,7 @@ $(function() {
             
     }
     
-    _.extend(Suggestions.prototype, Util.prototype);
+    _.extend(Suggestions.prototype, Queries.prototype);
     global.Suggestions = Suggestions;
 }(this));
 
@@ -31311,71 +31279,4 @@ $(function() {
 $(function() {
     var Kpi = new KeyPerformanceIndicator();
     Kpi.init();
-});
-(function(global) {
-    function Account() {
-     // Constructor
-    };
-    
-    Account.prototype.bindAccountEvents = function() {
-        var _this = this,
-            $document = $(document);
-        $document.on('click', '[data-account-id]', function(e) {
-            var $this = $(this);
-               
-        });
-    }
-    
-    Account.prototype.renderAccount = function(container, kpiName) {
-        var _this = this;
-        //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(container, componentsTemplate[_this.kpiListTemplatePath], resource[_this.kpiDataPath][kpiName], false);
-    }
-    
-    Account.prototype.getAccounts = function() {
-        var _this = this,
-            objectName = 'Account',
-            fields = ['Id', 'Name'],
-            whereClause = 'WHERE Specialty_1_vod__c = "Cardiology"',
-            sortClause = ['Name, ASC'],
-            limit = '10';
-        _this.consoleLog('getAccounts::Entering');
-       _this.clm.queryRecord(objectName, fields, _this.updateAccount);
-    }
-    
-    Account.prototype.getCurrentAccount = function() {
-        var _this = this;
-        _this.consoleLog('getCurrentAccount:: Entering');
-        _this.clm.getDataForCurrentObject('Account', 'Id', _this.updateAccount);
-    }
-    
-    Account.prototype.updateAccount = function(response) {
-        var _this = this;
-        _this.consoleLog('CLM Testing', response);
-       /* if (result.success == true) {
-            var newValues = {};
-            newValues.My_Custom_Field__c = 'new value';
-            newValues.Number_Field_1__c = 42;
-            com.veeva.clm.updateRecord('Account', 'Id', result.Account.Id,callBack);
-        }*/
-    }
-    
-    Account.prototype.init = function() {
-        var _this = this;
-        _this.clm = com.veeva.clm;
-        _this.consoleLog('CLM Testing::INI');
-        _this.getCurrentAccount();
-        _this.getAccounts();
-        _this.queryRecord(_this.queryConfig.accounts).then(function(accounts) {
-            _this.consoleLog('My Accounts', accounts);
-        });
-    }
-    
-    _.extend(Account.prototype, Queries.prototype);
-    global.Account = Account;
-}(this));
-
-$(function() {
-    var account = new Account();
-    account.init();
 });
