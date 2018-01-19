@@ -17,7 +17,7 @@
         //fillTemplate(container, templateObj, object, appendFlag, callback)
         _this.fillTemplate(_this.suggestion.listContainer, componentsTemplate[_this.suggestionListTemplatePath], resource[_this.suggestionDataPath], false);
         _this.fillTemplate(_this.suggestion.detailsContainer, componentsTemplate[_this.suggestionDetailTemplatePath], resource[_this.suggestionDataPath], false);
-        _this.attachAccountIds();
+        $(document).trigger('suggestion-loaded');
     }
     
     Suggestions.prototype.buildSuggestions = function() {
@@ -73,7 +73,7 @@
             
     }
     
-    _.extend(Suggestions.prototype, MyInsight.prototype);
+    _.extend(Suggestions.prototype, Util.prototype);
     global.Suggestions = Suggestions;
 }(this));
 

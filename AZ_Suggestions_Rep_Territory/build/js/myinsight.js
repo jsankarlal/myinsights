@@ -30970,6 +30970,10 @@ appData = {
             
         });
         
+        $(document).on('hcp-loaded suggestion-loaded', function(event){
+            _this.attachAccountIds();
+        });
+        
     };
     
     MyInsight.prototype.parseSuggestions = function(suggestions) {
@@ -31099,7 +31103,7 @@ $(function() {
         //fillTemplate(container, templateObj, object, appendFlag, callback)
         _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource[_this.hcpDataPath], false);
         _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
-        _this.attachAccountIds();
+        $(document).trigger('hcp-loaded');
     }
     
     Hcp.prototype.buildHcp = function() {
@@ -31156,7 +31160,7 @@ $(function() {
             
     }
     
-    _.extend(Hcp.prototype, MyInsight.prototype);
+    _.extend(Hcp.prototype, Util.prototype);
     global.Hcp = Hcp;
 }(this));
 
@@ -31183,7 +31187,7 @@ $(function() {
         //fillTemplate(container, templateObj, object, appendFlag, callback)
         _this.fillTemplate(_this.suggestion.listContainer, componentsTemplate[_this.suggestionListTemplatePath], resource[_this.suggestionDataPath], false);
         _this.fillTemplate(_this.suggestion.detailsContainer, componentsTemplate[_this.suggestionDetailTemplatePath], resource[_this.suggestionDataPath], false);
-        _this.attachAccountIds();
+        $(document).trigger('suggestion-loaded');
     }
     
     Suggestions.prototype.buildSuggestions = function() {
@@ -31239,7 +31243,7 @@ $(function() {
             
     }
     
-    _.extend(Suggestions.prototype, MyInsight.prototype);
+    _.extend(Suggestions.prototype, Util.prototype);
     global.Suggestions = Suggestions;
 }(this));
 

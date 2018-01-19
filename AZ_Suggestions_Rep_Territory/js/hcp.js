@@ -17,7 +17,7 @@
         //fillTemplate(container, templateObj, object, appendFlag, callback)
         _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource[_this.hcpDataPath], false);
         _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
-        _this.attachAccountIds();
+        $(document).trigger('hcp-loaded');
     }
     
     Hcp.prototype.buildHcp = function() {
@@ -74,7 +74,7 @@
             
     }
     
-    _.extend(Hcp.prototype, MyInsight.prototype);
+    _.extend(Hcp.prototype, Util.prototype);
     global.Hcp = Hcp;
 }(this));
 

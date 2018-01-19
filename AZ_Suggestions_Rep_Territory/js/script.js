@@ -65,6 +65,10 @@ appData = {
             
         });
         
+        $(document).on('hcp-loaded suggestion-loaded', function(event){
+            _this.attachAccountIds();
+        });
+        
     };
     
     MyInsight.prototype.parseSuggestions = function(suggestions) {
