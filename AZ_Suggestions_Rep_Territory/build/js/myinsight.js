@@ -31099,6 +31099,7 @@ $(function() {
         //fillTemplate(container, templateObj, object, appendFlag, callback)
         _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource[_this.hcpDataPath], false);
         _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
+        _this.attachAccountIds();
     }
     
     Hcp.prototype.buildHcp = function() {
@@ -31126,6 +31127,22 @@ $(function() {
         });
     }
     
+    Hcp.prototype.attachAccountIds = function() {
+		var _this = this,
+            $suggestionElements = $('.navigate-to-native');
+        
+        _this.consoleLog('attachAccountIds - entering');
+        _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
+        
+        $suggestionElements.each(function(index, element) {
+            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index,
+                type = (index + 1) % 2 == 1 ? 'view' : 'call';
+            $(element).attr('data-account-id', appData.accountIdList[temp]);
+            $(element).attr('data-suggestion-type', type);
+            
+        });
+    };
+    
     Hcp.prototype.init = function() {
         var _this = this;
         _this.hcp = {};
@@ -31139,7 +31156,7 @@ $(function() {
             
     }
     
-    _.extend(Hcp.prototype, Util.prototype);
+    _.extend(Hcp.prototype, MyInsight.prototype);
     global.Hcp = Hcp;
 }(this));
 
@@ -31166,6 +31183,7 @@ $(function() {
         //fillTemplate(container, templateObj, object, appendFlag, callback)
         _this.fillTemplate(_this.suggestion.listContainer, componentsTemplate[_this.suggestionListTemplatePath], resource[_this.suggestionDataPath], false);
         _this.fillTemplate(_this.suggestion.detailsContainer, componentsTemplate[_this.suggestionDetailTemplatePath], resource[_this.suggestionDataPath], false);
+        _this.attachAccountIds();
     }
     
     Suggestions.prototype.buildSuggestions = function() {
@@ -31192,6 +31210,22 @@ $(function() {
         });
     }
     
+    Suggestions.prototype.attachAccountIds = function() {
+		var _this = this,
+            $suggestionElements = $('.navigate-to-native');
+        
+        _this.consoleLog('attachAccountIds - entering');
+        _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
+        
+        $suggestionElements.each(function(index, element) {
+            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index,
+                type = (index + 1) % 2 == 1 ? 'view' : 'call';
+            $(element).attr('data-account-id', appData.accountIdList[temp]);
+            $(element).attr('data-suggestion-type', type);
+            
+        });
+    };
+    
     Suggestions.prototype.init = function() {
         var _this = this;
         _this.suggestion = {};
@@ -31205,7 +31239,7 @@ $(function() {
             
     }
     
-    _.extend(Suggestions.prototype, Util.prototype);
+    _.extend(Suggestions.prototype, MyInsight.prototype);
     global.Suggestions = Suggestions;
 }(this));
 
