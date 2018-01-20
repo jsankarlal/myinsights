@@ -30645,7 +30645,8 @@ $q = window.Q;
         try {
             _this.clm.queryRecord(queryObject.object, queryObject.fields, queryObject.where, queryObject.sort, queryObject.limit, function(response) {
                 _this.consoleLog('clmQueryRecord resolved - response.success ', response.success);
-                if (response.success == 'true') {
+                _this.consoleLog('clmQueryRecord resolved - response ', response);
+                if (response.success) {
                     _this.consoleLog('clmQueryRecord resolved - response.' + queryObject.object, response[queryObject.object].length);
                     deferred.resolve(response[queryObject.object]);
                 } else {
