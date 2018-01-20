@@ -6,12 +6,29 @@
     Account.prototype.bindAccountEvents = function() {
         var _this = this,
             $document = $(document);
-        $document.on('click', '[data-account-id]', function(e) {
+        $document.on('click', '.myaccount-form .update-email', function(e) {
             var $this = $(this);
-               
+            _this.clmUpdateRecord();
         });
     }
     
+    //jscs:disable	
+    Account.prototype.clmUpdateRecord = function(container, kpiName) {
+        var _this = this,
+            newValues = {
+                "Gender_vod__c": "Male",
+                "Language_vod__c": "English",
+                "PersonTitle": "Mr.",
+                "Phone": "9962234889"
+            };
+        
+        _this.consoleLog('clmUpdateRecord:: Resolved', result);
+        com.veeva.clm.updateRecord('Account', 'Id', '0010E00000FOr7gQAD', newValues, function(result) {
+            _this.consoleLog('clmUpdateRecord:: Resolved', result);
+        });
+    }
+    //jscs:enable	
+
     Account.prototype.renderAccount = function(container, kpiName) {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)

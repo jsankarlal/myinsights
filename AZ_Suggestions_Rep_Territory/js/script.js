@@ -39,7 +39,7 @@ appData = {
         tableData:[],
         suggestions:[]
      },
-     accountIdList:[],
+     accountIdList:['0010E00000FOr7gQAD'],
      months_to_date: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
  };
 

@@ -30767,7 +30767,7 @@ var componentsTemplate = {},
 componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 '   <% _.each(result, function(suggestion) { %>       ' +
 '        <div class="line">' +
-'            <a href="#suggestion-<%= suggestion.id %>" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="true" class="suggestion-item" data-account-id="">' +
+'            <a href="#suggestion-<%= index %>" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="true" class="suggestion-item" data-account-id="">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-1">' +
 '                        <i class="fa fa-2x fg-navy fa-bell" aria-hidden="true"></i>' +
@@ -30783,7 +30783,7 @@ componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 
 componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
 '   <% _.each(result,function(suggestion, index) { %>       ' +
-'         <div class="tab-pane fade <%= index == 2 ? \'in active\': \'\'%> " id="suggestion-<%= suggestion.id %>">' +
+'         <div class="tab-pane fade <%= index == 2 ? \'in active\': \'\'%> " id="suggestion-<%= index %>">' +
 '             <div class="row  margin-right-left-0 margin-bottom-10">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
 '                    <div class="padding-10 padding-bottom-0">' +
@@ -30816,7 +30816,7 @@ componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
 componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '    <% _.each(result,function(hcp, index) { %>       ' +
 '        <div class="line <%= index == 1 ? \'active\': \'\'%>">' +
-'            <a href="#user-<%= hcp.id %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">' +
+'            <a href="#user-<%= index %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-2">' +
 '                        <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 60px;">' +
@@ -30837,7 +30837,7 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 	
 componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '    <% _.each(result,function(hcp, index) { %>    ' +
-'        <div class="tab-pane fade <%= index == 1 ? \'in active\': \'\'%>" id="user-<%= hcp.id %>">' +
+'        <div class="tab-pane fade <%= index == 1 ? \'in active\': \'\'%>" id="user-<%= index %>">' +
 '' +
 '            <div class="row  margin-right-left-0 margin-bottom-10">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
@@ -31107,7 +31107,7 @@ appData = {
         tableData:[],
         suggestions:[]
      },
-     accountIdList:[],
+     accountIdList:['0010E00000FOr7gQAD'],
      months_to_date: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
  };
 
@@ -31379,12 +31379,29 @@ $(function() {
     Account.prototype.bindAccountEvents = function() {
         var _this = this,
             $document = $(document);
-        $document.on('click', '[data-account-id]', function(e) {
+        $document.on('click', '.myaccount-form .update-email', function(e) {
             var $this = $(this);
-               
+            _this.clmUpdateRecord();
         });
     }
     
+    //jscs:disable	
+    Account.prototype.clmUpdateRecord = function(container, kpiName) {
+        var _this = this,
+            newValues = {
+                "Gender_vod__c": "Male",
+                "Language_vod__c": "English",
+                "PersonTitle": "Mr.",
+                "Phone": "9962234889"
+            };
+        
+        _this.consoleLog('clmUpdateRecord:: Resolved', result);
+        com.veeva.clm.updateRecord('Account', 'Id', '0010E00000FOr7gQAD', newValues, function(result) {
+            _this.consoleLog('clmUpdateRecord:: Resolved', result);
+        });
+    }
+    //jscs:enable	
+
     Account.prototype.renderAccount = function(container, kpiName) {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
