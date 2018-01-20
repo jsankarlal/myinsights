@@ -31406,7 +31406,7 @@ $(function() {
             };
         
         _this.consoleLog('clmUpdateRecord:: entering');
-        com.veeva.clm.updateRecord('Account', 'Id', '0010E00000FOr7gQAD', newValues, function(result) {
+        com.veeva.clm.updateRecord('Account', '0010E00000FOr7gQAD', newValues, function(result) {
             _this.consoleLog('clmUpdateRecord:: Resolved', result);
         });
     }
