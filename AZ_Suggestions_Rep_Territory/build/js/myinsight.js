@@ -30647,13 +30647,11 @@ $q = window.Q;
                 _this.consoleLog('clmQueryRecord resolved - response.success ', response.success);
                 if (response.success == 'true') {
                     _this.consoleLog('clmQueryRecord resolved - response.' + queryObject.object, response[queryObject.object].length);
+                    deferred.resolve(response[queryObject.object]);
                 } else {
                     _this.consoleLog('clmQueryRecord resolved - response.message', response.message);
                     _this.consoleLog('clmQueryRecord resolved - response.code', response.code);
                 }
-                
-                deferred.resolve(response);
-                
             });
         } catch (e) {
             _this.consoleLog('clmQueryRecord - error', e);
