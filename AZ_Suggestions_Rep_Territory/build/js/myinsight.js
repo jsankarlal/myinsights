@@ -31381,6 +31381,8 @@ $(function() {
             $document = $(document);
         $document.on('click', '.myaccount-form .update-email', function(e) {
             var $this = $(this);
+            e.preventDefault();
+            _this.consoleLog('update-email - clicked');
             _this.clmUpdateRecord();
         });
     }
