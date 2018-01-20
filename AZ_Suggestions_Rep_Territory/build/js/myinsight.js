@@ -30765,7 +30765,7 @@ var componentsTemplate = {},
     resource = {};
 
 componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
-'   <% _.each(result, function(suggestion) { %>       ' +
+'   <% _.each(result, function(suggestion, index) { %>       ' +
 '        <div class="line">' +
 '            <a href="#suggestion-<%= index %>" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="true" class="suggestion-item" data-account-id="">' +
 '                <div class="row">' +
@@ -31379,7 +31379,7 @@ $(function() {
     Account.prototype.bindAccountEvents = function() {
         var _this = this,
             $document = $(document);
-        $document.on('click', '.myaccount-form .update-email', function(e) {
+        $document.on('click', '.update-email', function(e) {
             var $this = $(this);
             e.preventDefault();
             _this.consoleLog('update-email - clicked');
@@ -31388,7 +31388,7 @@ $(function() {
     }
     
     //jscs:disable	
-    Account.prototype.clmUpdateRecord = function(container, kpiName) {
+    Account.prototype.clmUpdateRecord = function() {
         var _this = this,
             newValues = {
                 "Gender_vod__c": "Male",
@@ -31397,7 +31397,7 @@ $(function() {
                 "Phone": "9962234889"
             };
         
-        _this.consoleLog('clmUpdateRecord:: Resolved', result);
+        _this.consoleLog('clmUpdateRecord:: entering');
         com.veeva.clm.updateRecord('Account', 'Id', '0010E00000FOr7gQAD', newValues, function(result) {
             _this.consoleLog('clmUpdateRecord:: Resolved', result);
         });
@@ -31442,6 +31442,7 @@ $(function() {
         var _this = this;
         _this.clm = com.veeva.clm;
         _this.consoleLog('CLM Testing::INI');
+        _this.bindAccountEvents();
    //     _this.getCurrentAccount();
    //     _this.getAccounts();
         _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {

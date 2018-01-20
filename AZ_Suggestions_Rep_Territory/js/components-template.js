@@ -2,7 +2,7 @@ var componentsTemplate = {},
     resource = {};
 
 componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
-'   <% _.each(result, function(suggestion) { %>       ' +
+'   <% _.each(result, function(suggestion, index) { %>       ' +
 '        <div class="line">' +
 '            <a href="#suggestion-<%= index %>" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="true" class="suggestion-item" data-account-id="">' +
 '                <div class="row">' +
