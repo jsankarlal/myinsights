@@ -31385,6 +31385,14 @@ $(function() {
             _this.consoleLog('update-email - clicked');
             _this.clmUpdateRecord();
         });
+        
+        $document.on('click', '.create-record', function(e) {
+            var $this = $(this);
+            e.preventDefault();
+            _this.consoleLog('create-record - clicked');
+            _this.clmCreateRecord();
+        });
+        
     }
     
     //jscs:disable	
@@ -31400,6 +31408,23 @@ $(function() {
         _this.consoleLog('clmUpdateRecord:: entering');
         com.veeva.clm.updateRecord('Account', 'Id', '0010E00000FOr7gQAD', newValues, function(result) {
             _this.consoleLog('clmUpdateRecord:: Resolved', result);
+        });
+    }
+    
+    Account.prototype.clmCreateRecord = function() {
+        var _this = this,
+            newRecord = {
+                "Gender_vod__c": "Male",
+                "Language_vod__c": "English",
+                "PersonTitle": "Mr.",
+                "Phone": "9962234889",
+                "FirstName": "Justin",
+                "LastName": "Sankarlal"
+            };
+        
+        _this.consoleLog('clmCreateRecord:: entering');
+        com.veeva.clm.createRecord('Account', newRecord, function(result) {
+            _this.consoleLog('clmCreateRecord:: Resolved', result);
         });
     }
     //jscs:enable	
