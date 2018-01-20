@@ -60,7 +60,7 @@
            callback(); 
         }
         
-    }   
+    }
         
     Util.prototype.consoleLog = function(message, object) {
         if (object) {

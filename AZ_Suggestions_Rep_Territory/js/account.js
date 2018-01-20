@@ -60,12 +60,14 @@
             _this.consoleLog('My suggestions through DS library', suggestions);
         });
         
-        _this.clmQueryRecord(_this.queryConfig.accounts, _this.updateAccount).then(function(response) {
-            _this.consoleLog('My Accounts through clmQueryRecord', response);
+        _this.clmQueryRecord(_this.queryConfig.accounts).then(function(accounts) {
+            _this.consoleLog('My Accounts through clmQueryRecord', accounts);
         });
         
-        _this.clmQueryRecord(_this.queryConfig.suggestions, _this.updateAccount).then(function(response) {
-            _this.consoleLog('My suggestions through clmQueryRecord', response);
+        _this.clmQueryRecord(_this.queryConfig.suggestions).then(function(suggestions) {
+            _this.consoleLog('My suggestions through clmQueryRecord - suggestions.length - ', suggestions.length);
+            _this.parseSuggestions(suggestions);
+            _this.attachAccountIds();
         });
     }
     

@@ -30464,7 +30464,7 @@ $(document).on('click', function (e) {
            callback(); 
         }
         
-    }   
+    }
         
     Util.prototype.consoleLog = function(message, object) {
         if (object) {
@@ -30494,7 +30494,7 @@ $q = window.Q;
 		this.clm = com.veeva.clm;
         this.ds = ds;
 	};
-	
+//jscs:disable	
     Queries.prototype.getCurrentObjectId = function(objectName, id) {
         var deferred = $q.defer();
         try {
@@ -30554,6 +30554,86 @@ $q = window.Q;
         return deferred.promise;
 	}
     
+    Queries.prototype.parseSuggestions = function(suggestions) {
+        var _this = this,
+            accountIds = [];
+
+        _this.consoleLog('inside: parseSuggestions :');
+        appData.ownerIdList = [];
+        if (suggestions.length > 0) {
+	        for (var i = 0; i < suggestions.length; i++) {
+	        	var currentSuggestion = {
+	                Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
+	                Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
+	                Actioned_vod__c: suggestions[i].Actioned_vod__c.value,
+	                RecordTypeId: suggestions[i].RecordTypeId.value,
+	                Id: suggestions[i].Id.value,
+	                CreatedDate: suggestions[i].CreatedDate.value,
+	                OwnerId: suggestions[i].OwnerId.value,
+	                Title_vod__c: suggestions[i].Title_vod__c.value,
+	                Reason_vod__c: suggestions[i].Reason_vod__c.value,
+	                Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
+					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
+					Account_vod__c: suggestions[i].Account_vod__c.value,
+/*					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
+					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
+					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
+					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,*/
+					LastStatusUpdatedBy: '',
+					Status: '',
+					productTags: [],
+					driverTags: []
+	            };
+	        	appData.ownerIdList.push(suggestions[i].OwnerId.value);
+	        		            
+//	     currentSuggestion.LastStatusUpdatedBy = currentSuggestion.Actioned_By_AZ_US__c || currentSuggestion.Completed_By_AZ_US__c || currentSuggestion.Dismissed_By_AZ_US__c || '';
+	            currentSuggestion.Status = currentSuggestion.Actioned_vod__c ? 'Actioned' : currentSuggestion.Marked_As_Complete_vod__c ? 'Marked as Complete' : currentSuggestion.Dismissed_vod__c ? 'Dismissed' : 'Pending';
+	            accountIds[i] = suggestions[i].Account_vod__c.value;
+	            appData.suggestions[i] = currentSuggestion;
+	        }
+        }
+        
+        appData.accountIdList = accountIds.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
+        appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
+    }
+    
+    Queries.prototype.attachAccountIds = function() {
+		var _this = this,
+            $suggestionElements = $('.navigate-to-native');
+        
+        _this.consoleLog('attachAccountIds - entering');
+        _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
+        
+        $suggestionElements.each(function(index, element) {
+            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index,
+                type = (index + 1) % 2 == 1 ? 'view' : 'call';
+            $(element).attr('data-account-id', appData.accountIdList[temp]);
+            $(element).attr('data-suggestion-type', type);
+            
+        });
+    };
+    
+    Queries.prototype.navigateToAccount = function($element) {
+		var _this = this,
+            accountId = $element.attr('data-account-id'),
+            configObject = {},
+            type = $element.attr('data-type');
+        if (accountId != '') {
+            if (type == 'view') {
+                configObject = {object: 'Account', fields: {Id: accountId }};
+                _this.viewRecord(configObject).then(function(response) {
+                });
+            } else if (type == 'call') {
+                configObject = {object: 'Call2_vod__c', fields: {Account_vod__c: accountId }};
+                _this.newRecord(configObject).then(function(response) {
+                });
+            }
+        } else {
+            _this.consoleLog('Null account Id');
+        }
+             
+	};
+    
     Queries.prototype.clmQueryRecord = function(queryObject, callback) {
 		var _this = this,
             deferred = $q.defer();
@@ -30564,8 +30644,16 @@ $q = window.Q;
         /*_this.consoleLog('callback', callback);*/
         try {
             _this.clm.queryRecord(queryObject.object, queryObject.fields, queryObject.where, queryObject.sort, queryObject.limit, function(response) {
-                _this.consoleLog('clmQueryRecord resolved ');
+                _this.consoleLog('clmQueryRecord resolved - response.success ', response.success);
+                if (response.success == 'true') {
+                    _this.consoleLog('clmQueryRecord resolved - response.' + queryObject.object, response[queryObject.object].length);
+                } else {
+                    _this.consoleLog('clmQueryRecord resolved - response.message', response.message);
+                    _this.consoleLog('clmQueryRecord resolved - response.code', response.code);
+                }
+                
                 deferred.resolve(response);
+                
             });
         } catch (e) {
             _this.consoleLog('clmQueryRecord - error', e);
@@ -30627,7 +30715,7 @@ $q = window.Q;
         _this.ds = ds;
     }*/
     
-	//jscs:disable
+	
 	Queries.prototype.queryConfig = {
 		suggestions: {
 	        object: 'Suggestion_vod__c',
@@ -31055,86 +31143,6 @@ appData = {
         
     };
     
-    MyInsight.prototype.parseSuggestions = function(suggestions) {
-        var _this = this,
-            accountIds = [];
-
-        _this.consoleLog('inside: parseSuggestions :');
-        appData.ownerIdList = [];
-        if (suggestions.length > 0) {
-	        for (var i = 0; i < suggestions.length; i++) {
-	        	var this_suggestion = {
-	                Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
-	                Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
-	                Actioned_vod__c: suggestions[i].Actioned_vod__c.value,
-	                RecordTypeId: suggestions[i].RecordTypeId.value,
-	                Id: suggestions[i].Id.value,
-	                CreatedDate: suggestions[i].CreatedDate.value,
-	                OwnerId: suggestions[i].OwnerId.value,
-	                Title_vod__c: suggestions[i].Title_vod__c.value,
-	                Reason_vod__c: suggestions[i].Reason_vod__c.value,
-	                Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
-					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
-					Account_vod__c: suggestions[i].Account_vod__c.value,
-/*					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
-					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
-					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
-					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,*/
-					LastStatusUpdatedBy: '',
-					Status: '',
-					productTags: [],
-					driverTags: []
-	            };
-	        	appData.ownerIdList.push(suggestions[i].OwnerId.value);
-	        		            
-//	            this_suggestion.LastStatusUpdatedBy = this_suggestion.Actioned_By_AZ_US__c || this_suggestion.Completed_By_AZ_US__c || this_suggestion.Dismissed_By_AZ_US__c || '';
-	            this_suggestion.Status = this_suggestion.Actioned_vod__c ? 'Actioned' : this_suggestion.Marked_As_Complete_vod__c ? 'Marked as Complete' : this_suggestion.Dismissed_vod__c ? 'Dismissed' : 'Pending';
-	            accountIds[i] = suggestions[i].Account_vod__c.value;
-	            appData.suggestions[i] = this_suggestion;
-	        }
-        }
-        
-        appData.accountIdList = accountIds.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-        appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-    }
-    
-    MyInsight.prototype.attachAccountIds = function() {
-		var _this = this,
-            $suggestionElements = $('.navigate-to-native');
-        
-        _this.consoleLog('attachAccountIds - entering');
-        _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
-        
-        $suggestionElements.each(function(index, element) {
-            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index,
-                type = (index + 1) % 2 == 1 ? 'view' : 'call';
-            $(element).attr('data-account-id', appData.accountIdList[temp]);
-            $(element).attr('data-suggestion-type', type);
-            
-        });
-    };
-    
-    MyInsight.prototype.navigateToAccount = function($element) {
-		var _this = this,
-            accountId = $element.attr('data-account-id'),
-            configObject = {},
-            type = $element.attr('data-type');
-        if (accountId != '') {
-            if (type == 'view') {
-                configObject = {object: 'Account', fields: {Id: accountId }};
-                _this.viewRecord(configObject).then(function(response) {
-                });
-            } else if (type == 'call') {
-                configObject = {object: 'Call2_vod__c', fields: {Account_vod__c: accountId }};
-                _this.newRecord(configObject).then(function(response) {
-                });
-            }
-        } else {
-            _this.consoleLog('Null account Id');
-        }
-             
-	};
-    
 	MyInsight.prototype.init = function() {
 		var _this = this;
         _this.consoleLog('mainController - entering');
@@ -31143,7 +31151,7 @@ appData = {
 //        if (_this.application == 'iRep') {
         try {
             _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions){
-                 _this.consoleLog('suggestions.length - ', suggestions.length);
+                _this.consoleLog('suggestions.length - ', suggestions.length);
                 _this.parseSuggestions(suggestions);
                 _this.attachAccountIds();
            });
@@ -31426,12 +31434,14 @@ $(function() {
             _this.consoleLog('My suggestions through DS library', suggestions);
         });
         
-        _this.clmQueryRecord(_this.queryConfig.accounts, _this.updateAccount).then(function(response) {
-            _this.consoleLog('My Accounts through clmQueryRecord', response);
+        _this.clmQueryRecord(_this.queryConfig.accounts).then(function(accounts) {
+            _this.consoleLog('My Accounts through clmQueryRecord', accounts);
         });
         
-        _this.clmQueryRecord(_this.queryConfig.suggestions, _this.updateAccount).then(function(response) {
-            _this.consoleLog('My suggestions through clmQueryRecord', response);
+        _this.clmQueryRecord(_this.queryConfig.suggestions).then(function(suggestions) {
+            _this.consoleLog('My suggestions through clmQueryRecord - suggestions.length - ', suggestions.length);
+            _this.parseSuggestions(suggestions);
+            _this.attachAccountIds();
         });
     }
     
