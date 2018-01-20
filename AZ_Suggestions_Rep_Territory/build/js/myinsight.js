@@ -30543,14 +30543,14 @@ $q = window.Q;
         
         try {
             ds.runQuery(queryObject).then(function(result) {
-                _this.consoleLog('queryRecord resolved ');
+                _this.consoleLog('dsRunQuery resolved ');
                 deferred.resolve(result.data);
             });
         } catch (e) {
             _this.consoleLog('dsRunQuery - error', e);
         }
 
-        _this.consoleLog('queryRecord returns ');
+        _this.consoleLog('dsRunQuery returns ');
         return deferred.promise;
 	}
     
@@ -30563,15 +30563,15 @@ $q = window.Q;
         console.log(callback);
         /*_this.consoleLog('callback', callback);*/
         try {
-            _this.clm.queryRecord(queryObject.object, queryObject.fields, queryObject.where, queryObject.sort, queryObject.limit, callback).then(function(result) {
-                _this.consoleLog('queryRecord resolved ');
-                deferred.resolve(result.data);
+            _this.clm.queryRecord(queryObject.object, queryObject.fields, queryObject.where, queryObject.sort, queryObject.limit, function(response) {
+                _this.consoleLog('clmQueryRecord resolved ');
+                deferred.resolve(response);
             });
         } catch (e) {
             _this.consoleLog('clmQueryRecord - error', e);
         }
 
-        _this.consoleLog('queryRecord returns ');
+        _this.consoleLog('clmQueryRecord returns ');
         return deferred.promise;
 	}
     
