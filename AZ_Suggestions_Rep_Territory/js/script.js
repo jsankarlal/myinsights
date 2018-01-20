@@ -161,7 +161,7 @@ appData = {
         _this.setDataAdapter();
 //        if (_this.application == 'iRep') {
         try {
-            _this.queryRecord(_this.queryConfig.suggestions).then(function(suggestions){
+            _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions){
                  _this.consoleLog('suggestions.length - ', suggestions.length);
                 _this.parseSuggestions(suggestions);
                 _this.attachAccountIds();

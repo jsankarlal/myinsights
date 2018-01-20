@@ -50,10 +50,22 @@
         var _this = this;
         _this.clm = com.veeva.clm;
         _this.consoleLog('CLM Testing::INI');
-        _this.getCurrentAccount();
-        _this.getAccounts();
-        _this.queryRecord(_this.queryConfig.accounts).then(function(accounts) {
-            _this.consoleLog('My Accounts', accounts);
+   //     _this.getCurrentAccount();
+   //     _this.getAccounts();
+        _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
+            _this.consoleLog('My Accounts - through DS library', accounts);
+        });
+        
+        _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions) {
+            _this.consoleLog('My suggestions through DS library', suggestions);
+        });
+        
+        _this.clmQueryRecord(_this.queryConfig.accounts, _this.updateAccount).then(function(response) {
+            _this.consoleLog('My Accounts through clmQueryRecord', response);
+        });
+        
+        _this.clmQueryRecord(_this.queryConfig.suggestions, _this.updateAccount).then(function(response) {
+            _this.consoleLog('My suggestions through clmQueryRecord', response);
         });
     }
     
