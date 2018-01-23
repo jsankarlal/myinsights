@@ -16,7 +16,7 @@
         });
 
         $document.on('hcp-loaded', function(e) {
-        //    _this.renderRelationshipCharts();
+            _this.renderRelationshipCharts();
         });
 
         $document.on('shown.bs.modal', '#popup-modal', function() {
