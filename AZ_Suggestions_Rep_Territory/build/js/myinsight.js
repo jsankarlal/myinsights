@@ -30553,48 +30553,51 @@ $q = window.Q;
         _this.consoleLog('dsRunQuery returns ');
         return deferred.promise;
 	}
-    
+    Queries.prototype.parseAccounts = function(accounts) {
+        var _this = this;
+
+    }
+
     Queries.prototype.parseSuggestions = function(suggestions) {
         var _this = this,
             accountIds = [];
 
         _this.consoleLog('inside: parseSuggestions :');
-        appData.ownerIdList = [];
+        resource['suggestions'] = [];
+        resource.ownerIdList = [];
         if (suggestions.length > 0) {
 	        for (var i = 0; i < suggestions.length; i++) {
 	        	var currentSuggestion = {
-	                Marked_As_Complete_vod__c: suggestions[i].Marked_As_Complete_vod__c.value,
-	                Dismissed_vod__c: suggestions[i].Dismissed_vod__c.value,
-	                Actioned_vod__c: suggestions[i].Actioned_vod__c.value,
-	                RecordTypeId: suggestions[i].RecordTypeId.value,
-	                Id: suggestions[i].Id.value,
-	                CreatedDate: suggestions[i].CreatedDate.value,
-	                OwnerId: suggestions[i].OwnerId.value,
-	                Title_vod__c: suggestions[i].Title_vod__c.value,
-	                Reason_vod__c: suggestions[i].Reason_vod__c.value,
-	                Posted_Date_vod__c: suggestions[i].Posted_Date_vod__c.value,
-					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
-					Account_vod__c: suggestions[i].Account_vod__c.value,
-/*					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
-					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
-					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
-					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,*/
-					LastStatusUpdatedBy: '',
-					Status: '',
+	                markedCompleted: suggestions[i].Marked_As_Complete_vod__c.value,
+	                dissmissed: suggestions[i].Dismissed_vod__c.value,
+	                actioned: suggestions[i].Actioned_vod__c.value,
+                    recordTypeId: suggestions[i].RecordTypeId.value,
+	                id: suggestions[i].Id.value,
+	                createdDate: suggestions[i].CreatedDate.value,
+	                ownerId: suggestions[i].OwnerId.value,
+	                title: suggestions[i].Title_vod__c.value,
+	                reason: suggestions[i].Reason_vod__c.value,
+	                postedDate: suggestions[i].Posted_Date_vod__c.value,
+					expirationDate: suggestions[i].Expiration_Date_vod__c.value,
+					accountId: suggestions[i].Account_vod__c.value,
+					lastStatusUpdatedBy: '',
+                    status: '',
+                    accountName: '',
 					productTags: [],
 					driverTags: []
 	            };
-	        	appData.ownerIdList.push(suggestions[i].OwnerId.value);
+	        	resource.ownerIdList.push(suggestions[i].OwnerId.value);
 	        		            
 //	     currentSuggestion.LastStatusUpdatedBy = currentSuggestion.Actioned_By_AZ_US__c || currentSuggestion.Completed_By_AZ_US__c || currentSuggestion.Dismissed_By_AZ_US__c || '';
-	            currentSuggestion.Status = currentSuggestion.Actioned_vod__c ? 'Actioned' : currentSuggestion.Marked_As_Complete_vod__c ? 'Marked as Complete' : currentSuggestion.Dismissed_vod__c ? 'Dismissed' : 'Pending';
+	            currentSuggestion.status = currentSuggestion.actioned ? 'Actioned' : currentSuggestion.markedCompleted ? 'Marked as Complete' : currentSuggestion.dissmissed ? 'Dismissed' : 'Pending';
 	            accountIds[i] = suggestions[i].Account_vod__c.value;
-	            appData.suggestions[i] = currentSuggestion;
+	            resource.suggestions[i] = currentSuggestion;
 	        }
         }
         
-        appData.accountIdList = accountIds.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
-        appData.ownerIdList = appData.ownerIdList.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
+        resource.accountIdList = accountIds.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
+        resource.ownerIdList = appData.ownerIdList.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
+        $(document).trigger('suggestion-parsed');
     }
     
     Queries.prototype.attachAccountIds = function() {
@@ -30602,12 +30605,12 @@ $q = window.Q;
             $suggestionElements = $('.navigate-to-native');
         
         _this.consoleLog('attachAccountIds - entering');
-        _this.consoleLog('appData.accountIdList.length- ', appData.accountIdList.length);
+        _this.consoleLog('resource.accountIdList.length- ', resource.accountIdList.length);
         
         $suggestionElements.each(function(index, element) {
-            var temp = index >= appData.accountIdList.length ? appData.accountIdList.length - 1 : index,
+            var temp = index >= resource.accountIdList.length ? resource.accountIdList.length - 1 : index,
                 type = (index + 1) % 2 == 1 ? 'view' : 'call';
-            $(element).attr('data-account-id', appData.accountIdList[temp]);
+            $(element).attr('data-account-id', resource.accountIdList[temp]);
             $(element).attr('data-suggestion-type', type);
             
         });
@@ -31187,25 +31190,25 @@ $(function() {
             var $this = $(this);
                
         });
+
+        $document.on('hcp-parsed', function(e) {
+            //    _this.renderHcp();
+        });
     }
     
     Hcp.prototype.renderHcp = function() {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource[_this.hcpDataPath], false);
-        _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
+        _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp, false);
+        _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp, false);
+        _this.fillTemplate(_this.hospital.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp, false);
+        _this.fillTemplate(_this.hospital.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp, false);
         $(document).trigger('hcp-loaded');
     }
     
     Hcp.prototype.buildHcp = function() {
         var _this = this;
-            _this.hcpListTemplatePath = 'hcp-list';
-            _this.hcpDetailTemplatePath = 'hcp-detail';
             _this.hcpDataPath = '/staticJson/hcp.json';
-       /* _this.fetchResource(_this.hcpDataPath, 'json').then(function() {
-            _this.renderHcp();
-        });
-        */
         
         $.ajax({
             method: 'GET',
@@ -31213,7 +31216,7 @@ $(function() {
             type: 'json',
             success: function(data) {
                 var path = this.url;
-                resource[this.url] = data;
+                resource.hcp = data;
                 _this.renderHcp();
             },
 
@@ -31225,12 +31228,24 @@ $(function() {
     Hcp.prototype.init = function() {
         var _this = this;
         _this.hcp = {};
+        _this.hospital = {};
         _this.hcp.listContainer = $('#hcp-list');
         _this.hcp.detailsContainer = $('#hcp-details');
+        _this.hospital.listContainer = $('#hospital-list');
+        _this.hospital.detailsContainer = $('#hospital-details');
+        _this.hcpListTemplatePath = 'hcp-list';
+        _this.hcpDetailTemplatePath = 'hcp-detail';
         _this.addSpinner(_this.hcp.listContainer);
         _this.addSpinner(_this.hcp.detailsContainer);
         if (_this.application != 'iRep') {
+        //    _this.getHcps();
             _this.buildHcp();
+            try {
+                _this.clmQueryRecord(_this.queryConfig.account, _this.parseAccounts(accounts));
+            } catch (error) {
+                _this.consoleLog('Error', error);
+            }
+            
         }
             
     }
@@ -31255,16 +31270,30 @@ $(function() {
             var $this = $(this);
                
         });
+
+        $document.on('suggestion-parsed', function(e) {
+            _this.renderSuggestions();
+        });
     }
     
-    Suggestions.prototype.renderSuggestions = function() {
+     Suggestions.prototype.renderSuggestions = function() {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(_this.suggestion.listContainer, componentsTemplate[_this.suggestionListTemplatePath], resource[_this.suggestionDataPath], false);
-        _this.fillTemplate(_this.suggestion.detailsContainer, componentsTemplate[_this.suggestionDetailTemplatePath], resource[_this.suggestionDataPath], false);
+    //    _this.fillTemplate(_this.suggestion.listContainer, componentsTemplate[_this.suggestionListTemplatePath], resource[_this.suggestionDataPath], false);
+    //    _this.fillTemplate(_this.suggestion.detailsContainer, componentsTemplate[_this.suggestionDetailTemplatePath], resource[_this.suggestionDataPath], false);
+        _this.fillTemplate(_this.suggestion.listContainer, componentsTemplate[_this.suggestionListTemplatePath], resource.suggestions, false);
+        _this.fillTemplate(_this.suggestion.detailsContainer, componentsTemplate[_this.suggestionDetailTemplatePath], resource.suggestions, false);
+    
         $(document).trigger('suggestion-loaded');
     }
     
+    Suggestions.prototype.getSuggestions = function() {
+        var _this = this;
+            _this.suggestionListTemplatePath = 'suggestion-list';
+            _this.suggestionDetailTemplatePath = 'suggestion-detail';
+        _this.clmQueryRecord(_this.queryConfig.suggestions, _this.parseSuggestions(suggestions));
+    }
+
     Suggestions.prototype.buildSuggestions = function() {
         var _this = this;
             _this.suggestionListTemplatePath = 'suggestion-list';
@@ -31280,7 +31309,7 @@ $(function() {
             type: 'json',
             success: function(data) {
                 var path = this.url;
-                resource[this.url] = data;
+                resource.suggestions = data;
                 _this.renderSuggestions();
             },
 
@@ -31296,8 +31325,15 @@ $(function() {
         _this.suggestion.detailsContainer = $('#suggestion-details');
         _this.addSpinner(_this.suggestion.listContainer);
         _this.addSpinner(_this.suggestion.detailsContainer);
+        _this.suggestionListTemplatePath = 'suggestion-list';
+        _this.suggestionDetailTemplatePath = 'suggestion-detail';
         if (_this.application != 'iRep') {
             _this.buildSuggestions();
+            try {
+                _this.clmQueryRecord(_this.queryConfig.suggestions, _this.parseSuggestions(suggestions));
+            } catch (error) {
+                _this.consoleLog('Error', error);
+            }
         }
             
     }

@@ -10,25 +10,25 @@
             var $this = $(this);
                
         });
+
+        $document.on('hcp-parsed', function(e) {
+            //    _this.renderHcp();
+        });
     }
     
     Hcp.prototype.renderHcp = function() {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource[_this.hcpDataPath], false);
-        _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource[_this.hcpDataPath], false);
+        _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp, false);
+        _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp, false);
+        _this.fillTemplate(_this.hospital.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp, false);
+        _this.fillTemplate(_this.hospital.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp, false);
         $(document).trigger('hcp-loaded');
     }
     
     Hcp.prototype.buildHcp = function() {
         var _this = this;
-            _this.hcpListTemplatePath = 'hcp-list';
-            _this.hcpDetailTemplatePath = 'hcp-detail';
             _this.hcpDataPath = '/staticJson/hcp.json';
-       /* _this.fetchResource(_this.hcpDataPath, 'json').then(function() {
-            _this.renderHcp();
-        });
-        */
         
         $.ajax({
             method: 'GET',
@@ -36,7 +36,7 @@
             type: 'json',
             success: function(data) {
                 var path = this.url;
-                resource[this.url] = data;
+                resource.hcp = data;
                 _this.renderHcp();
             },
 
@@ -48,12 +48,24 @@
     Hcp.prototype.init = function() {
         var _this = this;
         _this.hcp = {};
+        _this.hospital = {};
         _this.hcp.listContainer = $('#hcp-list');
         _this.hcp.detailsContainer = $('#hcp-details');
+        _this.hospital.listContainer = $('#hospital-list');
+        _this.hospital.detailsContainer = $('#hospital-details');
+        _this.hcpListTemplatePath = 'hcp-list';
+        _this.hcpDetailTemplatePath = 'hcp-detail';
         _this.addSpinner(_this.hcp.listContainer);
         _this.addSpinner(_this.hcp.detailsContainer);
         if (_this.application != 'iRep') {
+        //    _this.getHcps();
             _this.buildHcp();
+            try {
+                _this.clmQueryRecord(_this.queryConfig.account, _this.parseAccounts(accounts));
+            } catch (error) {
+                _this.consoleLog('Error', error);
+            }
+            
         }
             
     }
