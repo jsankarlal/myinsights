@@ -14,6 +14,14 @@
         $document.on('hcp-parsed', function(e) {
             //    _this.renderHcp();
         });
+
+        $document.on('hcp-loaded', function(e) {
+        //    _this.renderRelationshipCharts();
+        });
+
+        $document.on('shown.bs.modal', '#popup-modal', function() {
+            _this.renderRelationshipCharts();
+        });
     }
     
     Hcp.prototype.renderHcp = function() {
@@ -67,6 +75,8 @@
             }
             
         }
+
+        _this.bindHcpEvents();
             
     }
     

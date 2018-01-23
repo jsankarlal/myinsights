@@ -11,6 +11,7 @@
         <link href="assets/css/font-awesome.min.css" rel="stylesheet">
         <link href="css/default-theme.css" rel="stylesheet">
         <link href="css/dashboard-sytle.css" rel="stylesheet">
+        <link href="css/vjs.min.css" rel="stylesheet">
         
 	</head>
 	<body class="bg-theme1 default-theme">
@@ -152,15 +153,16 @@
 		</footer>
         <!-- Modal -->
         <div class="modal fade" id="popup-modal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
+          <div class="modal-dialog" role="document" >
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="popupModalLabel">Relationship Charts - <span class="username"> Firstname Lastname</span></h5>
               </div>
               <div class="modal-body">
                     <div class="panel-collapse collapse in">
-                        <div class="panel-body">
-                            <p>Content for Relationship Charts</p>
+                        <div class="panel-body text-center">
+                            <p> Relationship Chart</p>
+                            <div id="mynetwork" class="relationship-chart padding-15"></div>
                         </div>
                     </div>
               </div>

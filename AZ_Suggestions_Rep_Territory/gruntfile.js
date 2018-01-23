@@ -25,7 +25,8 @@ module.exports = function(grunt) {
         scriptPath + 'lib/jquery.js',
         scriptPath + 'lib/bootstrap.js',
       //  scriptPath + 'touch.js',
-        scriptPath + 'lib/lodash.js'
+        scriptPath + 'lib/lodash.js',
+        scriptPath + 'lib/vjs.js'
 		/* 
         scriptPath+'lib/velocity.js',
         scriptPath+'lib/velocity.ui.js',
