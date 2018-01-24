@@ -130,11 +130,11 @@ $q = window.Q;
         });
     };
     
-    Queries.prototype.navigateToAccount = function($element) {
+    Queries.prototype.navigateToAccount = function(eventData) {
 		var _this = this,
-            accountId = $element.attr('data-account-id'),
+            accountId = eventData.accountId;
             configObject = {},
-            type = $element.attr('data-type');
+            type = eventData.type;
         if (accountId != '') {
             if (type == 'view') {
                 configObject = {object: 'Account', fields: {Id: accountId }};

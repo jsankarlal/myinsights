@@ -90338,6 +90338,7 @@ exports["default"] = FloydWarshall;
 /***/ })
 /******/ ]);
 });
+var sampleNetwork = {};
 //Util Object
 (function(global) {
 	function Util() {
@@ -90390,19 +90391,23 @@ exports["default"] = FloydWarshall;
         var _this = this,
         // create an array with hcps
         hcps = new vis.DataSet([
-            {id: 1, label: 'hcp 1'},
-            {id: 2, label: 'hcp 2'},
-            {id: 3, label: 'hcp 3'},
-            {id: 4, label: 'hcp 4'},
-            {id: 5, label: 'hcp 5'},
-            {id: 6, label: 'hcp 6'}
+            {
+                id: 1,
+                label: 'hcp 1',
+                value:50
+            },
+            {id: 2, label: 'hcp 2', value:100},
+            {id: 3, label: 'hcp 3', value:75},
+            {id: 4, label: 'hcp 4', value:50},
+            {id: 5, label: 'hcp 5', value:200},
+            {id: 6, label: 'hcp 6', value:300}
         ]),
         // create an array with edges
         edges = new vis.DataSet([
-            {from: 1, to: 2, dashes: true},
-            {from: 2, to: 3, dashes: [5, 5]},
-            {from: 2, to: 4, dashes: [5, 5, 3, 3]},
-            {from: 2, to: 5, dashes: [2, 2, 10, 10]},
+            {from: 1, to: 2, dashes: false},
+            {from: 2, to: 3, dashes: false},
+            {from: 2, to: 4, dashes: false},
+            {from: 2, to: 5, dashes: false},
             {from: 2, to: 6, dashes: false}
         ]),
         // create a network
@@ -90412,13 +90417,39 @@ exports["default"] = FloydWarshall;
             nodes: hcps,
             edges: edges
         },
-        options = {},
-        network = {};
+        network = {},
+        options = {
+            nodes: {
+                shape: 'circle',
+                borderWidth:1,
+                color: {
+                    border: 'red',
+                    background: 'orange'
+                },
+                font:{color:'#333'},
+                scaling:{
+                    min:25,
+                    max:600,
+                    label:false
+                }
+            },
+            edges: {
+              color: 'lightblue'
+            }
+        };
 
         //  var network = new vis.Network(container, data, options);
         containers.forEach(function(item, index) {
-            network[index] = new vis.Network(item, data, options);
+            network[index] = new vis.Network(item, data, options).on('click', function(properties) {
+                console.log(properties);
+                console.log('clicked nodes:', properties.nodes);
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                $(document).trigger('navigate-to-native', {accountId:'0010E00000FOr7gQAD', type:'view'});
+            });
         });
+
+        sampleNetwork = network;
     }
     
     Util.prototype.fillTemplate = function(container, templateObj, object, appendFlag, callback) {
@@ -90587,11 +90618,11 @@ $q = window.Q;
         });
     };
     
-    Queries.prototype.navigateToAccount = function($element) {
+    Queries.prototype.navigateToAccount = function(eventData) {
 		var _this = this,
-            accountId = $element.attr('data-account-id'),
+            accountId = eventData.accountId;
             configObject = {},
-            type = $element.attr('data-type');
+            type = eventData.type;
         if (accountId != '') {
             if (type == 'view') {
                 configObject = {object: 'Account', fields: {Id: accountId }};
@@ -91107,7 +91138,13 @@ appData = {
         
         $(document).on('click', '.navigate-to-native', function(event){
             event.preventDefault();
-            _this.navigateToAccount($(this));
+            _this.navigateToAccount({accountId: $element.attr('data-account-id'), type: $(this).attr('data-type')});
+            
+        });
+
+        $(document).on('navigate-to-native', function(event, eventData){
+            event.preventDefault();
+            _this.navigateToAccount(eventData);
             
         });
         

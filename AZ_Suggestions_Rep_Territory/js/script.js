@@ -56,7 +56,13 @@ appData = {
         
         $(document).on('click', '.navigate-to-native', function(event){
             event.preventDefault();
-            _this.navigateToAccount($(this));
+            _this.navigateToAccount({accountId: $element.attr('data-account-id'), type: $(this).attr('data-type')});
+            
+        });
+
+        $(document).on('navigate-to-native', function(event, eventData){
+            event.preventDefault();
+            _this.navigateToAccount(eventData);
             
         });
         
