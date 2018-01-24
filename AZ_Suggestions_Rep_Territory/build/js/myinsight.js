@@ -90568,16 +90568,16 @@ $q = window.Q;
                     accountName: accounts[i].Name.value,
                     firstName: accounts[i].FirstName.value,
                     lastName: accounts[i].LastName.value,
-                    gender: accounts[i].Gender_AZ__c.value,
-                    type: accounts[i].Type_AZ_US__c.value == '' ? 'person' : 'business',
+                    gender: accounts[i].Gender_AZ__c.value || 'male',
                     name: accounts[i].Name.value,
+                    type: i % 2 == 0 ? 'person' : 'business',
                     email: accounts[i].Email_Address_AZ_EU__c.value,
-                    address: accounts[i].Address_vod__c.value,
-                    language: accounts[i].Language_vod__c.value,
+                    address: accounts[i].Address_vod__c.value || '13 chruch street, chennai',
+                    language: accounts[i].Language_vod__c.value || 'English',
                     therapyArea: 'Oncology',
                     product: 'Lynparza',
-                    jobTitle: accounts[i].Job_Title_AZ__c.value,
-                    hcmSpeciality: accounts[i].HCM_Specialty_AZ__c.value,
+                    jobTitle: accounts[i].Job_Title_AZ__c.value || 'Medical officer',
+                    hcmSpeciality: accounts[i].HCM_Specialty_AZ__c.value || 'Medical Officer',
                     metric:{
                         academic:{
                             rating: 5,
@@ -90760,7 +90760,7 @@ $q = window.Q;
 	    },
         accounts: {
             object: 'Account',
-            fields: ['Name', 'Id', 'FirstName', 'LastName', 'Job_Title_AZ__c', 'Language_vod__c', 'Email_Address_AZ_EU__c', 'HCM_Specialty_AZ__c', 'Type_AZ_US__c'],
+            fields: ['Name', 'Id', 'FirstName', 'LastName'],// 'Job_Title_AZ__c', 'Language_vod__c', 'Email_Address_AZ_EU__c', 'HCM_Specialty_AZ__c', 'Type_AZ_US__c'],
             where: '',
             sort: [],
             limit: ''
