@@ -97,7 +97,7 @@
         _this.bindAccountEvents();
    //     _this.getCurrentAccount();
    //     _this.getAccounts();
-        _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
+   /*      _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
             _this.consoleLog('My Accounts - through DS library', accounts);
         });
         
@@ -113,7 +113,7 @@
             _this.consoleLog('My suggestions through clmQueryRecord - suggestions.length - ', suggestions.length);
             _this.parseSuggestions(suggestions);
             _this.attachAccountIds();
-        });
+        });  */ 
     }
     
     _.extend(Account.prototype, Queries.prototype);
