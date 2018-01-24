@@ -106,10 +106,10 @@ $q = window.Q;
                     }
 	            };
   
-	            accountIds[i] = suggestions[i].Account_vod__c.value;
 	            resource.hcp[i] = currentAccount;
             }
         }
+        $(document).trigger('suggestion-parsed');
     }
 
     Queries.prototype.parseSuggestions = function(suggestions) {
@@ -118,7 +118,6 @@ $q = window.Q;
 
         _this.consoleLog('inside: parseSuggestions :');
         resource['suggestions'] = [];
-        resource.ownerIdList = [];
         if (suggestions.length > 0) {
 	        for (var i = 0; i < suggestions.length; i++) {
 	        	var currentSuggestion = {
@@ -150,7 +149,7 @@ $q = window.Q;
         }
         
         resource.accountIdList = accountIds.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
-        resource.ownerIdList = appData.ownerIdList.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
+        resource.ownerIdList = resource.ownerIdList.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
         $(document).trigger('suggestion-parsed');
     }
     

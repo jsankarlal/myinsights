@@ -90594,10 +90594,10 @@ $q = window.Q;
                     }
 	            };
   
-	            accountIds[i] = suggestions[i].Account_vod__c.value;
 	            resource.hcp[i] = currentAccount;
             }
         }
+        $(document).trigger('suggestion-parsed');
     }
 
     Queries.prototype.parseSuggestions = function(suggestions) {
@@ -90606,7 +90606,6 @@ $q = window.Q;
 
         _this.consoleLog('inside: parseSuggestions :');
         resource['suggestions'] = [];
-        resource.ownerIdList = [];
         if (suggestions.length > 0) {
 	        for (var i = 0; i < suggestions.length; i++) {
 	        	var currentSuggestion = {
@@ -90638,7 +90637,7 @@ $q = window.Q;
         }
         
         resource.accountIdList = accountIds.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
-        resource.ownerIdList = appData.ownerIdList.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
+        resource.ownerIdList = resource.ownerIdList.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
         $(document).trigger('suggestion-parsed');
     }
     
@@ -91252,12 +91251,15 @@ $(function() {
         //fillTemplate(container, templateObj, object, appendFlag, callback)
         // var grouped = _.mapValues(_.groupBy(resource.hcp, 'type'),
         //                   clist => clist.map(resource.hcp => _.omit(resource.hcp, 'make')));
+
+        _this.consoleLog('renderHcp ', resource.hcp);
         resource.hcp = resource.hcp.reduce(function(r, a) {
             r[a.type] = r[a.type] || [];
             r[a.type].push(a);
             return r;
         }, Object.create(null));
-    
+        _this.consoleLog('renderHcp ', resource.hcp);
+        
         _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp.person, false);
         _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp.person, false);
         _this.fillTemplate(_this.hospital.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp.business, false);

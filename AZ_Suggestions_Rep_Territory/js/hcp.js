@@ -44,12 +44,15 @@
         //fillTemplate(container, templateObj, object, appendFlag, callback)
         // var grouped = _.mapValues(_.groupBy(resource.hcp, 'type'),
         //                   clist => clist.map(resource.hcp => _.omit(resource.hcp, 'make')));
+
+        _this.consoleLog('renderHcp ', resource.hcp);
         resource.hcp = resource.hcp.reduce(function(r, a) {
             r[a.type] = r[a.type] || [];
             r[a.type].push(a);
             return r;
         }, Object.create(null));
-    
+        _this.consoleLog('renderHcp ', resource.hcp);
+        
         _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp.person, false);
         _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp.person, false);
         _this.fillTemplate(_this.hospital.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp.business, false);
