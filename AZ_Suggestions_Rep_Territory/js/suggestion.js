@@ -65,7 +65,7 @@
                     }
                 }); */
                 _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions) {
-                    _this.consoleLog('My suggestions through DS library', suggestions);
+                    _this.consoleLog('My suggestions through DS library', suggestions.length);
                     _this.parseSuggestions(suggestions);
                 });
             } catch (error) {

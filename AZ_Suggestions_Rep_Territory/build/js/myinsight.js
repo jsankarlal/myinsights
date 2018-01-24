@@ -91267,7 +91267,7 @@ $(function() {
             return r;
         }, Object.create(null));
         _this.consoleLog('renderHcp ', resource.hcp);
-        
+
         _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp.person, false);
         _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp.person, false);
         _this.fillTemplate(_this.hospital.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp.business, false);
@@ -91318,7 +91318,7 @@ $(function() {
                     }
                 }); */
                 _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
-                    _this.consoleLog('My Accounts - through DS library', accounts);
+                    _this.consoleLog('My Accounts - through DS library', accounts.length);
                     _this.parseAccounts(accounts);
                 });
                 
@@ -91406,7 +91406,7 @@ $(function() {
                     }
                 }); */
                 _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions) {
-                    _this.consoleLog('My suggestions through DS library', suggestions);
+                    _this.consoleLog('My suggestions through DS library', suggestions.length);
                     _this.parseSuggestions(suggestions);
                 });
             } catch (error) {
