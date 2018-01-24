@@ -90559,6 +90559,7 @@ $q = window.Q;
     Queries.prototype.parseAccounts = function(accounts) {
         var _this = this;
         _this.consoleLog('inside: parseAccounts :');
+        try {
         resource['hcp'] = [];
         
         if (accounts.length > 0) {
@@ -90568,16 +90569,16 @@ $q = window.Q;
                     accountName: accounts[i].Name.value,
                     firstName: accounts[i].FirstName.value,
                     lastName: accounts[i].LastName.value,
-                    gender: accounts[i].Gender_AZ__c.value || 'male',
+                    gender: 'male',
                     name: accounts[i].Name.value,
                     type: i % 2 == 0 ? 'person' : 'business',
-                    email: accounts[i].Email_Address_AZ_EU__c.value,
-                    address: accounts[i].Address_vod__c.value || '13 chruch street, chennai',
-                    language: accounts[i].Language_vod__c.value || 'English',
+                    email: 'test"gmail.com',
+                    address: '13 chruch street, chennai',
+                    language: 'English',
                     therapyArea: 'Oncology',
                     product: 'Lynparza',
-                    jobTitle: accounts[i].Job_Title_AZ__c.value || 'Medical officer',
-                    hcmSpeciality: accounts[i].HCM_Specialty_AZ__c.value || 'Medical Officer',
+                    jobTitle: 'Medical officer',
+                    hcmSpeciality: 'Medical Officer',
                     metric:{
                         academic:{
                             rating: 5,
@@ -90597,7 +90598,11 @@ $q = window.Q;
 	            resource.hcp[i] = currentAccount;
             }
         }
-        $(document).trigger('suggestion-parsed');
+
+        } catch (err) {
+            _this.consoleLog('parse suggestion errror', err);
+        }  
+        $(document).trigger('Account -parsed');
     }
 
     Queries.prototype.parseSuggestions = function(suggestions) {
@@ -90605,6 +90610,7 @@ $q = window.Q;
             accountIds = [];
 
         _this.consoleLog('inside: parseSuggestions :');
+        try {
         resource['suggestions'] = [];
         if (suggestions.length > 0) {
 	        for (var i = 0; i < suggestions.length; i++) {
@@ -90627,7 +90633,6 @@ $q = window.Q;
 					productTags: [],
 					driverTags: []
 	            };
-	        	resource.ownerIdList.push(suggestions[i].OwnerId.value);
 	        		            
 //	     currentSuggestion.LastStatusUpdatedBy = currentSuggestion.Actioned_By_AZ_US__c || currentSuggestion.Completed_By_AZ_US__c || currentSuggestion.Dismissed_By_AZ_US__c || '';
 	            currentSuggestion.status = currentSuggestion.actioned ? 'Actioned' : currentSuggestion.markedCompleted ? 'Marked as Complete' : currentSuggestion.dissmissed ? 'Dismissed' : 'Pending';
@@ -90638,6 +90643,9 @@ $q = window.Q;
         
         resource.accountIdList = accountIds.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
         resource.ownerIdList = resource.ownerIdList.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
+        } catch (err) {
+            _this.consoleLog('parse suggestion errror', err);
+        }    
         $(document).trigger('suggestion-parsed');
     }
     
