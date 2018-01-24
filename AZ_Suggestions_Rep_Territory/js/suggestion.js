@@ -52,6 +52,7 @@
         _this.addSpinner(_this.suggestion.detailsContainer);
         _this.suggestionListTemplatePath = 'suggestion-list';
         _this.suggestionDetailTemplatePath = 'suggestion-detail';
+        _this.bindSuggestionsEvents();
         if (_this.application != 'iRep') {
         //    _this.buildSuggestions();
             try {

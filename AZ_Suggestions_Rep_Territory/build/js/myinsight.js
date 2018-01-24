@@ -91245,7 +91245,7 @@ $(function() {
         });
 
         $document.on('hcp-parsed', function(e) {
-            //    _this.renderHcp();
+            _this.renderHcp();
         });
 
         $document.on('hcp-loaded', function(e) {
@@ -91393,6 +91393,7 @@ $(function() {
         _this.addSpinner(_this.suggestion.detailsContainer);
         _this.suggestionListTemplatePath = 'suggestion-list';
         _this.suggestionDetailTemplatePath = 'suggestion-detail';
+        _this.bindSuggestionsEvents();
         if (_this.application != 'iRep') {
         //    _this.buildSuggestions();
             try {

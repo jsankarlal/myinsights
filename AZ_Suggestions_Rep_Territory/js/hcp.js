@@ -12,7 +12,7 @@
         });
 
         $document.on('hcp-parsed', function(e) {
-            //    _this.renderHcp();
+            _this.renderHcp();
         });
 
         $document.on('hcp-loaded', function(e) {
