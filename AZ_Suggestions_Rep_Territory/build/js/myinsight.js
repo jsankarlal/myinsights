@@ -91309,13 +91309,17 @@ $(function() {
 //        if (_this.application != 'iRep') {
             // _this.buildHcp();
             try {
-                _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
+                /* _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
                     if (result.success == true) {
                         _this.consoleLog('account- clmQueryRecord', result[_this.queryConfig.accounts.object]);
                         _this.parseAccounts(result[_this.queryConfig.accounts.object]);
                     } else {
                         _this.consoleLog('account clmQueryRecord - response', result);
                     }
+                }); */
+                _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
+                    _this.consoleLog('My Accounts - through DS library', accounts);
+                    _this.parseAccounts(accounts);
                 });
                 
             } catch (error) {
@@ -91392,13 +91396,17 @@ $(function() {
         if (_this.application != 'iRep') {
         //    _this.buildSuggestions();
             try {
-                _this.clmQueryRecord(_this.queryConfig.suggestions, function(result) {
+                /* _this.clmQueryRecord(_this.queryConfig.suggestions, function(result) {
                     if (result.success == true) {
                         _this.consoleLog('suggestion', result[_this.queryConfig.suggestions.object]);
                         _this.parseSuggestions(result[_this.queryConfig.suggestions.object]);
                     } else {
                         _this.consoleLog('suggestion - response', result);
                     }
+                }); */
+                _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions) {
+                    _this.consoleLog('My suggestions through DS library', suggestions);
+                    _this.parseSuggestions(suggestions);
                 });
             } catch (error) {
                 _this.consoleLog('Error', error);

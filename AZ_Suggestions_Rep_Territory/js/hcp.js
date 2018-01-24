@@ -76,13 +76,17 @@
 //        if (_this.application != 'iRep') {
             // _this.buildHcp();
             try {
-                _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
+                /* _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
                     if (result.success == true) {
                         _this.consoleLog('account- clmQueryRecord', result[_this.queryConfig.accounts.object]);
                         _this.parseAccounts(result[_this.queryConfig.accounts.object]);
                     } else {
                         _this.consoleLog('account clmQueryRecord - response', result);
                     }
+                }); */
+                _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
+                    _this.consoleLog('My Accounts - through DS library', accounts);
+                    _this.parseAccounts(accounts);
                 });
                 
             } catch (error) {
