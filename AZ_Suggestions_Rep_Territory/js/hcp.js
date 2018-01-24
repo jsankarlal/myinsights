@@ -27,10 +27,18 @@
     Hcp.prototype.renderHcp = function() {
         var _this = this;
         //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp, false);
-        _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp, false);
-        _this.fillTemplate(_this.hospital.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp, false);
-        _this.fillTemplate(_this.hospital.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp, false);
+        // var grouped = _.mapValues(_.groupBy(resource.hcp, 'type'),
+        //                   clist => clist.map(resource.hcp => _.omit(resource.hcp, 'make')));
+        resource.hcp = resource.hcp.reduce(function(r, a) {
+            r[a.type] = r[a.type] || [];
+            r[a.type].push(a);
+            return r;
+        }, Object.create(null));
+    
+        _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp.person, false);
+        _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp.person, false);
+        _this.fillTemplate(_this.hospital.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp.business, false);
+        _this.fillTemplate(_this.hospital.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp.business, false);
         $(document).trigger('hcp-loaded');
     }
     

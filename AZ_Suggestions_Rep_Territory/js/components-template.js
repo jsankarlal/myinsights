@@ -53,10 +53,14 @@ componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
 componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '    <% _.each(result,function(hcp, index) { %>       ' +
 '        <div class="line <%= index == 1 ? \'active\': \'\'%>">' +
-'            <a href="#user-<%= index %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">' +
+'            <a href="#<%=hcp.type %><%= index %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-2">' +
-'                        <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 60px;">' +
+'                             <% if (hcp.type == \'person\') { %> ' +
+'                               <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 60px;">' +
+'                              <% } else { %> ' +
+'                               <i class="fa fa-hospital-o fa-3x" aria-hidden="true"></i>' +
+'                              <% } %> ' +
 '                    </div>' +
 '                    <div class="col-xs-7 col-sm-8">' +
 '                        <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
@@ -74,13 +78,18 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 	
 componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '    <% _.each(result,function(hcp, index) { %>    ' +
-'        <div class="tab-pane fade <%= index == 1 ? \'in active\': \'\'%>" id="user-<%= index %>">' +
+'        <div class="tab-pane fade <%= index == 1 ? \'in active\': \'\'%>" id="<%=hcp.type %><%= index %>">' +
 '' +
 '            <div class="row  margin-right-left-0 margin-bottom-10">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
 '                    <div class="row padding-10">' +
 '                        <div class="col-xs-3 col-sm-3 text-center padding-top-30">' +
-'                            <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 70px;">' +
+'                             <% if (hcp.type == \'person\') { %> ' +
+'                               <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 70px;">' +
+'                              <% } else { %> ' +
+'                               <!-- <img src="assets/images/hospital-building.png" style="height: 70px;"> -->' +
+'                               <i class="fa fa-hospital-o fa-3x" aria-hidden="true"></i>' +
+'                              <% } %> ' +
 '                        </div>' +
 '                        <div class="col-xs-9 col-sm-9">' +
 '                            <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
