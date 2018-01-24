@@ -70,12 +70,12 @@ $q = window.Q;
     
     Queries.prototype.parseAccounts = function(accounts) {
         var _this = this;
-        _this.consoleLog('inside: parseAccounts :', accounts);
+       // _this.consoleLog('inside: parseAccounts :', accounts);
         try {
             resource['hcp'] = [];
             if (accounts.length > 0) {
                 for (var i = 0; i < accounts.length; i++) {
-                    _this.consoleLog('inside: parseAccounts - loop :', accounts[i]);
+                //    _this.consoleLog('inside: parseAccounts - loop :', accounts[i]);
                     var currentAccount = {
                         id: accounts[i].Id.value,
                         accountName: accounts[i].Name.value,
@@ -106,7 +106,7 @@ $q = window.Q;
                             }
                         }
                     };
-    
+                    _this.consoleLog('inside: parseAccounts - loop :', currentAccount);
                     resource.hcp[i] = currentAccount;
                 }
             }
@@ -114,7 +114,7 @@ $q = window.Q;
         } catch (err) {
             _this.consoleLog('parse suggestion errror', err);
         }  
-        $(document).trigger('Account -parsed');
+        $(document).trigger('hcp-parsed');
     }
 
     Queries.prototype.parseSuggestions = function(suggestions) {
