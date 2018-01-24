@@ -90563,6 +90563,7 @@ $q = window.Q;
             resource['hcp'] = [];
             if (accounts.length > 0) {
                 for (var i = 0; i < accounts.length; i++) {
+                    _this.consoleLog('inside: parseAccounts - loop :', accounts[i]);
                     var currentAccount = {
                         id: accounts[i].Id.value,
                         accountName: accounts[i].Name.value,
@@ -91394,7 +91395,7 @@ $(function() {
         _this.bindSuggestionsEvents();
         if (_this.application != 'iRep') {
             try {
-                _this.buildSuggestions();
+            //    _this.buildSuggestions();
                 /* _this.clmQueryRecord(_this.queryConfig.suggestions, function(result) {
                     if (result.success == true) {
                         _this.consoleLog('suggestion', result[_this.queryConfig.suggestions.object]);
@@ -91403,10 +91404,10 @@ $(function() {
                         _this.consoleLog('suggestion - response', result);
                     }
                 }); */
-               /*  _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions) {
+                _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions) {
                     _this.consoleLog('My suggestions through DS library', suggestions.length);
                     _this.parseSuggestions(suggestions);
-                }); */
+                });
             } catch (error) {
                 _this.consoleLog('Error', error);
             }

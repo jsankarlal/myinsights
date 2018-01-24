@@ -75,6 +75,7 @@ $q = window.Q;
             resource['hcp'] = [];
             if (accounts.length > 0) {
                 for (var i = 0; i < accounts.length; i++) {
+                    _this.consoleLog('inside: parseAccounts - loop :', accounts[i]);
                     var currentAccount = {
                         id: accounts[i].Id.value,
                         accountName: accounts[i].Name.value,
