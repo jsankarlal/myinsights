@@ -70,46 +70,45 @@ $q = window.Q;
     
     Queries.prototype.parseAccounts = function(accounts) {
         var _this = this;
-        _this.consoleLog('inside: parseAccounts :');
+        _this.consoleLog('inside: parseAccounts :', accounts);
         try {
-        resource['hcp'] = [];
-        
-        if (accounts.length > 0) {
-	        for (var i = 0; i < accounts.length; i++) {
-	        	var currentAccount = {
-	                id: accounts[i].Id.value,
-                    accountName: accounts[i].Name.value,
-                    firstName: accounts[i].FirstName.value,
-                    lastName: accounts[i].LastName.value,
-                    gender: 'male',
-                    name: accounts[i].Name.value,
-                    type: i % 2 == 0 ? 'person' : 'business',
-                    email: 'test"gmail.com',
-                    address: '13 chruch street, chennai',
-                    language: 'English',
-                    therapyArea: 'Oncology',
-                    product: 'Lynparza',
-                    jobTitle: 'Medical officer',
-                    hcmSpeciality: 'Medical Officer',
-                    metric:{
-                        academic:{
-                            rating: 5,
-                            percentage: '90'
-                        },
-                        internet:{
-                            rating: 4,
-                            percentage: '24'
-                        },
-                        society:{
-                            rating: 3,
-                            percentage: '8'
+            resource['hcp'] = [];
+            if (accounts.length > 0) {
+                for (var i = 0; i < accounts.length; i++) {
+                    var currentAccount = {
+                        id: accounts[i].Id.value,
+                        accountName: accounts[i].Name.value,
+                        firstName: accounts[i].FirstName.value,
+                        lastName: accounts[i].LastName.value,
+                        gender: 'male',
+                        name: accounts[i].Name.value,
+                        type: i % 2 == 0 ? 'person' : 'business',
+                        email: 'test"gmail.com',
+                        address: '13 chruch street, chennai',
+                        language: 'English',
+                        therapyArea: 'Oncology',
+                        product: 'Lynparza',
+                        jobTitle: 'Medical officer',
+                        hcmSpeciality: 'Medical Officer',
+                        metric:{
+                            academic:{
+                                rating: 5,
+                                percentage: '90'
+                            },
+                            internet:{
+                                rating: 4,
+                                percentage: '24'
+                            },
+                            society:{
+                                rating: 3,
+                                percentage: '8'
+                            }
                         }
-                    }
-	            };
-  
-	            resource.hcp[i] = currentAccount;
+                    };
+    
+                    resource.hcp[i] = currentAccount;
+                }
             }
-        }
 
         } catch (err) {
             _this.consoleLog('parse suggestion errror', err);
@@ -123,38 +122,37 @@ $q = window.Q;
 
         _this.consoleLog('inside: parseSuggestions :');
         try {
-        resource['suggestions'] = [];
-        if (suggestions.length > 0) {
-	        for (var i = 0; i < suggestions.length; i++) {
-	        	var currentSuggestion = {
-	                markedCompleted: suggestions[i].Marked_As_Complete_vod__c.value,
-	                dissmissed: suggestions[i].Dismissed_vod__c.value,
-	                actioned: suggestions[i].Actioned_vod__c.value,
-                    recordTypeId: suggestions[i].RecordTypeId.value,
-	                id: suggestions[i].Id.value,
-	                createdDate: suggestions[i].CreatedDate.value,
-	                ownerId: suggestions[i].OwnerId.value,
-	                title: suggestions[i].Title_vod__c.value,
-	                reason: suggestions[i].Reason_vod__c.value,
-	                postedDate: suggestions[i].Posted_Date_vod__c.value,
-					expirationDate: suggestions[i].Expiration_Date_vod__c.value,
-					accountId: suggestions[i].Account_vod__c.value,
-					lastStatusUpdatedBy: '',
-                    status: '',
-                    accountName: '',
-					productTags: [],
-					driverTags: []
-	            };
-	        		            
-//	     currentSuggestion.LastStatusUpdatedBy = currentSuggestion.Actioned_By_AZ_US__c || currentSuggestion.Completed_By_AZ_US__c || currentSuggestion.Dismissed_By_AZ_US__c || '';
-	            currentSuggestion.status = currentSuggestion.actioned ? 'Actioned' : currentSuggestion.markedCompleted ? 'Marked as Complete' : currentSuggestion.dissmissed ? 'Dismissed' : 'Pending';
-	            accountIds[i] = suggestions[i].Account_vod__c.value;
-	            resource.suggestions[i] = currentSuggestion;
-	        }
-        }
-        
-        resource.accountIdList = accountIds.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
-        resource.ownerIdList = resource.ownerIdList.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
+            resource['suggestions'] = [];
+            if (suggestions.length > 0) {
+                for (var i = 0; i < suggestions.length; i++) {
+                    var currentSuggestion = {
+                        markedCompleted: suggestions[i].Marked_As_Complete_vod__c.value,
+                        dissmissed: suggestions[i].Dismissed_vod__c.value,
+                        actioned: suggestions[i].Actioned_vod__c.value,
+                        recordTypeId: suggestions[i].RecordTypeId.value,
+                        id: suggestions[i].Id.value,
+                        createdDate: suggestions[i].CreatedDate.value,
+                        ownerId: suggestions[i].OwnerId.value,
+                        title: suggestions[i].Title_vod__c.value,
+                        reason: suggestions[i].Reason_vod__c.value,
+                        postedDate: suggestions[i].Posted_Date_vod__c.value,
+                        expirationDate: suggestions[i].Expiration_Date_vod__c.value,
+                        accountId: suggestions[i].Account_vod__c.value,
+                        lastStatusUpdatedBy: '',
+                        status: '',
+                        accountName: '',
+                        productTags: [],
+                        driverTags: []
+                    };
+                                    
+    //	     currentSuggestion.LastStatusUpdatedBy = currentSuggestion.Actioned_By_AZ_US__c || currentSuggestion.Completed_By_AZ_US__c || currentSuggestion.Dismissed_By_AZ_US__c || '';
+                    currentSuggestion.status = currentSuggestion.actioned ? 'Actioned' : currentSuggestion.markedCompleted ? 'Marked as Complete' : currentSuggestion.dissmissed ? 'Dismissed' : 'Pending';
+                    accountIds[i] = suggestions[i].Account_vod__c.value;
+                    resource.suggestions[i] = currentSuggestion;
+                }
+            }
+            
+            resource.accountIdList = accountIds.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
         } catch (err) {
             _this.consoleLog('parse suggestion errror', err);
         }    
