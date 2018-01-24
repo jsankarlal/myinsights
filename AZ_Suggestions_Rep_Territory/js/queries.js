@@ -69,7 +69,43 @@ $q = window.Q;
 	}
     Queries.prototype.parseAccounts = function(accounts) {
         var _this = this;
-
+        _this.consoleLog('inside: parseAccounts :');
+        resource['hcp'] = [];
+        
+        if (accounts.length > 0) {
+	        for (var i = 0; i < accounts.length; i++) {
+	        	var currentAccount = {
+	                id: accounts[i].Id.value,
+                    accountName: accounts[i].Name.value,
+                    firstName: accounts[i].FirstName.value,
+                    lastName: accounts[i].LastName.value,
+                    gender: 'male',
+                    address: accounts[i].Address_vod__c.value,
+                    language: 'English',
+                    therapyArea: 'Oncology',
+                    product: 'Lynparza',
+                    jobTitle: 'Medical Officer',
+                    hcmSpeciality: 'INTERNAL MEDICINE - CARDIOVASCULAR DISEASE',
+                    metric:{
+                        academic:{
+                            rating: 5,
+                            percentage: '90'
+                        },
+                        internet:{
+                            rating: 4,
+                            percentage: '24'
+                        },
+                        society:{
+                            rating: 3,
+                            percentage: '8'
+                        }
+                    }
+	            };
+  
+	            accountIds[i] = suggestions[i].Account_vod__c.value;
+	            resource.hcp[i] = currentAccount;
+            }
+        }
     }
 
     Queries.prototype.parseSuggestions = function(suggestions) {

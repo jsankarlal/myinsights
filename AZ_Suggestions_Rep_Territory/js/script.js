@@ -66,7 +66,7 @@ appData = {
             
         });
         
-         $(document).on('click', '#targetted-users .line, #suggestions .line', function(event){
+         $(document).on('click', '.tab-pane .line', function(event){
             $(this).addClass('active');
             $(this).siblings().removeClass('active');
             
@@ -86,7 +86,7 @@ appData = {
         _this.bindEvents();
         _this.setDataAdapter();
 //        if (_this.application == 'iRep') {
-        try {
+/*         try {
             _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions){
                 _this.consoleLog('suggestions.length - ', suggestions.length);
                 _this.parseSuggestions(suggestions);
@@ -94,7 +94,7 @@ appData = {
            });
         } catch(e) {
             _this.consoleLog('Error in MyInsight.prototype.init - ', e);
-        }
+        } */
             
 //        }
                 

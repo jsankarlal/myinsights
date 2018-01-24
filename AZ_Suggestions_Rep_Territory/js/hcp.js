@@ -73,17 +73,23 @@
         _this.hcpDetailTemplatePath = 'hcp-detail';
         _this.addSpinner(_this.hcp.listContainer);
         _this.addSpinner(_this.hcp.detailsContainer);
-        if (_this.application != 'iRep') {
-        //    _this.getHcps();
-            _this.buildHcp();
+//        if (_this.application != 'iRep') {
+            // _this.buildHcp();
             try {
-                _this.clmQueryRecord(_this.queryConfig.account, _this.parseAccounts(accounts));
+                _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
+                    if (result.success == true) {
+                        _this.consoleLog('account- clmQueryRecord', result[_this.queryConfig.accounts.object]);
+                        _this.parseAccounts(result[_this.queryConfig.accounts.object]);
+                    } else {
+                        _this.consoleLog('account clmQueryRecord - response', result);
+                    }
+                });
+                
             } catch (error) {
                 _this.consoleLog('Error', error);
             }
             
-        }
-
+//        }
         _this.bindHcpEvents();
             
     }

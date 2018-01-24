@@ -53,7 +53,7 @@
         _this.suggestionListTemplatePath = 'suggestion-list';
         _this.suggestionDetailTemplatePath = 'suggestion-detail';
         if (_this.application != 'iRep') {
-            _this.buildSuggestions();
+        //    _this.buildSuggestions();
             try {
                 _this.clmQueryRecord(_this.queryConfig.suggestions, function(result) {
                     if (result.success == true) {

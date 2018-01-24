@@ -90557,7 +90557,43 @@ $q = window.Q;
 	}
     Queries.prototype.parseAccounts = function(accounts) {
         var _this = this;
-
+        _this.consoleLog('inside: parseAccounts :');
+        resource['hcp'] = [];
+        
+        if (accounts.length > 0) {
+	        for (var i = 0; i < accounts.length; i++) {
+	        	var currentAccount = {
+	                id: accounts[i].Id.value,
+                    accountName: accounts[i].Name.value,
+                    firstName: accounts[i].FirstName.value,
+                    lastName: accounts[i].LastName.value,
+                    gender: 'male',
+                    address: accounts[i].Address_vod__c.value,
+                    language: 'English',
+                    therapyArea: 'Oncology',
+                    product: 'Lynparza',
+                    jobTitle: 'Medical Officer',
+                    hcmSpeciality: 'INTERNAL MEDICINE - CARDIOVASCULAR DISEASE',
+                    metric:{
+                        academic:{
+                            rating: 5,
+                            percentage: '90'
+                        },
+                        internet:{
+                            rating: 4,
+                            percentage: '24'
+                        },
+                        society:{
+                            rating: 3,
+                            percentage: '8'
+                        }
+                    }
+	            };
+  
+	            accountIds[i] = suggestions[i].Account_vod__c.value;
+	            resource.hcp[i] = currentAccount;
+            }
+        }
     }
 
     Queries.prototype.parseSuggestions = function(suggestions) {
@@ -91148,7 +91184,7 @@ appData = {
             
         });
         
-         $(document).on('click', '#targetted-users .line, #suggestions .line', function(event){
+         $(document).on('click', '.tab-pane .line', function(event){
             $(this).addClass('active');
             $(this).siblings().removeClass('active');
             
@@ -91168,7 +91204,7 @@ appData = {
         _this.bindEvents();
         _this.setDataAdapter();
 //        if (_this.application == 'iRep') {
-        try {
+/*         try {
             _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions){
                 _this.consoleLog('suggestions.length - ', suggestions.length);
                 _this.parseSuggestions(suggestions);
@@ -91176,7 +91212,7 @@ appData = {
            });
         } catch(e) {
             _this.consoleLog('Error in MyInsight.prototype.init - ', e);
-        }
+        } */
             
 //        }
                 
@@ -91270,16 +91306,23 @@ $(function() {
         _this.hcpDetailTemplatePath = 'hcp-detail';
         _this.addSpinner(_this.hcp.listContainer);
         _this.addSpinner(_this.hcp.detailsContainer);
-        if (_this.application != 'iRep') {
-        //    _this.getHcps();
-            _this.buildHcp();
+//        if (_this.application != 'iRep') {
+            // _this.buildHcp();
             try {
-                _this.clmQueryRecord(_this.queryConfig.account, _this.parseAccounts(accounts));
+                _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
+                    if (result.success == true) {
+                        _this.consoleLog('account- clmQueryRecord', result[_this.queryConfig.accounts.object]);
+                        _this.parseAccounts(result[_this.queryConfig.accounts.object]);
+                    } else {
+                        _this.consoleLog('account clmQueryRecord - response', result);
+                    }
+                });
+                
             } catch (error) {
                 _this.consoleLog('Error', error);
             }
             
-        }
+//        }
 
         _this.bindHcpEvents();
             
@@ -91348,7 +91391,7 @@ $(function() {
         _this.suggestionListTemplatePath = 'suggestion-list';
         _this.suggestionDetailTemplatePath = 'suggestion-detail';
         if (_this.application != 'iRep') {
-            _this.buildSuggestions();
+        //    _this.buildSuggestions();
             try {
                 _this.clmQueryRecord(_this.queryConfig.suggestions, function(result) {
                     if (result.success == true) {
