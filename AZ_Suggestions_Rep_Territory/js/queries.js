@@ -66,7 +66,8 @@ $q = window.Q;
 
         _this.consoleLog('dsRunQuery returns ');
         return deferred.promise;
-	}
+    }
+    
     Queries.prototype.parseAccounts = function(accounts) {
         var _this = this;
         _this.consoleLog('inside: parseAccounts :');
@@ -79,13 +80,16 @@ $q = window.Q;
                     accountName: accounts[i].Name.value,
                     firstName: accounts[i].FirstName.value,
                     lastName: accounts[i].LastName.value,
-                    gender: 'male',
+                    gender: accounts[i].Gender_AZ__c.value,
+                    type: accounts[i].Type_AZ_US__c.value == '' ? 'person' : 'business',
+                    name: accounts[i].Name.value,
+                    email: accounts[i].Email_Address_AZ_EU__c.value,
                     address: accounts[i].Address_vod__c.value,
-                    language: 'English',
+                    language: accounts[i].Language_vod__c.value,
                     therapyArea: 'Oncology',
                     product: 'Lynparza',
-                    jobTitle: 'Medical Officer',
-                    hcmSpeciality: 'INTERNAL MEDICINE - CARDIOVASCULAR DISEASE',
+                    jobTitle: accounts[i].Job_Title_AZ__c.value,
+                    hcmSpeciality: accounts[i].HCM_Specialty_AZ__c.value,
                     metric:{
                         academic:{
                             rating: 5,
@@ -225,16 +229,6 @@ $q = window.Q;
         } catch (e) {
             _this.consoleLog('viewRecord - error', e);
         }
-      /*  ds.viewRecord(configObject).then(function(resp) {
-            _this.consoleLog('viewRecord resolved - success ' + resp);
-            deferred.resolve(resp);
-            },function(err) {
-            _this.consoleLog('viewRecord resolved - error', err);
-           deferred.resolve(err);
-        });
-        
-        _this.consoleLog('viewRecord returns ');
-        return deferred.promise;*/
 	};
     
     Queries.prototype.newRecord = function(configObject) {
@@ -247,28 +241,9 @@ $q = window.Q;
         } catch (e) {
             _this.consoleLog('newRecord - error', e);
         }
-        /*
-        ds.newRecord(configObject).then(function(resp) {
-            _this.consoleLog('newRecord resolved - success ' + resp);
-            deferred.resolve(resp);
-        }, function(err) {
-            _this.consoleLog('newRecord resolved - error', err);
-            deferred.resolve(err);
-        });
-        
-        _this.consoleLog('newRecord returns ');
-        return deferred.promise;
-        */
 	};
-    
-/*    Queries.prototype.init = function() {
-        var _this = this;
-        _this.clm = com.veeva.clm;
-        _this.ds = ds;
-    }*/
-    
-	
-	Queries.prototype.queryConfig = {
+
+    Queries.prototype.queryConfig = {
 		suggestions: {
 	        object: 'Suggestion_vod__c',
 	        fields: ['OwnerId', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c'],
@@ -297,7 +272,7 @@ $q = window.Q;
 	    },
         accounts: {
             object: 'Account',
-            fields: ['Name', 'Id', 'FirstName', 'LastName'],
+            fields: ['Name', 'Id', 'FirstName', 'LastName', 'Job_Title_AZ__c', 'Language_vod__c', 'Email_Address_AZ_EU__c', 'HCM_Specialty_AZ__c', 'Type_AZ_US__c'],
             where: '',
             sort: [],
             limit: ''

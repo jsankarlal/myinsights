@@ -3,7 +3,7 @@ var componentsTemplate = {},
 
 componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 '   <% _.each(result, function(suggestion, index) { %>       ' +
-'        <div class="line">' +
+'        <div class="line <%= index == 0 ? \'active\': \'\'%>">' +
 '            <a href="#suggestion-<%= index %>" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="true" class="suggestion-item" data-account-id="">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-1">' +
@@ -20,7 +20,7 @@ componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 
 componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
 '   <% _.each(result,function(suggestion, index) { %>       ' +
-'         <div class="tab-pane fade <%= index == 2 ? \'in active\': \'\'%> " id="suggestion-<%= index %>">' +
+'         <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%> " id="suggestion-<%= index %>">' +
 '             <div class="row  margin-right-left-0 margin-bottom-10">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
 '                    <div class="padding-10 padding-bottom-0">' +
@@ -52,7 +52,7 @@ componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
 
 componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '    <% _.each(result,function(hcp, index) { %>       ' +
-'        <div class="line <%= index == 1 ? \'active\': \'\'%>">' +
+'        <div class="line <%= index == 0 ? \'active\': \'\'%>">' +
 '            <a href="#<%=hcp.type %><%= index %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-2">' +
@@ -78,7 +78,7 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 	
 componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '    <% _.each(result,function(hcp, index) { %>    ' +
-'        <div class="tab-pane fade <%= index == 1 ? \'in active\': \'\'%>" id="<%=hcp.type %><%= index %>">' +
+'        <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%>" id="<%=hcp.type %><%= index %>">' +
 '' +
 '            <div class="row  margin-right-left-0 margin-bottom-10">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +

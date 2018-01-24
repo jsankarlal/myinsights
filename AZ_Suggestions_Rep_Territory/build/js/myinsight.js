@@ -90554,7 +90554,8 @@ $q = window.Q;
 
         _this.consoleLog('dsRunQuery returns ');
         return deferred.promise;
-	}
+    }
+    
     Queries.prototype.parseAccounts = function(accounts) {
         var _this = this;
         _this.consoleLog('inside: parseAccounts :');
@@ -90567,13 +90568,16 @@ $q = window.Q;
                     accountName: accounts[i].Name.value,
                     firstName: accounts[i].FirstName.value,
                     lastName: accounts[i].LastName.value,
-                    gender: 'male',
+                    gender: accounts[i].Gender_AZ__c.value,
+                    type: accounts[i].Type_AZ_US__c.value == '' ? 'person' : 'business',
+                    name: accounts[i].Name.value,
+                    email: accounts[i].Email_Address_AZ_EU__c.value,
                     address: accounts[i].Address_vod__c.value,
-                    language: 'English',
+                    language: accounts[i].Language_vod__c.value,
                     therapyArea: 'Oncology',
                     product: 'Lynparza',
-                    jobTitle: 'Medical Officer',
-                    hcmSpeciality: 'INTERNAL MEDICINE - CARDIOVASCULAR DISEASE',
+                    jobTitle: accounts[i].Job_Title_AZ__c.value,
+                    hcmSpeciality: accounts[i].HCM_Specialty_AZ__c.value,
                     metric:{
                         academic:{
                             rating: 5,
@@ -90713,16 +90717,6 @@ $q = window.Q;
         } catch (e) {
             _this.consoleLog('viewRecord - error', e);
         }
-      /*  ds.viewRecord(configObject).then(function(resp) {
-            _this.consoleLog('viewRecord resolved - success ' + resp);
-            deferred.resolve(resp);
-            },function(err) {
-            _this.consoleLog('viewRecord resolved - error', err);
-           deferred.resolve(err);
-        });
-        
-        _this.consoleLog('viewRecord returns ');
-        return deferred.promise;*/
 	};
     
     Queries.prototype.newRecord = function(configObject) {
@@ -90735,28 +90729,9 @@ $q = window.Q;
         } catch (e) {
             _this.consoleLog('newRecord - error', e);
         }
-        /*
-        ds.newRecord(configObject).then(function(resp) {
-            _this.consoleLog('newRecord resolved - success ' + resp);
-            deferred.resolve(resp);
-        }, function(err) {
-            _this.consoleLog('newRecord resolved - error', err);
-            deferred.resolve(err);
-        });
-        
-        _this.consoleLog('newRecord returns ');
-        return deferred.promise;
-        */
 	};
-    
-/*    Queries.prototype.init = function() {
-        var _this = this;
-        _this.clm = com.veeva.clm;
-        _this.ds = ds;
-    }*/
-    
-	
-	Queries.prototype.queryConfig = {
+
+    Queries.prototype.queryConfig = {
 		suggestions: {
 	        object: 'Suggestion_vod__c',
 	        fields: ['OwnerId', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c'],
@@ -90785,7 +90760,7 @@ $q = window.Q;
 	    },
         accounts: {
             object: 'Account',
-            fields: ['Name', 'Id', 'FirstName', 'LastName'],
+            fields: ['Name', 'Id', 'FirstName', 'LastName', 'Job_Title_AZ__c', 'Language_vod__c', 'Email_Address_AZ_EU__c', 'HCM_Specialty_AZ__c', 'Type_AZ_US__c'],
             where: '',
             sort: [],
             limit: ''
@@ -90807,7 +90782,7 @@ var componentsTemplate = {},
 
 componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 '   <% _.each(result, function(suggestion, index) { %>       ' +
-'        <div class="line">' +
+'        <div class="line <%= index == 0 ? \'active\': \'\'%>">' +
 '            <a href="#suggestion-<%= index %>" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="true" class="suggestion-item" data-account-id="">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-1">' +
@@ -90824,7 +90799,7 @@ componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 
 componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
 '   <% _.each(result,function(suggestion, index) { %>       ' +
-'         <div class="tab-pane fade <%= index == 2 ? \'in active\': \'\'%> " id="suggestion-<%= index %>">' +
+'         <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%> " id="suggestion-<%= index %>">' +
 '             <div class="row  margin-right-left-0 margin-bottom-10">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
 '                    <div class="padding-10 padding-bottom-0">' +
@@ -90856,7 +90831,7 @@ componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
 
 componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '    <% _.each(result,function(hcp, index) { %>       ' +
-'        <div class="line <%= index == 1 ? \'active\': \'\'%>">' +
+'        <div class="line <%= index == 0 ? \'active\': \'\'%>">' +
 '            <a href="#<%=hcp.type %><%= index %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-2">' +
@@ -90882,7 +90857,7 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 	
 componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '    <% _.each(result,function(hcp, index) { %>    ' +
-'        <div class="tab-pane fade <%= index == 1 ? \'in active\': \'\'%>" id="<%=hcp.type %><%= index %>">' +
+'        <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%>" id="<%=hcp.type %><%= index %>">' +
 '' +
 '            <div class="row  margin-right-left-0 margin-bottom-10">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
@@ -91172,7 +91147,7 @@ appData = {
     MyInsight.prototype.bindEvents = function() {
         var _this = this;
         
-        $(document).on('click', '.navigate-to-native', function(event){
+        /* $(document).on('click', '.navigate-to-native', function(event){
             event.preventDefault();
             _this.navigateToAccount({accountId: $element.attr('data-account-id'), type: $(this).attr('data-type')});
             
@@ -91194,7 +91169,7 @@ appData = {
        //     _this.attachAccountIds();
             _this.consoleLog('hcp-loaded suggestion-loaded EVENT');
             
-        });
+        }); */
         
     };
     
@@ -91239,9 +91214,24 @@ $(function() {
     Hcp.prototype.bindHcpEvents = function() {
         var _this = this,
             $document = $(document);
-        $document.on('click', '[data-account-id]', function(e) {
-            var $this = $(this);
-               
+        
+        $(document).on('click', '.navigate-to-native', function(event) {
+            event.preventDefault();
+            _this.navigateToAccount({accountId: $(this).attr('data-account-id'), type: $(this).attr('data-type')});
+        });
+
+        $(document).on('navigate-to-native', function(event, eventData) {
+            event.preventDefault();
+            _this.navigateToAccount(eventData);
+        });
+        
+        $(document).on('click', '.tab-pane .line', function(event) {
+            $(this).addClass('active');
+            $(this).siblings().removeClass('active'); 
+        });
+        
+        $(document).on('hcp-loaded suggestion-loaded', function(event) {
+            _this.consoleLog('hcp-loaded suggestion-loaded EVENT');
         });
 
         $document.on('hcp-parsed', function(e) {

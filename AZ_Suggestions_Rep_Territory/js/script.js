@@ -54,7 +54,7 @@ appData = {
     MyInsight.prototype.bindEvents = function() {
         var _this = this;
         
-        $(document).on('click', '.navigate-to-native', function(event){
+        /* $(document).on('click', '.navigate-to-native', function(event){
             event.preventDefault();
             _this.navigateToAccount({accountId: $element.attr('data-account-id'), type: $(this).attr('data-type')});
             
@@ -76,7 +76,7 @@ appData = {
        //     _this.attachAccountIds();
             _this.consoleLog('hcp-loaded suggestion-loaded EVENT');
             
-        });
+        }); */
         
     };
     

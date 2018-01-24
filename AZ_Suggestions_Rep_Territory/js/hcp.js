@@ -6,9 +6,24 @@
     Hcp.prototype.bindHcpEvents = function() {
         var _this = this,
             $document = $(document);
-        $document.on('click', '[data-account-id]', function(e) {
-            var $this = $(this);
-               
+        
+        $(document).on('click', '.navigate-to-native', function(event) {
+            event.preventDefault();
+            _this.navigateToAccount({accountId: $(this).attr('data-account-id'), type: $(this).attr('data-type')});
+        });
+
+        $(document).on('navigate-to-native', function(event, eventData) {
+            event.preventDefault();
+            _this.navigateToAccount(eventData);
+        });
+        
+        $(document).on('click', '.tab-pane .line', function(event) {
+            $(this).addClass('active');
+            $(this).siblings().removeClass('active'); 
+        });
+        
+        $(document).on('hcp-loaded suggestion-loaded', function(event) {
+            _this.consoleLog('hcp-loaded suggestion-loaded EVENT');
         });
 
         $document.on('hcp-parsed', function(e) {
