@@ -20,7 +20,7 @@ var sampleNetwork = {};
     Util.prototype.setDataAdapter = function() {
         var _this = this;
         _this.application = window.location.host.indexOf('localhost:') == 0 || window.location.host.indexOf('test-myinsights.herokuapp.com') == 0 ? 'localhost' : 'iRep';
-        _this.consoleLog('Current Application', _this.application);
+        _this.consoleLog('Current Navigator', navigator.platform);
     };
     
     Util.prototype.fetchResource = function(path, type) {
