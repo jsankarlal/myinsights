@@ -91219,7 +91219,8 @@ $(function() {
     
     Hcp.prototype.bindHcpEvents = function() {
         var _this = this,
-            $document = $(document);
+            $document = $(document),
+            $newsFeed = $('#news-feed');
         
         $(document).on('click', '.navigate-to-native', function(event) {
             event.preventDefault();
@@ -91231,6 +91232,30 @@ $(function() {
             _this.navigateToAccount(eventData);
         });
         
+        $(document).click(function() {
+            var $targetEl = $(event.target);
+            if ($targetEl.closest('#news-feed').length < 1) {
+                $newsFeed.collapse('hide');
+            }
+           
+        });
+        
+        $(document).on('click', '.news-feed-show', function() {
+            $newsFeed.collapse('toggle');
+        });
+
+        $(document).on('click', '.news-feed-cancel', function() {
+            $newsFeed.collapse('hide');
+        });
+
+        $(document).on('show.bs.collapse', '#news-feed', function() {
+            $newsFeed.addClass('max-height-80vh');
+        });
+        
+        $(document).on('hide.bs.collapse', '#news-feed', function() {
+            $newsFeed.removeClass('max-height-80vh');
+        });
+
         $(document).on('click', '.tab-pane .line', function(event) {
             $(this).addClass('active');
             $(this).siblings().removeClass('active'); 
