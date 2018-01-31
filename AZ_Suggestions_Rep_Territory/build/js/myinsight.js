@@ -90359,8 +90359,9 @@ var sampleNetwork = {};
     
     Util.prototype.setDataAdapter = function() {
         var _this = this;
-        _this.application = window.location.host.indexOf('localhost:') == 0 || window.location.host.indexOf('test-myinsights.herokuapp.com') == 0 ? 'localhost' : 'iRep';
+        _this.application = window.location.hostname == 'localhost' ? 'localhost' : 'iRep';
         _this.consoleLog('Current Navigator', navigator.platform);
+        _this.consoleLog('Current Platform', _this.application);
     };
     
     Util.prototype.fetchResource = function(path, type) {
@@ -90788,7 +90789,8 @@ var componentsTemplate = {},
 
 componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 '   <% _.each(result, function(suggestion, index) { %>       ' +
-'        <div class="line <%= index == 0 ? \'active\': \'\'%>">' +
+'       <div class="line">' +
+'       <!-- <div class="line <%= index == 0 ? \'active\': \'\'%>"> -->' +
 '            <a href="#suggestion-<%= index %>" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="true" class="suggestion-item" data-account-id="">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-1">' +
@@ -90804,8 +90806,10 @@ componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 ' </div>';
 
 componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
+'   <a href="#" class="action-link back-button pull-right"> Back </a>' +
 '   <% _.each(result,function(suggestion, index) { %>       ' +
-'         <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%> " id="suggestion-<%= index %>">' +
+'         <div class="tab-pane fade" id="suggestion-<%= index %>">' +
+'    <!--     <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%> " id="suggestion-<%= index %>"> -->' +
 '             <div class="row  margin-right-left-0 margin-bottom-10">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
 '                    <div class="padding-10 padding-bottom-0">' +
@@ -90837,7 +90841,8 @@ componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
 
 componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '    <% _.each(result,function(hcp, index) { %>       ' +
-'        <div class="line <%= index == 0 ? \'active\': \'\'%>">' +
+'       <div class="line">' +
+'       <!-- <div class="line <%= index == 0 ? \'active\': \'\'%>"> -->' +
 '            <a href="#<%=hcp.type %><%= index %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-2">' +
@@ -90847,11 +90852,11 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '                               <i class="fa fa-hospital-o fa-3x" aria-hidden="true"></i>' +
 '                              <% } %> ' +
 '                    </div>' +
-'                    <div class="col-xs-7 col-sm-8">' +
+'                    <div class="col-xs-6 col-sm-6">' +
 '                        <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
 '                        <p class="short-description"> <%= hcp.address %></p>' +
 '                    </div>' +
-'                    <div class="col-xs-3 col-sm-2">' +
+'                    <div class="col-xs-4 col-sm-4">' +
 '                        <p> <%= hcp.product %> </p>' +
 '                        <p> <%= hcp.therapyArea %></p>' +
 '                    </div>' +
@@ -90862,6 +90867,7 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '</div>';
 	
 componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
+'    <a href="#" class="action-link back-button pull-right"> Back </a> ' +
 '    <% _.each(result,function(hcp, index) { %>    ' +
 '        <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%>" id="<%=hcp.type %><%= index %>">' +
 '' +
@@ -90879,6 +90885,8 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                        <div class="col-xs-9 col-sm-9">' +
 '                            <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
 '                            <p> <%= hcp.address %></p>' +
+'                        </div>' +
+'                    </div>' +
 '                            <div class="action-link-list">' +
 '                                <a class="navigate-to-native fg-navy action-link" data-account-id="<%= hcp.id %>" data-type="view">' +
 '                                    <i class="fa padding-10 box-shadow-all-white fa-external-link" aria-hidden="true"></i>' +
@@ -90889,8 +90897,6 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                                    Record a Call' +
 '                                </a>' +
 '                            </div>' +
-'                        </div>' +
-'                    </div>' +
 '                </div>' +
 '' +
 '            </div> ' +
@@ -91231,6 +91237,16 @@ $(function() {
             event.preventDefault();
             _this.navigateToAccount(eventData);
         });
+
+        $(document).on('show.bs.tab', '.line a[data-toggle="tab"]', function(e) {
+            console.log(e.target);// newly activated tab
+            console.log(e.relatedTarget);// previous active tab
+            $(e.target).closest('.card-view').addClass('show-detail');
+        });
+
+        $(document).on('click', '.back-button', function() {
+            $(this).closest('.card-view').removeClass('show-detail');
+        });
         
         $(document).click(function() {
             var $targetEl = $(event.target);
@@ -91240,6 +91256,10 @@ $(function() {
            
         });
         
+        $(document).on('click', '.news-feed-show', function() {
+            $newsFeed.collapse('toggle');
+        });
+
         $(document).on('click', '.news-feed-show', function() {
             $newsFeed.collapse('toggle');
         });
@@ -91330,8 +91350,7 @@ $(function() {
         _this.hcpDetailTemplatePath = 'hcp-detail';
         _this.addSpinner(_this.hcp.listContainer);
         _this.addSpinner(_this.hcp.detailsContainer);
-//        if (_this.application != 'iRep') {
-            // _this.buildHcp();
+        if (_this.application == 'iRep') {
             try {
                 /* _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
                     if (result.success == true) {
@@ -91350,7 +91369,10 @@ $(function() {
                 _this.consoleLog('Error', error);
             }
             
-//        }
+        } else {
+            _this.buildHcp();
+        }
+        
         _this.bindHcpEvents();
             
     }
@@ -91418,9 +91440,8 @@ $(function() {
         _this.suggestionListTemplatePath = 'suggestion-list';
         _this.suggestionDetailTemplatePath = 'suggestion-detail';
         _this.bindSuggestionsEvents();
-        if (_this.application != 'iRep') {
+        if (_this.application == 'iRep') {
             try {
-            //    _this.buildSuggestions();
                 /* _this.clmQueryRecord(_this.queryConfig.suggestions, function(result) {
                     if (result.success == true) {
                         _this.consoleLog('suggestion', result[_this.queryConfig.suggestions.object]);
@@ -91436,7 +91457,11 @@ $(function() {
             } catch (error) {
                 _this.consoleLog('Error', error);
             }
+        } else {
+            _this.buildSuggestions();
         }
+
+        // _this.bindSuggestionsEvents();
             
     }
     

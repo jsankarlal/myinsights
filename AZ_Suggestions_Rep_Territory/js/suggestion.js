@@ -53,9 +53,8 @@
         _this.suggestionListTemplatePath = 'suggestion-list';
         _this.suggestionDetailTemplatePath = 'suggestion-detail';
         _this.bindSuggestionsEvents();
-        if (_this.application != 'iRep') {
+        if (_this.application == 'iRep') {
             try {
-            //    _this.buildSuggestions();
                 /* _this.clmQueryRecord(_this.queryConfig.suggestions, function(result) {
                     if (result.success == true) {
                         _this.consoleLog('suggestion', result[_this.queryConfig.suggestions.object]);
@@ -71,7 +70,11 @@
             } catch (error) {
                 _this.consoleLog('Error', error);
             }
+        } else {
+            _this.buildSuggestions();
         }
+
+        // _this.bindSuggestionsEvents();
             
     }
     

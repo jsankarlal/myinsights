@@ -845,7 +845,7 @@ strong em, strong i, em strong, i strong {
 }
 
 .action-link{
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
 }
 .console-button{
@@ -871,4 +871,8 @@ strong em, strong i, em strong, i strong {
     margin: auto;
     height: 100px;
     width: 100%;
+}
+
+.card-container .back-button{
+    display:none;
 }

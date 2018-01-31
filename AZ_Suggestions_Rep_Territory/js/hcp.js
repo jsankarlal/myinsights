@@ -17,6 +17,16 @@
             event.preventDefault();
             _this.navigateToAccount(eventData);
         });
+
+        $(document).on('show.bs.tab', '.line a[data-toggle="tab"]', function(e) {
+            console.log(e.target);// newly activated tab
+            console.log(e.relatedTarget);// previous active tab
+            $(e.target).closest('.card-view').addClass('show-detail');
+        });
+
+        $(document).on('click', '.back-button', function() {
+            $(this).closest('.card-view').removeClass('show-detail');
+        });
         
         $(document).click(function() {
             var $targetEl = $(event.target);
@@ -26,6 +36,10 @@
            
         });
         
+        $(document).on('click', '.news-feed-show', function() {
+            $newsFeed.collapse('toggle');
+        });
+
         $(document).on('click', '.news-feed-show', function() {
             $newsFeed.collapse('toggle');
         });
@@ -116,8 +130,7 @@
         _this.hcpDetailTemplatePath = 'hcp-detail';
         _this.addSpinner(_this.hcp.listContainer);
         _this.addSpinner(_this.hcp.detailsContainer);
-//        if (_this.application != 'iRep') {
-            // _this.buildHcp();
+        if (_this.application == 'iRep') {
             try {
                 /* _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
                     if (result.success == true) {
@@ -136,7 +149,10 @@
                 _this.consoleLog('Error', error);
             }
             
-//        }
+        } else {
+            _this.buildHcp();
+        }
+        
         _this.bindHcpEvents();
             
     }

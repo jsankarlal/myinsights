@@ -43,10 +43,9 @@
 }
 
 .container-height{
-    max-height: 58vh;
+    height: 54vh;
     overflow-y: auto;
     overflow-x:hidden;
-    min-height: 40vh;
 }
 .kpi-container {
     min-height: 20vh;
@@ -93,3 +92,18 @@
     width:30vw;
 }
 
+.card-view .detail-section {
+    display:none;
+}
+
+.card-view .list-section {
+    display:block;
+}
+
+.card-view.show-detail .detail-section {
+    display:block;
+}
+
+.card-view.show-detail .list-section {
+    display:none;
+}

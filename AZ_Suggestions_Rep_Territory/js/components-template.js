@@ -3,7 +3,8 @@ var componentsTemplate = {},
 
 componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 '   <% _.each(result, function(suggestion, index) { %>       ' +
-'        <div class="line <%= index == 0 ? \'active\': \'\'%>">' +
+'       <div class="line">' +
+'       <!-- <div class="line <%= index == 0 ? \'active\': \'\'%>"> -->' +
 '            <a href="#suggestion-<%= index %>" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="true" class="suggestion-item" data-account-id="">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-1">' +
@@ -19,8 +20,10 @@ componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 ' </div>';
 
 componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
+'   <a href="#" class="action-link back-button pull-right"> Back </a>' +
 '   <% _.each(result,function(suggestion, index) { %>       ' +
-'         <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%> " id="suggestion-<%= index %>">' +
+'         <div class="tab-pane fade" id="suggestion-<%= index %>">' +
+'    <!--     <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%> " id="suggestion-<%= index %>"> -->' +
 '             <div class="row  margin-right-left-0 margin-bottom-10">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
 '                    <div class="padding-10 padding-bottom-0">' +
@@ -52,7 +55,8 @@ componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
 
 componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '    <% _.each(result,function(hcp, index) { %>       ' +
-'        <div class="line <%= index == 0 ? \'active\': \'\'%>">' +
+'       <div class="line">' +
+'       <!-- <div class="line <%= index == 0 ? \'active\': \'\'%>"> -->' +
 '            <a href="#<%=hcp.type %><%= index %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-2">' +
@@ -62,11 +66,11 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '                               <i class="fa fa-hospital-o fa-3x" aria-hidden="true"></i>' +
 '                              <% } %> ' +
 '                    </div>' +
-'                    <div class="col-xs-7 col-sm-8">' +
+'                    <div class="col-xs-6 col-sm-6">' +
 '                        <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
 '                        <p class="short-description"> <%= hcp.address %></p>' +
 '                    </div>' +
-'                    <div class="col-xs-3 col-sm-2">' +
+'                    <div class="col-xs-4 col-sm-4">' +
 '                        <p> <%= hcp.product %> </p>' +
 '                        <p> <%= hcp.therapyArea %></p>' +
 '                    </div>' +
@@ -77,6 +81,7 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '</div>';
 	
 componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
+'    <a href="#" class="action-link back-button pull-right"> Back </a> ' +
 '    <% _.each(result,function(hcp, index) { %>    ' +
 '        <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%>" id="<%=hcp.type %><%= index %>">' +
 '' +
@@ -94,6 +99,8 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                        <div class="col-xs-9 col-sm-9">' +
 '                            <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
 '                            <p> <%= hcp.address %></p>' +
+'                        </div>' +
+'                    </div>' +
 '                            <div class="action-link-list">' +
 '                                <a class="navigate-to-native fg-navy action-link" data-account-id="<%= hcp.id %>" data-type="view">' +
 '                                    <i class="fa padding-10 box-shadow-all-white fa-external-link" aria-hidden="true"></i>' +
@@ -104,8 +111,6 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                                    Record a Call' +
 '                                </a>' +
 '                            </div>' +
-'                        </div>' +
-'                    </div>' +
 '                </div>' +
 '' +
 '            </div> ' +
