@@ -90359,9 +90359,10 @@ var sampleNetwork = {};
     
     Util.prototype.setDataAdapter = function() {
         var _this = this;
-        _this.application = window.location.hostname == 'localhost' ? 'localhost' : 'iRep';
+        applicationHost = window.location.hostname == 'localhost' ? 'localhost' : 'iRep';
         _this.consoleLog('Current Navigator', navigator.platform);
-        _this.consoleLog('Current Platform', _this.application);
+        _this.consoleLog('Current Platform', applicationHost);
+        console.log('Current Platform : '+ applicationHost);
     };
     
     Util.prototype.fetchResource = function(path, type) {
@@ -90785,7 +90786,8 @@ $q = window.Q;
     queries.init();
 });*/
 var componentsTemplate = {},
-    resource = {};
+    resource = {},
+    applicaionHost = '';
 
 componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 '   <% _.each(result, function(suggestion, index) { %>       ' +
@@ -91350,7 +91352,7 @@ $(function() {
         _this.hcpDetailTemplatePath = 'hcp-detail';
         _this.addSpinner(_this.hcp.listContainer);
         _this.addSpinner(_this.hcp.detailsContainer);
-        if (_this.application == 'iRep') {
+        if (applicationHost == 'iRep') {
             try {
                 /* _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
                     if (result.success == true) {
@@ -91440,7 +91442,7 @@ $(function() {
         _this.suggestionListTemplatePath = 'suggestion-list';
         _this.suggestionDetailTemplatePath = 'suggestion-detail';
         _this.bindSuggestionsEvents();
-        if (_this.application == 'iRep') {
+        if (applicationHost == 'iRep') {
             try {
                 /* _this.clmQueryRecord(_this.queryConfig.suggestions, function(result) {
                     if (result.success == true) {

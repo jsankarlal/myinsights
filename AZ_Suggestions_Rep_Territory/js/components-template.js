@@ -1,5 +1,6 @@
 var componentsTemplate = {},
-    resource = {};
+    resource = {},
+    applicaionHost = '';
 
 componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 '   <% _.each(result, function(suggestion, index) { %>       ' +

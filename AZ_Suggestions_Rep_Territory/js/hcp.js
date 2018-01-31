@@ -130,7 +130,7 @@
         _this.hcpDetailTemplatePath = 'hcp-detail';
         _this.addSpinner(_this.hcp.listContainer);
         _this.addSpinner(_this.hcp.detailsContainer);
-        if (_this.application == 'iRep') {
+        if (applicationHost == 'iRep') {
             try {
                 /* _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
                     if (result.success == true) {

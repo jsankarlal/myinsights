@@ -19,9 +19,10 @@ var sampleNetwork = {};
     
     Util.prototype.setDataAdapter = function() {
         var _this = this;
-        _this.application = window.location.hostname == 'localhost' ? 'localhost' : 'iRep';
+        applicationHost = window.location.hostname == 'localhost' ? 'localhost' : 'iRep';
         _this.consoleLog('Current Navigator', navigator.platform);
-        _this.consoleLog('Current Platform', _this.application);
+        _this.consoleLog('Current Platform', applicationHost);
+        console.log('Current Platform : '+ applicationHost);
     };
     
     Util.prototype.fetchResource = function(path, type) {
