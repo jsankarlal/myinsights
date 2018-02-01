@@ -25,6 +25,7 @@
         });
 
         $(document).on('click', '.back-button', function() {
+            event.preventDefault();
             $(this).closest('.card-view').removeClass('show-detail');
         });
         
