@@ -24,10 +24,10 @@
             $(e.target).closest('.card-view').addClass('show-detail');
         });
 
-        $(document).on('click', '.back-button', function() {
-            event.preventDefault();
+        $(document).on('click tap touchstart', '.back-button', function() {
             $(this).closest('.card-view').removeClass('show-detail');
             _this.consoleLog('Click Back Button', $(this).closest('.card-view').find('.card-title')[0]);
+            event.preventDefault();
         });
         
         $(document).click(function() {
