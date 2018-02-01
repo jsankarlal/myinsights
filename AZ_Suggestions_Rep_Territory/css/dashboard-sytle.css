@@ -849,14 +849,14 @@ strong em, strong i, em strong, i strong {
     font-weight: 500;
 }
 .console-button{
-    top: 3px;
+    top: 55px;
     position: fixed;
     display: block!important;
     margin-top: 0px;
     z-index: 10;
     cursor: pointer;
     border: 2px solid #ccc;
-    right: 250px;
+    right: 130px;
 }
 
 .action-link{
