@@ -24,7 +24,7 @@ componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
 '   <% _.each(result,function(suggestion, index) { %>       ' +
 '         <div class="tab-pane fade" id="suggestion-<%= index %>">' +
 '    <!--     <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%> " id="suggestion-<%= index %>"> -->' +
-'             <div class="row  margin-right-left-0 margin-bottom-10">' +
+'             <div class="row  margin-right-left-0">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
 '                    <div class="padding-10 padding-bottom-0">' +
 '                        <h4><span> Target Account :  </span> <span class=""> <%= suggestion.accountName %></span> </h4>' +
@@ -84,10 +84,10 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '    <% _.each(result,function(hcp, index) { %>    ' +
 '        <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%>" id="<%=hcp.type %><%= index %>">' +
 '' +
-'            <div class="row  margin-right-left-0 margin-bottom-10">' +
+'            <div class="row  margin-right-left-0">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
-'                    <div class="row padding-10">' +
-'                        <div class="col-xs-3 col-sm-3 text-center padding-top-30">' +
+'                    <div class="row padding-top-5">' +
+'                        <div class="col-xs-3 col-sm-3 text-center">' +
 '                             <% if (hcp.type == \'person\') { %> ' +
 '                               <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 70px;">' +
 '                              <% } else { %> ' +
@@ -97,7 +97,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                        </div>' +
 '                        <div class="col-xs-9 col-sm-9">' +
 '                            <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
-'                            <p> <%= hcp.address %></p>' +
+'                            <p class="margin-bottom-0"> <%= hcp.address %></p>' +
 '                        </div>' +
 '                    </div>' +
 '                            <div class="action-link-list">' +
@@ -119,7 +119,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                    <div class="col-xs-4 padding-bottom-10">' +
 '                        <span class="label navy-theme label-lg full-width">Academic</span>' +
 '                    </div>' +
-'                    <div class="col-xs-5 padding-top-5 fg-gold">' +
+'                    <div class="col-xs-6 padding-top-5 padding-right-0 padding-left-0 fg-gold">' +
 '                        <% if (hcp.metric.academic.rating >= 1) { %> ' +
 '                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
 '                        <% } else { %>' +
@@ -142,7 +142,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
 '                        <% } %>' +
 '                    </div>' +
-'                    <div class="col-xs-3">' +
+'                    <div class="col-xs-2 padding-5">' +
 '                        <div class="percentage-section">' +
 '                            <span> <%= hcp.metric.academic.percentage %> </span> ' +
 '                            <i class="fa fa-percent" aria-hidden="true"></i>' +
@@ -154,7 +154,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                    <div class="col-xs-4 padding-bottom-10">' +
 '                        <span class="label navy-theme label-lg full-width">Internet</span>' +
 '                    </div>' +
-'                    <div class="col-xs-5 padding-top-5 fg-gold">' +
+'                    <div class="col-xs-6 padding-top-5 padding-right-0 padding-left-0 fg-gold">' +
 '                        <% if (hcp.metric.internet.rating >= 1) { %> ' +
 '                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
 '                        <% } else { %>' +
@@ -177,7 +177,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
 '                        <% } %>' +
 '                    </div>' +
-'                    <div class="col-xs-3">' +
+'                    <div class="col-xs-2 padding-5">' +
 '                        <div class="percentage-section">' +
 '                            <span> <%= hcp.metric.internet.percentage %></span> ' +
 '                            <i class="fa fa-percent" aria-hidden="true"></i>' +
@@ -189,7 +189,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                    <div class="col-xs-4 padding-bottom-10">' +
 '                        <span class="label navy-theme label-lg full-width">Society</span>' +
 '                    </div>' +
-'                    <div class="col-xs-5 padding-top-5 fg-gold">' +
+'                    <div class="col-xs-6 padding-top-5 padding-right-0 padding-left-0 fg-gold">' +
 '                        <% if (hcp.metric.society.rating >= 1) { %> ' +
 '                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
 '                        <% } else { %>' +
@@ -212,7 +212,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
 '                        <% } %>' +
 '                    </div>' +
-'                    <div class="col-xs-3">' +
+'                    <div class="col-xs-2 padding-5">' +
 '                        <div class="percentage-section">' +
 '                            <span> <%= hcp.metric.society.percentage %> </span> ' +
 '                            <i class="fa fa-percent" aria-hidden="true"></i>' +
