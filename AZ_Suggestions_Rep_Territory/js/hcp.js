@@ -27,6 +27,7 @@
         $(document).on('click', '.back-button', function() {
             event.preventDefault();
             $(this).closest('.card-view').removeClass('show-detail');
+            _this.consoleLog('Click Back Button', $(this).closest('.card-view').find('.card-title')[0]);
         });
         
         $(document).click(function() {
