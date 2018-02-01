@@ -92,18 +92,18 @@
     width:30vw;
 }
 
-.card-view .detail-section {
+.card-view .detail-section, .card-view .detail-view-title {
     display:none;
 }
 
-.card-view .list-section {
+.card-view .list-section, .card-view .list-view-title  {
     display:block;
 }
 
-.card-view.show-detail .detail-section {
+.card-view.show-detail .detail-section, .card-view.show-detail .detail-view-title {
     display:block;
 }
 
-.card-view.show-detail .list-section {
+.card-view.show-detail .list-section, .card-view.show-detail .list-view-title {
     display:none;
 }

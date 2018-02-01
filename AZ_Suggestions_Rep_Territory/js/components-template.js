@@ -21,7 +21,6 @@ componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
 ' </div>';
 
 componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
-'   <a href="#" class="action-link back-button pull-right"> Back </a>' +
 '   <% _.each(result,function(suggestion, index) { %>       ' +
 '         <div class="tab-pane fade" id="suggestion-<%= index %>">' +
 '    <!--     <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%> " id="suggestion-<%= index %>"> -->' +
@@ -82,7 +81,6 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '</div>';
 	
 componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
-'    <a href="#" class="action-link back-button pull-right"> Back </a> ' +
 '    <% _.each(result,function(hcp, index) { %>    ' +
 '        <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%>" id="<%=hcp.type %><%= index %>">' +
 '' +
