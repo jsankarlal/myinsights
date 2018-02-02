@@ -12,7 +12,14 @@
         <link href="css/default-theme.css" rel="stylesheet">
         <link href="css/dashboard-sytle.css" rel="stylesheet">
         <link href="css/vjs.min.css" rel="stylesheet">
-        
+        <style>
+            .kpi-section .card-container .col-xs-6{
+                height:15vh;
+            }
+            .container-height {
+                height: 64vh;
+            }
+        </style>
 	</head>
 	<body class="bg-theme1 default-theme">
 		<!-- Header Template -->
@@ -42,9 +49,9 @@
                 <h4 class="margin-0 page-title padding-bottom-10 padding-top-10">
                     <i class="fa fa-bar-chart" aria-hidden="true"></i> 
                     <span> KPI & Suggestion Insights </span>
-                    <a class='padding-left-10 action-link news-feed pull-right news-feed-show'>
+                    <!-- <a class='padding-left-10 action-link news-feed pull-right news-feed-show'>
                         <i class="fa fa-envelope"></i> <span class="padding-left-5">news feed</span>
-                    </a>
+                    </a> -->
                     <span class="welcome-text pull-right">Welcome 王伟</span>
                 </h4>
             </secton>
@@ -167,10 +174,26 @@
                             
                             
                         </div> <!- 3RD COLUMN ENDS -->
-                        <div class="col-xs-3 col-sm-3 padding-right-0 kpi-container myinsight-component" data-kpi-name="callsNumber">
-                            
-                            
-                        </div> <!- 3RD COLUMN ENDS -->
+                        <div class="col-xs-3 col-sm-3 padding-right-0 news-container">
+                            <div class="card-view kpi-section">
+                                <div class="card-title">
+                                    <span class="main-title">
+                                        <i class="fa fa-newspaper-o padding-right-5" aria-hidden="true"></i>
+                                        News Feeds        
+                                    </span>
+                                </div>
+                                <div class="card-container">
+                                    <p class="short-description"><a href="http://www.cpi.ac.cn/publish/default/hyzx/content/2018011711410517612.htm">
+                                        <i class="fa fa-external-link padding-right-5" aria-hidden="true"></i>匹多莫德必须还原的四个真相(2018-01-17)
+                                        </a>
+                                    </p>
+                                    <p class="short-description"><a href="http://www.cpi.ac.cn/publish/default/hyzx/content/2018011711054712764.htm"><i class="fa fa-external-link padding-right-5" aria-hidden="true"></i>2017年1-3季度统计：全球癌症畅销药TOP10(2018-01-17)</a></p>
+                                    <p class="short-description"><a href="http://www.cpi.ac.cn/publish/default/hyzx/content/2018011711054712764.htm"><i class="fa fa-external-link padding-right-5" aria-hidden="true"></i>2017年1-3季度统计：全球癌症畅销药TOP10</a></p>
+                                    <p class="short-description"><a href="http://www.cpi.ac.cn/publish/default/hyzx/content/2018011709222411239.htm"><i class="fa fa-external-link padding-right-5" aria-hidden="true"></i>两年三千万，深挖微生物“黑科技”</a></p>
+                                    <p class="short-description"><a href="http://www.cpi.ac.cn/publish/default/hyzx/content/2018011709152812326.htm"><i class="fa fa-external-link padding-right-5" aria-hidden="true"></i>Teva四面楚歌 因贿赂被罚款2200万美元(2018-01-17)</a></p>
+                                </div>
+                            </div>
+                        </div>   
                         
 
                     </div> <!- ROW ENDS -->

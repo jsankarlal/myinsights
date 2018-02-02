@@ -847,6 +847,11 @@ strong em, strong i, em strong, i strong {
     /* height:24%; */
 }
 
+.kpi-section .card-title{
+    padding:10px;
+}
+
+
 .myinsight-section{
     max-height:74%;
     overflow:hidden;

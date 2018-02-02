@@ -117,3 +117,14 @@
 .card-view.show-detail .list-section, .card-view.show-detail .list-view-title {
     display:none;
 }
+
+.news-container p{
+    margin-bottom: 5px;
+    
+}
+
+.news-container .card-container{
+    padding:5px;
+    max-height:15vh;
+    overflow:auto;
+}
