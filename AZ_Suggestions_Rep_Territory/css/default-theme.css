@@ -128,3 +128,7 @@
     max-height:15vh;
     overflow:auto;
 }
+
+.panel-body{
+    padding:10px;
+}
