@@ -60,8 +60,8 @@
 .news-feed-container {
     max-height:50vh;
     right:0;
-    top:5vh;
-    border-radius: 4px;
+    top:5.25vh;
+    border-radius: 0px;
     overflow: auto;
 }
 
