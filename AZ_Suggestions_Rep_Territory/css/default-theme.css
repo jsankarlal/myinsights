@@ -30,11 +30,15 @@
     
 }
 .card-title .main-title{
-    font-size:15px;
+    font-size:18px;
 }
 
  .card-title .sub-title{
     padding-top: 3px;
+}
+
+.card-title .fa{
+    color:rgba(243, 189, 51, 1.00);
 }
 
 .page-title{

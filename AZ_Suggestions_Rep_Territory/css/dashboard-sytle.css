@@ -838,6 +838,10 @@ strong em, strong i, em strong, i strong {
     background-color:#d0006f;
 }
 
+.fg-veeva{
+    color:rgba(243, 189, 51, 1.00);
+}
+
 /* colour theme ends */
 .kpi-section{
     /* height:24%; */
