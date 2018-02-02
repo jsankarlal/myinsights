@@ -22,7 +22,7 @@ var sampleNetwork = {};
         applicationHost = window.location.hostname == 'localhost' ? 'localhost' : 'iRep';
         _this.consoleLog('Current Navigator', navigator.platform);
         _this.consoleLog('Current Platform', applicationHost);
-        console.log('Current Platform : '+ applicationHost);
+        console.log('Current Platform : ' + applicationHost);
     };
     
     Util.prototype.fetchResource = function(path, type) {
@@ -107,7 +107,7 @@ var sampleNetwork = {};
                 console.log('clicked nodes:', properties.nodes);
                 event.preventDefault();
                 event.stopImmediatePropagation();
-                $(document).trigger('navigate-to-native', {accountId:'0010E00000FOr7gQAD', type:'view'});
+                $(document).trigger('navigate-to-native', {accountId: $(event.target).closest('.relationship-chart').attr('data-account-id') || '0010E00000FOr7gQAD', type:'view'});
             });
         });
 

@@ -90362,7 +90362,7 @@ var sampleNetwork = {};
         applicationHost = window.location.hostname == 'localhost' ? 'localhost' : 'iRep';
         _this.consoleLog('Current Navigator', navigator.platform);
         _this.consoleLog('Current Platform', applicationHost);
-        console.log('Current Platform : '+ applicationHost);
+        console.log('Current Platform : ' + applicationHost);
     };
     
     Util.prototype.fetchResource = function(path, type) {
@@ -90447,7 +90447,7 @@ var sampleNetwork = {};
                 console.log('clicked nodes:', properties.nodes);
                 event.preventDefault();
                 event.stopImmediatePropagation();
-                $(document).trigger('navigate-to-native', {accountId:'0010E00000FOr7gQAD', type:'view'});
+                $(document).trigger('navigate-to-native', {accountId: $(event.target).closest('.relationship-chart').attr('data-account-id') || '0010E00000FOr7gQAD', type:'view'});
             });
         });
 
@@ -90563,6 +90563,7 @@ $q = window.Q;
        // _this.consoleLog('inside: parseAccounts :', accounts);
         try {
             resource['hcp'] = [];
+            resource['accountIdList'] = [];
             if (accounts.length > 0) {
                 for (var i = 0; i < accounts.length; i++) {
                 //    _this.consoleLog('inside: parseAccounts - loop :', accounts[i]);
@@ -90574,8 +90575,8 @@ $q = window.Q;
                         gender: 'male',
                         name: accounts[i].Name.value,
                         type: i % 2 == 0 ? 'person' : 'business',
-                        email: 'test"gmail.com',
-                        address: '13 chruch street, chennai',
+                        email: 'test@gmail.com',
+                        address: 'No.199, Liangjing Road, Pudong New District Shanghai,China 201203',
                         language: 'English',
                         therapyArea: 'Oncology',
                         product: 'Lynparza',
@@ -90598,6 +90599,7 @@ $q = window.Q;
                     };
                     _this.consoleLog('inside: parseAccounts - loop :', currentAccount);
                     resource.hcp[i] = currentAccount;
+                    resource.accountIdList[i] = currentAccount.id;
                 }
             }
 
@@ -90848,7 +90850,7 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '                <div class="row">' +
 '                    <div class="col-xs-2 col-sm-2">' +
 '                             <% if (hcp.type == \'person\') { %> ' +
-'                               <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 60px;">' +
+'                               <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 50px;">' +
 '                              <% } else { %> ' +
 '                               <i class="fa fa-hospital-o fa-3x" aria-hidden="true"></i>' +
 '                              <% } %> ' +
@@ -90874,7 +90876,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '            <div class="row  margin-right-left-0">' +
 '                <div class="col-xs-12 col-sm-12 padding-0">' +
 '                    <div class="row padding-top-5">' +
-'                        <div class="col-xs-3 col-sm-3 text-center">' +
+'                        <div class="col-xs-3 col-sm-3 padding-top-5 text-center">' +
 '                             <% if (hcp.type == \'person\') { %> ' +
 '                               <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 70px;">' +
 '                              <% } else { %> ' +
@@ -91014,16 +91016,22 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                <div class="panel panel-default">' +
 '                    <div class="panel-heading">' +
 '                        <h4 class="panel-title">' +
-'                            <a class="collapse-panel-heading collapsed fa-right" data-toggle="modal" data-target="#popup-modal" href="#">' +
-'                                <span>Relationship Charts </span><span class="fa fa-chevron-right pull-right"></span></a>' +
+'                            <a class="collapse-panel-heading collapsed" data-toggle="collapse" data-parent="#accordion-<%= hcp.id %>" href="#collapse0-<%= hcp.id %>">' +
+'                                <span>Relationship Charts </span><span class="fa fa-chevron-up pull-right"></span></a>' +
 '                        </h4>' +
+'                    </div>' +
+'                   <div id="collapse0-<%= hcp.id %>" class="panel-collapse collapse">' +
+'                        <div class="panel-body text-center">' +
+'                            <div class="relationship-chart" data-account-id="<%= hcp.id %>"></div>' +
+'                        </div>' +
 '                    </div>' +
 '                </div>' +
 '' +
 '                <div class="panel panel-default">' +
 '                    <div class="panel-heading">' +
 '                        <h4 class="panel-title">' +
-'                            <a class="collapse-panel-heading collapsed" data-toggle="collapse" data-parent="#accordion-<%= hcp.id %>" href="#collapse1-<%= hcp.id %>"><span>Suggested Topics </span><span class="fa fa-chevron-up pull-right"></span></a>' +
+'                            <a class="collapse-panel-heading collapsed" data-toggle="collapse" data-parent="#accordion-<%= hcp.id %>" href="#collapse1-<%= hcp.id %>">' +
+'                               <span>Suggested Topics </span><span class="fa fa-chevron-up pull-right"></span></a>' +
 '                        </h4>' +
 '                    </div>' +
 '                    <div id="collapse1-<%= hcp.id %>" class="panel-collapse collapse">' +
@@ -91079,8 +91087,19 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 
 componentsTemplate['kpi-list'] = '<div class="card-view kpi-section"> ' +
 '    <div class="card-title">' +
-'        <span class="main-title"> <%= result.title %></span>' +
-'        <span class="sub-title pull-right" data-kpi-id="<%= result.id %> "> <%= result.subTitle %> <i class="fa fa-chevron-right"></i></span>' +
+'        <span class="main-title">' +
+'            <% if (result.title == \'Sales Rate\') { %> ' +
+'                <i class="fa fa-line-chart padding-right-5" aria-hidden="true"></i>' +
+'            <% } %>' +
+'            <% if (result.title == \'Customer Coverage Rate\') { %> ' +
+'                <i class="fa fa-area-chart padding-right-5" aria-hidden="true"></i>' +
+'            <% } %>' +
+'            <% if (result.title == \'Calls Number\') { %> ' +
+'                <i class="fa fa-pie-chart padding-right-5" aria-hidden="true"></i>' +
+'            <% } %>' +
+'            <%= result.title %>' +
+'        </span>' +
+'     <!--   <span class="sub-title pull-right" data-kpi-id="<%= result.id %> "> <%= result.subTitle %> <i class="fa fa-chevron-right"></i></span> -->' +
 '    </div>' +
 '     <div class="card-container">' +
 '         <div class="row">' +
@@ -91088,15 +91107,15 @@ componentsTemplate['kpi-list'] = '<div class="card-view kpi-section"> ' +
 '                <div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0 <%= index == 0 ? \'border-right-50\': \'\' %> ">' +
 '                     <div class="card-tile">' +
 '                        <h6><%= metric.title %></h6>' +
-'                        <div class="percentage-section <%= result.title == \'Calls Number\' ? \'fg-yellowgreen\' : \'fg-aqua\' %>">' +
+'                        <div class="percentage-section padding-bottom-10 <%= result.title == \'Calls Number\' ? \'fg-yellowgreen\' : \'fg-aqua\' %>">' +
 '                            <span> <%= metric.value %></span> ' +
 '                            <i class="fa <%= result.title == \'Calls Number\' ? \'fa-arrow-up\' : \'fa-percent\' %>" aria-hidden="true"></i>' +
 '                        </div>' +
-'                        <div class="caption">' +
+'              <!--          <div class="caption">' +
 '                            <% _.each(metric.fields, function(field, pointer) { %>' +
 '                                <p class="label-description"><span><%= field.name %>: </span><span class=""> <%= field.value %></span></p>' +
 '                            <% }) %>' +
-'                        </div>' +
+'                        </div> -->' +
 '                    </div>' +
 '                </div>' +
 '            <% }) %>' +
@@ -91296,6 +91315,10 @@ $(function() {
         });
 
         $document.on('shown.bs.modal', '#popup-modal', function() {
+            _this.renderRelationshipCharts();
+        });
+
+        $document.on('show.bs.collapse', function() {
             _this.renderRelationshipCharts();
         });
     }

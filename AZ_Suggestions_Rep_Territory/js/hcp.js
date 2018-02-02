@@ -78,6 +78,10 @@
         $document.on('shown.bs.modal', '#popup-modal', function() {
             _this.renderRelationshipCharts();
         });
+
+        $document.on('show.bs.collapse', function() {
+            _this.renderRelationshipCharts();
+        });
     }
     
     Hcp.prototype.renderHcp = function() {

@@ -73,6 +73,7 @@ $q = window.Q;
        // _this.consoleLog('inside: parseAccounts :', accounts);
         try {
             resource['hcp'] = [];
+            resource['accountIdList'] = [];
             if (accounts.length > 0) {
                 for (var i = 0; i < accounts.length; i++) {
                 //    _this.consoleLog('inside: parseAccounts - loop :', accounts[i]);
@@ -84,8 +85,8 @@ $q = window.Q;
                         gender: 'male',
                         name: accounts[i].Name.value,
                         type: i % 2 == 0 ? 'person' : 'business',
-                        email: 'test"gmail.com',
-                        address: '13 chruch street, chennai',
+                        email: 'test@gmail.com',
+                        address: 'No.199, Liangjing Road, Pudong New District Shanghai,China 201203',
                         language: 'English',
                         therapyArea: 'Oncology',
                         product: 'Lynparza',
@@ -108,6 +109,7 @@ $q = window.Q;
                     };
                     _this.consoleLog('inside: parseAccounts - loop :', currentAccount);
                     resource.hcp[i] = currentAccount;
+                    resource.accountIdList[i] = currentAccount.id;
                 }
             }
 

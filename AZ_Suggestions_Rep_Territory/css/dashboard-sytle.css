@@ -832,7 +832,7 @@ strong em, strong i, em strong, i strong {
 
 /* colour theme ends */
 .kpi-section{
-    height:24%;
+    /* height:24%; */
 }
 
 .myinsight-section{
@@ -856,7 +856,7 @@ strong em, strong i, em strong, i strong {
     z-index: 10;
     cursor: pointer;
     border: 2px solid #ccc;
-    right: 130px;
+    right: 30px;
 }
 
 .action-link{
