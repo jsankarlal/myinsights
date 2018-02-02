@@ -567,7 +567,7 @@ strong em, strong i, em strong, i strong {
     background: #f9f9f9;
 }
 #news-feed, #news-feed a{
-    color:#172052;
+    color:#42526E;
 }
 
 #news-feed .list.list-hover .line:hover, #news-feed .list.list-hover .line.active {
@@ -839,7 +839,7 @@ strong em, strong i, em strong, i strong {
 }
 
 .fg-veeva{
-    color:rgba(243, 189, 51, 1.00);
+    color:#0747A6;
 }
 
 /* colour theme ends */

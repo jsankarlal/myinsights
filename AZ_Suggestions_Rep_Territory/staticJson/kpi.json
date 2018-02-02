@@ -1,6 +1,6 @@
 {
     "salesRate": {
-        "title" : "Sales Rate",
+        "title" : "Sales",
         "subTitle": "Details",
         "metric": [{
             "title": "Completed",
@@ -25,7 +25,7 @@
         }]
     },
     "callsNumber": {
-        "title" : "Calls Number",
+        "title" : "Calls",
         "subTitle": "Details",
         "metric": [{
             "title": "Completed",
@@ -50,7 +50,7 @@
         }]
     },
     "customerCoverage":{
-        "title" : "Customer Coverage Rate",
+        "title" : "Coverage",
         "subTitle": "Details",
         "metric":[{
             "title": "Completed",

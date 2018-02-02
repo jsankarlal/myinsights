@@ -90852,7 +90852,7 @@ componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
 '                             <% if (hcp.type == \'person\') { %> ' +
 '                               <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 50px;">' +
 '                              <% } else { %> ' +
-'                               <i class="fa fa-hospital-o fa-3x" aria-hidden="true"></i>' +
+'                               <i class="fa fa-h-square fa-3x" aria-hidden="true"></i>' +
 '                              <% } %> ' +
 '                    </div>' +
 '                    <div class="col-xs-6 col-sm-6">' +
@@ -90881,7 +90881,7 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 '                               <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 70px;">' +
 '                              <% } else { %> ' +
 '                               <!-- <img src="assets/images/hospital-building.png" style="height: 70px;"> -->' +
-'                               <i class="fa fa-hospital-o fa-3x" aria-hidden="true"></i>' +
+'                               <i class="fa fa-h-square fa-3x" aria-hidden="true"></i>' +
 '                              <% } %> ' +
 '                        </div>' +
 '                        <div class="col-xs-9 col-sm-9">' +
@@ -91088,13 +91088,13 @@ componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
 componentsTemplate['kpi-list'] = '<div class="card-view kpi-section"> ' +
 '    <div class="card-title">' +
 '        <span class="main-title">' +
-'            <% if (result.title == \'Sales Rate\') { %> ' +
+'            <% if (result.title == \'Sales\') { %> ' +
 '                <i class="fa fa-line-chart padding-right-5" aria-hidden="true"></i>' +
 '            <% } %>' +
-'            <% if (result.title == \'Customer Coverage Rate\') { %> ' +
+'            <% if (result.title == \'Coverage\') { %> ' +
 '                <i class="fa fa-area-chart padding-right-5" aria-hidden="true"></i>' +
 '            <% } %>' +
-'            <% if (result.title == \'Calls Number\') { %> ' +
+'            <% if (result.title == \'Calls\') { %> ' +
 '                <i class="fa fa-pie-chart padding-right-5" aria-hidden="true"></i>' +
 '            <% } %>' +
 '            <%= result.title %>' +
@@ -91102,7 +91102,7 @@ componentsTemplate['kpi-list'] = '<div class="card-view kpi-section"> ' +
 '     <!--   <span class="sub-title pull-right" data-kpi-id="<%= result.id %> "> <%= result.subTitle %> <i class="fa fa-chevron-right"></i></span> -->' +
 '    </div>' +
 '     <div class="card-container">' +
-'         <div class="row">' +
+'         <div class="row margin-0">' +
 '             <% _.each(result.metric, function(metric, index) { %>  ' +
 '                <div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0 <%= index == 0 ? \'border-right-50\': \'\' %> ">' +
 '                     <div class="card-tile">' +
