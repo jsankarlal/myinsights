@@ -566,6 +566,14 @@ strong em, strong i, em strong, i strong {
     cursor: pointer;
     background: #f9f9f9;
 }
+#news-feed, #news-feed a{
+    color:#172052;
+}
+
+#news-feed .list.list-hover .line:hover, #news-feed .list.list-hover .line.active {
+    cursor: pointer;
+    background: #bfbfd859;
+}
 
 .short-description{
   white-space: nowrap;
