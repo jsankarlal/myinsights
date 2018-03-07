@@ -90948,17 +90948,16 @@ $q = window.Q;
         var _this = this;
         _this.consoleLog('FRM Testing::INI');
         try {
-            _this.consoleLog('Incidents Query', _this.queryConfig.incidents);
+            
             _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
                 _this.consoleLog('Incidents Response', incidents);
             });
 
-            _this.consoleLog('Calls Query', _this.queryConfig.calls);
-            _this.dsRunQuery(_this.queryConfig.calls).then(function(incidents) {
-                _this.consoleLog('Incidents Response', incidents);
+            
+            _this.dsRunQuery(_this.queryConfig.calls).then(function(calls) {
+                _this.consoleLog('Incidents Response', calls);
             });
 
-            _this.consoleLog('accounts Query', _this.queryConfig.accounts);
             _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
                 _this.consoleLog('accounts Response', accounts);
            
