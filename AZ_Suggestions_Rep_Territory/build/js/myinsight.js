@@ -90793,7 +90793,7 @@ $q = window.Q;
         users: {
           object: 'User',
           fields: ['Name', 'Id'],
-          where: 'Id IN _userIDs'
+          where: ''
         },
         incidents: {
           object: 'MI_Incident_AZ_US__c',
@@ -90844,7 +90844,7 @@ $q = window.Q;
             'OwnerId',
             'RecordTypeId'
           ],
-          where: 'Id IN _trendIDs'
+          where: ''
         },
         callsById: {
           object: 'Call2_vod__c',
@@ -90893,7 +90893,7 @@ $q = window.Q;
             'MI_Oncology_Tier_AZ_US__c',
             'Respiratory_Tier_AZ_US__c',
           ],
-          where: 'Id IN _acccountIDs'
+          where: ''
         },
       
         allTierdAccounts:{
@@ -90949,17 +90949,36 @@ $q = window.Q;
         _this.consoleLog('FRM Testing::INI');
         try {
             
-            _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
-                _this.consoleLog('Incidents Response', incidents);
-            });
-
+            // _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
+            //     _this.consoleLog('Incidents Response', incidents);
+            // });
             
-            _this.dsRunQuery(_this.queryConfig.calls).then(function(calls) {
-                _this.consoleLog('Incidents Response', calls);
-            });
+            // _this.dsRunQuery(_this.queryConfig.calls).then(function(calls) {
+            //     _this.consoleLog('Incidents Response', calls);
+            // });
 
             _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
                 _this.consoleLog('accounts Response', accounts);
+           
+            });
+
+            _this.dsRunQuery(_this.queryConfig.users).then(function(users) {
+                _this.consoleLog('users Response', users);
+           
+            });
+
+            _this.dsRunQuery(_this.queryConfig.trends).then(function(trends) {
+                _this.consoleLog('trends Response', trends);
+           
+            });
+
+            _this.dsRunQuery(_this.queryConfig.trends).then(function(trends) {
+                _this.consoleLog('trends Response', trends);
+           
+            });
+            
+            _this.dsRunQuery(_this.queryConfig.frmAccounts).then(function(frmAccounts) {
+                _this.consoleLog('trends Response', frmAccounts);
            
             });
             

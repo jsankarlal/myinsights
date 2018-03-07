@@ -24,17 +24,36 @@
         _this.consoleLog('FRM Testing::INI');
         try {
             
-            _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
-                _this.consoleLog('Incidents Response', incidents);
-            });
-
+            // _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
+            //     _this.consoleLog('Incidents Response', incidents);
+            // });
             
-            _this.dsRunQuery(_this.queryConfig.calls).then(function(calls) {
-                _this.consoleLog('Incidents Response', calls);
-            });
+            // _this.dsRunQuery(_this.queryConfig.calls).then(function(calls) {
+            //     _this.consoleLog('Incidents Response', calls);
+            // });
 
             _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
                 _this.consoleLog('accounts Response', accounts);
+           
+            });
+
+            _this.dsRunQuery(_this.queryConfig.users).then(function(users) {
+                _this.consoleLog('users Response', users);
+           
+            });
+
+            _this.dsRunQuery(_this.queryConfig.trends).then(function(trends) {
+                _this.consoleLog('trends Response', trends);
+           
+            });
+
+            _this.dsRunQuery(_this.queryConfig.trends).then(function(trends) {
+                _this.consoleLog('trends Response', trends);
+           
+            });
+            
+            _this.dsRunQuery(_this.queryConfig.frmAccounts).then(function(frmAccounts) {
+                _this.consoleLog('trends Response', frmAccounts);
            
             });
             

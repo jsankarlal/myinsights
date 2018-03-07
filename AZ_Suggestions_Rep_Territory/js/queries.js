@@ -303,7 +303,7 @@ $q = window.Q;
         users: {
           object: 'User',
           fields: ['Name', 'Id'],
-          where: 'Id IN _userIDs'
+          where: ''
         },
         incidents: {
           object: 'MI_Incident_AZ_US__c',
@@ -354,7 +354,7 @@ $q = window.Q;
             'OwnerId',
             'RecordTypeId'
           ],
-          where: 'Id IN _trendIDs'
+          where: ''
         },
         callsById: {
           object: 'Call2_vod__c',
@@ -403,7 +403,7 @@ $q = window.Q;
             'MI_Oncology_Tier_AZ_US__c',
             'Respiratory_Tier_AZ_US__c',
           ],
-          where: 'Id IN _acccountIDs'
+          where: ''
         },
       
         allTierdAccounts:{
