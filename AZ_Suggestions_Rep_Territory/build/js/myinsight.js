@@ -90502,6 +90502,9 @@ $q = window.Q;
     Queries.prototype.getCurrentObjectId = function(objectName, id) {
         var deferred = $q.defer();
         try {
+            _this.consoleLog('getCurrentObjectId - entering');
+        _this.consoleLog('objectName', objectName);
+        _this.consoleLog('id', id);
             ds.getDataForCurrentObject(objectName, id).then(function(result) {
                 deferred.resolve(result);
             });
@@ -90916,7 +90919,7 @@ $q = window.Q;
         _this.consoleLog('FRM Testing::INI');
         try {
             _this.getCurrentObjectId('User', 'Id').then(function(result) {
-                _this.consoleLog('getCurrentObjectId :', result.User.Id);
+                _this.consoleLog('getCurrentObjectId :', JSON.stringify(result, null, '\t'));
             });
 
             // _this.getCurrentObjectId('User', 'Id').then(function(result) {
@@ -90926,7 +90929,7 @@ $q = window.Q;
             _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
                  _this.consoleLog('Incidents Response :', incidents.length);
             });
-            
+
             _this.dsRunQuery(_this.queryConfig.calls).then(function(calls) {
                  _this.consoleLog('Incidents Response : ', calls.length);
             });
@@ -90957,7 +90960,7 @@ $q = window.Q;
             // });
             
         } catch (error) {
-            _this.consoleLog('Error in FRM :', JSON.stringify(error, null, "\t"));
+            _this.consoleLog('Error in FRM :', JSON.stringify(error, null, '\t'));
         }
     }
     

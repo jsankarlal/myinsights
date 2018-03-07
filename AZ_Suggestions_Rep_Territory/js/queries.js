@@ -12,6 +12,9 @@ $q = window.Q;
     Queries.prototype.getCurrentObjectId = function(objectName, id) {
         var deferred = $q.defer();
         try {
+            _this.consoleLog('getCurrentObjectId - entering');
+        _this.consoleLog('objectName', objectName);
+        _this.consoleLog('id', id);
             ds.getDataForCurrentObject(objectName, id).then(function(result) {
                 deferred.resolve(result);
             });
