@@ -90799,14 +90799,6 @@ $q = window.Q;
           object: 'MI_Incident_AZ_US__c',
           fields: [
             'Name',
-            'MI_Trend_AZ_US__c',
-            'MI_Account_AZ_US__c',
-            'MI_Status_AZ_US__c',
-            'MI_Product_AZ_US__c',
-            'MI_Date_Opened_AZ_US__c',
-            'Incident_Payer_AZ_US__c',
-            'Incident_SPP_AZ_US__c',
-            'MI_Season_AZ_US__c',
             'CreatedById',
             'LastModifiedById',
             'OwnerId',
@@ -90884,14 +90876,7 @@ $q = window.Q;
           object: 'Account',
           fields: [
             'ID',
-            'Name',
-            'MI_Primary_StreetAddress_AZ_US__c',
-            'MI_Primary_City_AZ_US__c',
-            'MI_Primary_State_AZ_US__c',
-            'Phone',
-            'MI_MAPS_Tier_AZ_US__c',
-            'MI_Oncology_Tier_AZ_US__c',
-            'Respiratory_Tier_AZ_US__c',
+            'Name'
           ],
           where: ''
         },
@@ -90949,31 +90934,36 @@ $q = window.Q;
         _this.consoleLog('FRM Testing::INI');
         try {
             
-            // _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
-            //     _this.consoleLog('Incidents Response', incidents);
-            // });
+            _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
+                 _this.consoleLog('Incidents Response :', incidents.length);
+            });
             
-            // _this.dsRunQuery(_this.queryConfig.calls).then(function(calls) {
-            //     _this.consoleLog('Incidents Response', calls);
-            // });
+            _this.dsRunQuery(_this.queryConfig.calls).then(function(calls) {
+                 _this.consoleLog('Incidents Response : ', calls.length);
+            });
 
             _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
-                _this.consoleLog('accounts Response', accounts);
+                _this.consoleLog('accounts Response length : ', accounts.length);
            
             });
 
             _this.dsRunQuery(_this.queryConfig.users).then(function(users) {
-                _this.consoleLog('users Response', users);
+                _this.consoleLog('users Response :', users.length);
            
             });
 
             _this.dsRunQuery(_this.queryConfig.trends).then(function(trends) {
-                _this.consoleLog('trends Response', trends);
+                _this.consoleLog('trends Response : ', trends.length);
            
             });
 
             _this.dsRunQuery(_this.queryConfig.frmAccounts).then(function(frmAccounts) {
-                _this.consoleLog('frmAccounts Response', frmAccounts);
+                _this.consoleLog('frmAccounts Response :', frmAccounts.length);
+           
+            });
+
+            _this.dsRunQuery(_this.queryConfig.allTierdAccounts).then(function(allTierdAccounts) {
+                _this.consoleLog('allTierdAccounts Response length:', allTierdAccounts.length);
            
             });
             

@@ -309,14 +309,6 @@ $q = window.Q;
           object: 'MI_Incident_AZ_US__c',
           fields: [
             'Name',
-            'MI_Trend_AZ_US__c',
-            'MI_Account_AZ_US__c',
-            'MI_Status_AZ_US__c',
-            'MI_Product_AZ_US__c',
-            'MI_Date_Opened_AZ_US__c',
-            'Incident_Payer_AZ_US__c',
-            'Incident_SPP_AZ_US__c',
-            'MI_Season_AZ_US__c',
             'CreatedById',
             'LastModifiedById',
             'OwnerId',
@@ -394,14 +386,7 @@ $q = window.Q;
           object: 'Account',
           fields: [
             'ID',
-            'Name',
-            'MI_Primary_StreetAddress_AZ_US__c',
-            'MI_Primary_City_AZ_US__c',
-            'MI_Primary_State_AZ_US__c',
-            'Phone',
-            'MI_MAPS_Tier_AZ_US__c',
-            'MI_Oncology_Tier_AZ_US__c',
-            'Respiratory_Tier_AZ_US__c',
+            'Name'
           ],
           where: ''
         },
