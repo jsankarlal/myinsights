@@ -11,12 +11,13 @@ module.exports = function(grunt) {
         scriptPath + 'util.js',
         scriptPath + 'queries.js',
  //       scriptPath + 'customWidgets.js',
-        scriptPath + 'components-template.js',
-        scriptPath + 'script.js',
-        scriptPath + 'hcp.js',
-        scriptPath + 'suggestion.js',
-        scriptPath + 'kpi.js',
-        scriptPath + 'account.js'
+ //       scriptPath + 'components-template.js',
+ //       scriptPath + 'script.js',
+        // scriptPath + 'hcp.js',
+        // scriptPath + 'suggestion.js',
+        // scriptPath + 'kpi.js',
+        scriptPath + 'frm.js',
+    //    scriptPath + 'account.js'
         
     ];
     

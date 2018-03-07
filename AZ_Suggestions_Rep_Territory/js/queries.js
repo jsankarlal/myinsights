@@ -45,7 +45,7 @@ $q = window.Q;
 	Queries.prototype.dsRunQuery = function(queryObject, field, fieldValue, collections, condition) {
 		var _this = this,
             deferred = $q.defer();
-        _this.consoleLog('queryRecord - entering');
+        _this.consoleLog('dsRunQuery - entering');
         _this.consoleLog('queryObject', queryObject);
 		if (collections) {
 			queryObject.where += ds.getInStatement(collection); //where: 'TerritoryId IN ' + inTerr //where: 'Account_vod__c =\''+ accountId +'\''
@@ -54,7 +54,7 @@ $q = window.Q;
 		if (condition) {
             queryObject.where += condition + '\''; //where: 'UserId = '' + userId + '''
 		}
-        
+
         try {
             ds.runQuery(queryObject).then(function(result) {
                 _this.consoleLog('dsRunQuery resolved ');
@@ -284,6 +284,130 @@ $q = window.Q;
             where: '',
             sort: [],
             limit: ''
+        },
+        userTerritory: {
+            object: 'UserTerritory',
+            fields: ['TerritoryId'],
+            where: 'UserId = _userID'
+        },
+        childTerritories: {
+          object: 'Territory',
+          fields: ['Id'],
+          where: 'ParentTerritoryId = _territoryID'
+        },
+        userId: {
+          object: 'UserTerritory',
+          fields: ['UserId'],
+          where: 'TerritoryId IN _territoryIDs'
+        },
+        users: {
+          object: 'User',
+          fields: ['Name', 'Id'],
+          where: 'Id IN _userIDs'
+        },
+        incidents: {
+          object: 'MI_Incident_AZ_US__c',
+          fields: [
+            'Name',
+            'MI_Trend_AZ_US__c',
+            'MI_Account_AZ_US__c',
+            'MI_Status_AZ_US__c',
+            'MI_Product_AZ_US__c',
+            'MI_Date_Opened_AZ_US__c',
+            'Incident_Payer_AZ_US__c',
+            'Incident_SPP_AZ_US__c',
+            'MI_Season_AZ_US__c',
+            'CreatedById',
+            'LastModifiedById',
+            'OwnerId',
+            'RecordTypeId'
+          ]
+        //  where: 'OwnerId IN _userIDs'
+        },
+        incidentsById: {
+          object: 'MI_Incident_AZ_US__c',
+          fields: [
+            'Name',
+            'MI_Trend_AZ_US__c',
+            'MI_Account_AZ_US__c',
+            'MI_Status_AZ_US__c',
+            'MI_Product_AZ_US__c',
+            'MI_Date_Opened_AZ_US__c',
+            'Incident_Payer_AZ_US__c',
+            'Incident_SPP_AZ_US__c',
+            'MI_Season_AZ_US__c',
+            'CreatedById',
+            'LastModifiedById',
+            'OwnerId',
+            'RecordTypeId'
+          ],
+          where: 'OwnerId = _userID'
+        },
+        trends: {
+          object: 'MI_Trend_AZ_US__c',
+          fields: [
+            'Id',
+            'Name',
+            'MI_Status_AZ_US__c',
+            'CreatedById',
+            'LastModifiedById',
+            'OwnerId',
+            'RecordTypeId'
+          ],
+          where: 'Id IN _trendIDs'
+        },
+        callsById: {
+          object: 'Call2_vod__c',
+          fields: [
+            'Id',
+            'Account_vod__c',
+            'Call_Date_vod__c',
+            'Status_vod__c',
+            'Detailed_Products_vod__c',
+            'Name',
+            'Call_Type_AZ_US__c',
+            'CreatedByID',
+            'LastModifiedById',
+            'OwnerId',
+            'RecordTypeId'
+          ],
+          where: 'OwnerId = _userIDs'
+        },
+        calls: {
+          object: 'Call2_vod__c',
+          fields: frmCallFields
+        //  where: 'OwnerId IN _userIDs'
+        },
+        frmAccounts:{
+          object: 'Account',
+          fields: [
+            'ID',
+            'Name',
+            'MI_Primary_StreetAddress_AZ_US__c',
+            'MI_Primary_City_AZ_US__c',
+            'MI_Primary_State_AZ_US__c',
+            'Phone',
+            'MI_MAPS_Tier_AZ_US__c',
+            'MI_Oncology_Tier_AZ_US__c',
+            'Respiratory_Tier_AZ_US__c',
+          ],
+          where: 'Id IN _acccountIDs'
+        },
+      
+        allTierdAccounts:{
+          object: 'Account',
+          fields: [
+            'ID',
+            'Name',
+            'MI_Primary_StreetAddress_AZ_US__c',
+            'MI_Primary_City_AZ_US__c',
+            'MI_Primary_State_AZ_US__c',
+            'Phone',
+            'MI_MAPS_Tier_AZ_US__c',
+            'MI_Oncology_Tier_AZ_US__c',
+            'Respiratory_Tier_AZ_US__c',
+          ],
+          where: 'MI_MAPS_Tier_AZ_US__c = "1" OR MI_Oncology_Tier_AZ_US__c = "1" OR Respiratory_Tier_AZ_US__c = "1"'
         }
 	};
     //jscs:enable

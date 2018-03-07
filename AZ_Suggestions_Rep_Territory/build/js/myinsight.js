@@ -90535,7 +90535,7 @@ $q = window.Q;
 	Queries.prototype.dsRunQuery = function(queryObject, field, fieldValue, collections, condition) {
 		var _this = this,
             deferred = $q.defer();
-        _this.consoleLog('queryRecord - entering');
+        _this.consoleLog('dsRunQuery - entering');
         _this.consoleLog('queryObject', queryObject);
 		if (collections) {
 			queryObject.where += ds.getInStatement(collection); //where: 'TerritoryId IN ' + inTerr //where: 'Account_vod__c =\''+ accountId +'\''
@@ -90544,7 +90544,7 @@ $q = window.Q;
 		if (condition) {
             queryObject.where += condition + '\''; //where: 'UserId = '' + userId + '''
 		}
-        
+
         try {
             ds.runQuery(queryObject).then(function(result) {
                 _this.consoleLog('dsRunQuery resolved ');
@@ -90774,6 +90774,130 @@ $q = window.Q;
             where: '',
             sort: [],
             limit: ''
+        },
+        userTerritory: {
+            object: 'UserTerritory',
+            fields: ['TerritoryId'],
+            where: 'UserId = _userID'
+        },
+        childTerritories: {
+          object: 'Territory',
+          fields: ['Id'],
+          where: 'ParentTerritoryId = _territoryID'
+        },
+        userId: {
+          object: 'UserTerritory',
+          fields: ['UserId'],
+          where: 'TerritoryId IN _territoryIDs'
+        },
+        users: {
+          object: 'User',
+          fields: ['Name', 'Id'],
+          where: 'Id IN _userIDs'
+        },
+        incidents: {
+          object: 'MI_Incident_AZ_US__c',
+          fields: [
+            'Name',
+            'MI_Trend_AZ_US__c',
+            'MI_Account_AZ_US__c',
+            'MI_Status_AZ_US__c',
+            'MI_Product_AZ_US__c',
+            'MI_Date_Opened_AZ_US__c',
+            'Incident_Payer_AZ_US__c',
+            'Incident_SPP_AZ_US__c',
+            'MI_Season_AZ_US__c',
+            'CreatedById',
+            'LastModifiedById',
+            'OwnerId',
+            'RecordTypeId'
+          ]
+        //  where: 'OwnerId IN _userIDs'
+        },
+        incidentsById: {
+          object: 'MI_Incident_AZ_US__c',
+          fields: [
+            'Name',
+            'MI_Trend_AZ_US__c',
+            'MI_Account_AZ_US__c',
+            'MI_Status_AZ_US__c',
+            'MI_Product_AZ_US__c',
+            'MI_Date_Opened_AZ_US__c',
+            'Incident_Payer_AZ_US__c',
+            'Incident_SPP_AZ_US__c',
+            'MI_Season_AZ_US__c',
+            'CreatedById',
+            'LastModifiedById',
+            'OwnerId',
+            'RecordTypeId'
+          ],
+          where: 'OwnerId = _userID'
+        },
+        trends: {
+          object: 'MI_Trend_AZ_US__c',
+          fields: [
+            'Id',
+            'Name',
+            'MI_Status_AZ_US__c',
+            'CreatedById',
+            'LastModifiedById',
+            'OwnerId',
+            'RecordTypeId'
+          ],
+          where: 'Id IN _trendIDs'
+        },
+        callsById: {
+          object: 'Call2_vod__c',
+          fields: [
+            'Id',
+            'Account_vod__c',
+            'Call_Date_vod__c',
+            'Status_vod__c',
+            'Detailed_Products_vod__c',
+            'Name',
+            'Call_Type_AZ_US__c',
+            'CreatedByID',
+            'LastModifiedById',
+            'OwnerId',
+            'RecordTypeId'
+          ],
+          where: 'OwnerId = _userIDs'
+        },
+        calls: {
+          object: 'Call2_vod__c',
+          fields: frmCallFields
+        //  where: 'OwnerId IN _userIDs'
+        },
+        frmAccounts:{
+          object: 'Account',
+          fields: [
+            'ID',
+            'Name',
+            'MI_Primary_StreetAddress_AZ_US__c',
+            'MI_Primary_City_AZ_US__c',
+            'MI_Primary_State_AZ_US__c',
+            'Phone',
+            'MI_MAPS_Tier_AZ_US__c',
+            'MI_Oncology_Tier_AZ_US__c',
+            'Respiratory_Tier_AZ_US__c',
+          ],
+          where: 'Id IN _acccountIDs'
+        },
+      
+        allTierdAccounts:{
+          object: 'Account',
+          fields: [
+            'ID',
+            'Name',
+            'MI_Primary_StreetAddress_AZ_US__c',
+            'MI_Primary_City_AZ_US__c',
+            'MI_Primary_State_AZ_US__c',
+            'Phone',
+            'MI_MAPS_Tier_AZ_US__c',
+            'MI_Oncology_Tier_AZ_US__c',
+            'Respiratory_Tier_AZ_US__c',
+          ],
+          where: 'MI_MAPS_Tier_AZ_US__c = "1" OR MI_Oncology_Tier_AZ_US__c = "1" OR Respiratory_Tier_AZ_US__c = "1"'
         }
 	};
     //jscs:enable
@@ -90787,901 +90911,58 @@ $q = window.Q;
     var queries = new Queries();
     queries.init();
 });*/
-var componentsTemplate = {},
-    resource = {},
-    applicaionHost = '';
-
-componentsTemplate['suggestion-list'] = '<div class="list list-hover">' +
-'   <% _.each(result, function(suggestion, index) { %>       ' +
-'       <div class="line">' +
-'       <!-- <div class="line <%= index == 0 ? \'active\': \'\'%>"> -->' +
-'            <a href="#suggestion-<%= index %>" aria-controls="suggestions" role="tab" data-toggle="tab" aria-expanded="true" class="suggestion-item" data-account-id="">' +
-'                <div class="row">' +
-'                    <div class="col-xs-2 col-sm-1">' +
-'                        <i class="fa fa-2x fg-navy fa-bell" aria-hidden="true"></i>' +
-'                    </div>' +
-'                    <div class="col-xs-10 col-sm-11">' +
-'                        <p><%= suggestion.title %></p>' +
-'                    </div>' +
-'                </div>' +
-'            </a>' +
-'        </div>' +
-'     <% }) %>' +
-' </div>';
-
-componentsTemplate['suggestion-detail'] = '<div class="tab-content">' +
-'   <% _.each(result,function(suggestion, index) { %>       ' +
-'         <div class="tab-pane fade" id="suggestion-<%= index %>">' +
-'    <!--     <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%> " id="suggestion-<%= index %>"> -->' +
-'             <div class="row  margin-right-left-0">' +
-'                <div class="col-xs-12 col-sm-12 padding-0">' +
-'                    <div class="padding-10 padding-bottom-0">' +
-'                        <h4><span> Target Account :  </span> <span class=""> <%= suggestion.accountName %></span> </h4>' +
-'                        <h4><span> Title :  </span> <span class=""> <%= suggestion.title %></span> </h4>' +
-'                    </div>' +
-'                </div>' +
-'                <div class="col-xs-12 col-sm-12 padding-0">' +
-'                    <div class="text-center padding-10 padding-top-0">' +
-'                        <a class="action-link fg-navy navigate-to-native" data-account-id="<%= suggestion.accountId %>" data-type="view">' +
-'                            View Account' +
-'                            <i class="fa padding-10 fa-external-link " aria-hidden="true"></i>' +
-'                        </a>' +
-'                        <a class="action-link fg-navy navigate-to-native " data-account-id="<%= suggestion.accountId %>" data-type="call">' +
-'                            Record a Call' +
-'                            <i class="fa padding-10 fa-calendar-plus-o " aria-hidden="true"></i>' +
-'                        </a>' +
-'                    </div>' +
-'                </div>' +
-'             </div>' +
-'             <p><span class="fg-navy"> Reason : </span> <span> <%= suggestion.reason %></span></p>' +
-'             <p><span class="fg-navy"> Posted Date : </span> <span> <%= suggestion.postedDate %></span></p>' +
-'             <p><span class="fg-navy"> Expiry Date  :</span> <span> <%= suggestion.expiryDate %></span></p>' +
-'             <p><span class="fg-navy"> Status  :</span> <span> <%= suggestion.status %></span></p>' +
-'             <p><span class="fg-navy"> Last Status Updated By :</span> <span> <%= suggestion.lastStatusUpdatedBy %></span></p>' +
-'         </div>' +
-'    <% }) %>' +
-' </div>';
-
-componentsTemplate['hcp-list'] = '<div class="list list-hover">' +
-'    <% _.each(result,function(hcp, index) { %>       ' +
-'       <div class="line">' +
-'       <!-- <div class="line <%= index == 0 ? \'active\': \'\'%>"> -->' +
-'            <a href="#<%=hcp.type %><%= index %>" aria-controls="targetted-users" role="tab" data-toggle="tab" aria-expanded="true">' +
-'                <div class="row">' +
-'                    <div class="col-xs-2 col-sm-2">' +
-'                             <% if (hcp.type == \'person\') { %> ' +
-'                               <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 50px;">' +
-'                              <% } else { %> ' +
-'                               <i class="fa fa-h-square fa-3x" aria-hidden="true"></i>' +
-'                              <% } %> ' +
-'                    </div>' +
-'                    <div class="col-xs-6 col-sm-6">' +
-'                        <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
-'                        <p class="short-description"> <%= hcp.address %></p>' +
-'                    </div>' +
-'                    <div class="col-xs-4 col-sm-4">' +
-'                        <p> <%= hcp.product %> </p>' +
-'                        <p> <%= hcp.therapyArea %></p>' +
-'                    </div>' +
-'                </div>' +
-'            </a>' +
-'        </div>' +
-'    <% }) %>' +
-'</div>';
-	
-componentsTemplate['hcp-detail'] = '<div class="tab-content">' +
-'    <% _.each(result,function(hcp, index) { %>    ' +
-'        <div class="tab-pane fade <%= index == 0 ? \'in active\': \'\'%>" id="<%=hcp.type %><%= index %>">' +
-'' +
-'            <div class="row  margin-right-left-0">' +
-'                <div class="col-xs-12 col-sm-12 padding-0">' +
-'                    <div class="row padding-top-5">' +
-'                        <div class="col-xs-3 col-sm-3 padding-top-5 text-center">' +
-'                             <% if (hcp.type == \'person\') { %> ' +
-'                               <img src="assets/images/placeholder-<%= hcp.gender == \'male\' ? \'male\' : \'female\' %>.png" style="height: 70px;">' +
-'                              <% } else { %> ' +
-'                               <!-- <img src="assets/images/hospital-building.png" style="height: 70px;"> -->' +
-'                               <i class="fa fa-h-square fa-3x" aria-hidden="true"></i>' +
-'                              <% } %> ' +
-'                        </div>' +
-'                        <div class="col-xs-9 col-sm-9">' +
-'                            <p> <b> <%= hcp.firstName %></b> <span><%= hcp.lastName %></span></p>' +
-'                            <p class="margin-bottom-0"> <%= hcp.address %></p>' +
-'                        </div>' +
-'                    </div>' +
-'                            <div class="action-link-list">' +
-'                                <a class="navigate-to-native fg-navy action-link" data-account-id="<%= hcp.id %>" data-type="view">' +
-'                                    <i class="fa padding-10 box-shadow-all-white fa-external-link" aria-hidden="true"></i>' +
-'                                     View Account' +
-'                                </a>' +
-'                                <a class="navigate-to-native fg-navy action-link" data-account-id="<%= hcp.id %>" data-type="call">' +
-'                                    <i class="fa padding-10 box-shadow-all-white fa-calendar-plus-o " aria-hidden="true"></i>' +
-'                                    Record a Call' +
-'                                </a>' +
-'                            </div>' +
-'                </div>' +
-'' +
-'            </div> ' +
-'' +
-'            <div class="ratings-component">' +
-'                <div class="row margin-right-left-0">' +
-'                    <div class="col-xs-4 padding-bottom-10">' +
-'                        <span class="label navy-theme label-lg full-width">Academic</span>' +
-'                    </div>' +
-'                    <div class="col-xs-6 padding-top-5 padding-right-0 padding-left-0 fg-gold">' +
-'                        <% if (hcp.metric.academic.rating >= 1) { %> ' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.academic.rating >= 2) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.academic.rating >= 3) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.academic.rating >= 4) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.academic.rating >= 5) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } %>' +
-'                    </div>' +
-'                    <div class="col-xs-2 padding-5">' +
-'                        <div class="percentage-section">' +
-'                            <span> <%= hcp.metric.academic.percentage %> </span> ' +
-'                            <i class="fa fa-percent" aria-hidden="true"></i>' +
-'                        </div>' +
-'                    </div>' +
-'                </div>' +
-'' +
-'                <div class="row margin-right-left-0">' +
-'                    <div class="col-xs-4 padding-bottom-10">' +
-'                        <span class="label navy-theme label-lg full-width">Internet</span>' +
-'                    </div>' +
-'                    <div class="col-xs-6 padding-top-5 padding-right-0 padding-left-0 fg-gold">' +
-'                        <% if (hcp.metric.internet.rating >= 1) { %> ' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.internet.rating >= 2) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.internet.rating >= 3) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.internet.rating >= 4) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.internet.rating >= 5) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } %>' +
-'                    </div>' +
-'                    <div class="col-xs-2 padding-5">' +
-'                        <div class="percentage-section">' +
-'                            <span> <%= hcp.metric.internet.percentage %></span> ' +
-'                            <i class="fa fa-percent" aria-hidden="true"></i>' +
-'                        </div>' +
-'                    </div>' +
-'                </div>' +
-'' +
-'                <div class="row margin-right-left-0">' +
-'                    <div class="col-xs-4 padding-bottom-10">' +
-'                        <span class="label navy-theme label-lg full-width">Society</span>' +
-'                    </div>' +
-'                    <div class="col-xs-6 padding-top-5 padding-right-0 padding-left-0 fg-gold">' +
-'                        <% if (hcp.metric.society.rating >= 1) { %> ' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.society.rating >= 2) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.society.rating >= 3) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.society.rating >= 4) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } if (hcp.metric.society.rating >= 5) { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star" aria-hidden="true"></i>' +
-'                        <% } else { %>' +
-'                            <i class="fa fa-2x padding-left-5 fa-star-o" aria-hidden="true"></i>' +
-'                        <% } %>' +
-'                    </div>' +
-'                    <div class="col-xs-2 padding-5">' +
-'                        <div class="percentage-section">' +
-'                            <span> <%= hcp.metric.society.percentage %> </span> ' +
-'                            <i class="fa fa-percent" aria-hidden="true"></i>' +
-'                        </div>' +
-'                    </div>' +
-'                </div>' +
-'' +
-'            </div>' +
-'' +
-'            <div class="panel-group" id="accordion-<%= hcp.id %>">' +
-'' +
-'                <div class="panel panel-default">' +
-'                    <div class="panel-heading">' +
-'                        <h4 class="panel-title">' +
-'                            <a class="collapse-panel-heading collapsed" data-toggle="collapse" data-parent="#accordion-<%= hcp.id %>" href="#collapse0-<%= hcp.id %>">' +
-'                                <span>Relationship Charts </span><span class="fa fa-chevron-up pull-right"></span></a>' +
-'                        </h4>' +
-'                    </div>' +
-'                   <div id="collapse0-<%= hcp.id %>" class="panel-collapse collapse">' +
-'                        <div class="panel-body text-center">' +
-'                            <div class="relationship-chart" data-account-id="<%= hcp.id %>"></div>' +
-'                        </div>' +
-'                    </div>' +
-'                </div>' +
-'' +
-'                <div class="panel panel-default">' +
-'                    <div class="panel-heading">' +
-'                        <h4 class="panel-title">' +
-'                            <a class="collapse-panel-heading collapsed" data-toggle="collapse" data-parent="#accordion-<%= hcp.id %>" href="#collapse1-<%= hcp.id %>">' +
-'                               <span>Suggested Topics </span><span class="fa fa-chevron-up pull-right"></span></a>' +
-'                        </h4>' +
-'                    </div>' +
-'                    <div id="collapse1-<%= hcp.id %>" class="panel-collapse collapse">' +
-'                        <div class="panel-body">' +
-'                            <p>Content for suggested topics</p>' +
-'                        </div>' +
-'                    </div>' +
-'                </div>' +
-'' +
-'                <div class="panel panel-default">' +
-'                    <div class="panel-heading">' +
-'                        <h4 class="panel-title">' +
-'                            <a class="collapse-panel-heading collapsed"  data-toggle="collapse" data-parent="#accordion-<%= hcp.id %>" href="#collapse2-<%= hcp.id %>"><span>Basic information </span><span class="fa fa-chevron-up pull-right"></span></a>' +
-'                        </h4>' +
-'                    </div>' +
-'                    <div id="collapse2-<%= hcp.id %>" class="panel-collapse collapse">' +
-'                        <div class="panel-body">' +
-'                            <p>Content for basic Information</p>' +
-'                            <div class="list list-hover"> ' +
-'                                <div class="line">' +
-'                                    <p><span class="fg-navy"> First Name  </span> <span class="pull-right"> <%= hcp.firstName %></span></p>' +
-'                                </div>' +
-'                                <div class="line">' +
-'                                    <p><span class="fg-navy"> Last Name  </span> <span class="pull-right"> <%= hcp.lastName %></span></p>' +
-'                                </div>' +
-'                                <div class="line">' +
-'                                    <p><span class="fg-navy"> Address  </span> <span class="pull-right"> <%= hcp.address %></span></p>' +
-'                                </div>' +
-'                                <div class="line">' +
-'                                    <p><span class="fg-navy"> Account Name  </span> <span class="pull-right"> <%= hcp.accountName %></span></p>' +
-'                                </div>' +
-'                                <div class="line">' +
-'                                    <p><span class="fg-navy"> Therapy Area  </span> <span class="pull-right"> <%= hcp.therapyArea %></span></p>' +
-'                                </div>' +
-'                                <div class="line">' +
-'                                    <p><span class="fg-navy"> Product </span> <span class="pull-right"> <%= hcp.product %></span></p>' +
-'                                </div>' +
-'                                ' +
-'                                <div class="line">' +
-'                                    <p><span class="fg-navy"> Language </span> <span class="pull-right"> <%= hcp.language %></span></p>' +
-'                                </div>' +
-'                                ' +
-'                            </div>' +
-'                        </div>' +
-'                    </div>' +
-'                </div>' +
-'' +
-'            </div>' +
-'        </div>' +
-'    <% }) %>' +
-'    ' +
-'</div>';
-
-componentsTemplate['kpi-list'] = '<div class="card-view kpi-section"> ' +
-'    <div class="card-title">' +
-'        <span class="main-title">' +
-'            <% if (result.title == \'Sales\') { %> ' +
-'                <i class="fa fa-line-chart padding-right-5" aria-hidden="true"></i>' +
-'            <% } %>' +
-'            <% if (result.title == \'Coverage\') { %> ' +
-'                <i class="fa fa-area-chart padding-right-5" aria-hidden="true"></i>' +
-'            <% } %>' +
-'            <% if (result.title == \'Calls\') { %> ' +
-'                <i class="fa fa-pie-chart padding-right-5" aria-hidden="true"></i>' +
-'            <% } %>' +
-'            <%= result.title %>' +
-'        </span>' +
-'     <!--   <span class="sub-title pull-right" data-kpi-id="<%= result.id %> "> <%= result.subTitle %> <i class="fa fa-chevron-right"></i></span> -->' +
-'    </div>' +
-'     <div class="card-container">' +
-'         <div class="row margin-0">' +
-'             <% _.each(result.metric, function(metric, index) { %>  ' +
-'                <div class="col-xs-6 col-sm-6 col-md-6 card-widget padding-0 <%= index == 0 ? \'border-right-50\': \'\' %> ">' +
-'                     <div class="card-tile">' +
-'                        <h6><%= metric.title %></h6>' +
-'                        <div class="percentage-section padding-bottom-10 <%= result.title == \'Calls Number\' ? \'fg-yellowgreen\' : \'fg-aqua\' %>">' +
-'                            <span> <%= metric.value %></span> ' +
-'                            <i class="fa <%= result.title == \'Calls Number\' ? \'fa-arrow-up\' : \'fa-percent\' %>" aria-hidden="true"></i>' +
-'                        </div>' +
-'              <!--          <div class="caption">' +
-'                            <% _.each(metric.fields, function(field, pointer) { %>' +
-'                                <p class="label-description"><span><%= field.name %>: </span><span class=""> <%= field.value %></span></p>' +
-'                            <% }) %>' +
-'                        </div> -->' +
-'                    </div>' +
-'                </div>' +
-'            <% }) %>' +
-'         </div>' +
-'    </div>' +
-'</div>';
-//jscs:disable
-appData = {
-     product_map: [{
-         Id: '',
-         Name: ''
-     }],
-     accountId:'',
-     currentUser: {
-         Id: '',
-         territoryId: ''
-     },
-     childTerrIds: [],
-     subordinateUserIds: [],
-     subordinateUsers: [],
-     recordtype_map: { //best practice is to actually store this in a unique object per SFDC object
-         Call_vod: '',
-         Call_Objective_vod: '',
-         Email_vod: '',
-         Insight_vod: '',
-         Driver_vod: '', //for Suggestion tag
-         Product_vod: '' //for Suggestion tag
-     },
-     suggestionIds: [],
-     accountIds: [],
-     suggestions: [],
-     childUserLookup:{},
-     ownerIdLookup:{},
-     ownerIdList:[],
-     usersList:[],
-     usersListSet:'',
-     filtered:{
-        userObject:{
-            usersList:[],
-            averageData:{}
-        },
-        myCount:{},
-        count:{},
-        types:{},
-        tableData:[],
-        suggestions:[]
-     },
-     accountIdList:['0010E00000FOr7gQAD'],
-     months_to_date: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
- };
-
-
-//MyInsights Object
 (function(global) {
-	function MyInsight() {
-		
-	};
-	
-    
-    MyInsight.prototype.bindEvents = function() {
-        var _this = this;
-        
-        /* $(document).on('click', '.navigate-to-native', function(event){
-            event.preventDefault();
-            _this.navigateToAccount({accountId: $element.attr('data-account-id'), type: $(this).attr('data-type')});
-            
-        });
-
-        $(document).on('navigate-to-native', function(event, eventData){
-            event.preventDefault();
-            _this.navigateToAccount(eventData);
-            
-        });
-        
-         $(document).on('click', '.tab-pane .line', function(event){
-            $(this).addClass('active');
-            $(this).siblings().removeClass('active');
-            
-        });
-        
-        $(document).on('hcp-loaded suggestion-loaded', function(event){
-       //     _this.attachAccountIds();
-            _this.consoleLog('hcp-loaded suggestion-loaded EVENT');
-            
-        }); */
-        
+    function FRM() {
+     // Constructor
     };
     
-	MyInsight.prototype.init = function() {
-		var _this = this;
-        _this.consoleLog('mainController - entering');
-        _this.bindEvents();
-        _this.setDataAdapter();
-//        if (_this.application == 'iRep') {
-/*         try {
-            _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions){
-                _this.consoleLog('suggestions.length - ', suggestions.length);
-                _this.parseSuggestions(suggestions);
-                _this.attachAccountIds();
-           });
-        } catch(e) {
-            _this.consoleLog('Error in MyInsight.prototype.init - ', e);
-        } */
+    FRM.prototype.bindFRMEvents = function() {
+        var _this = this,
+            $document = $(document);
+        
+    }
+    
+    FRM.prototype.renderFRM = function(container, kpiName) {
+        var _this = this;
+        //fillTemplate(container, templateObj, object, appendFlag, callback)
+        _this.fillTemplate(container, componentsTemplate[_this.kpiListTemplatePath], resource[_this.kpiDataPath][kpiName], false);
+    }
+
+    FRM.prototype.getIncidents = function(container, kpiName) {
+        var _this = this;
+    }
+  
+    FRM.prototype.init = function() {
+        var _this = this;
+        _this.clm = com.veeva.clm;
+        _this.consoleLog('FRM Testing::INI');
+        try {
+            _this.consoleLog('Incidents Query', _this.queryConfig.incidents);
+            _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
+                _this.consoleLog('Incidents Response', incidents);
+           //     _this.parseAccounts(accounts);
+            });
+
+            _this.consoleLog('Incidents Query', _this.queryConfig.calls);
+            _this.dsRunQuery(_this.queryConfig.calls).then(function(incidents) {
+                _this.consoleLog('Incidents Response', incidents);
+           //     _this.parseAccounts(accounts);
+            });
             
-//        }
-                
-	};
-	
-	$.extend(MyInsight.prototype, Queries.prototype);
-    global.MyInsight = MyInsight;
-	
-})(this);
+        } catch (error) {
+            _this.consoleLog('Error in FRM', error);
+        }
+    }
+    
+    _.extend(FRM.prototype, Queries.prototype);
+    global.FRM = FRM;
+}(this));
 
 $(function() {
 	console.log('document ready');
-	var myInsight = new MyInsight();
-    $('#response').append('<pre>document-ready</pre>');
+	var FRM = new FRM();
     
-	myInsight.init();
-});
-
-(function(global) {
-    function Hcp() {
-     // Constructor
-    };
+    $('#response').append('<pre>FRM document-ready</pre>');
     
-    Hcp.prototype.bindHcpEvents = function() {
-        var _this = this,
-            $document = $(document),
-            $newsFeed = $('#news-feed');
-        
-        $(document).on('click', '.navigate-to-native', function(event) {
-            event.preventDefault();
-            _this.navigateToAccount({accountId: $(this).attr('data-account-id'), type: $(this).attr('data-type')});
-        });
-
-        $(document).on('navigate-to-native', function(event, eventData) {
-            event.preventDefault();
-            _this.navigateToAccount(eventData);
-        });
-
-        $(document).on('show.bs.tab', '.line a[data-toggle="tab"]', function(e) {
-            console.log(e.target);// newly activated tab
-            console.log(e.relatedTarget);// previous active tab
-            $(e.target).closest('.card-view').addClass('show-detail');
-        });
-
-        $(document).on('click tap touchstart', '.back-button', function() {
-            $(this).closest('.card-view').removeClass('show-detail');
-            _this.consoleLog('Click Back Button', $(this).closest('.card-view').find('.card-title')[0]);
-            event.preventDefault();
-        });
-        
-        $(document).click(function() {
-            var $targetEl = $(event.target);
-            if ($targetEl.closest('#news-feed').length < 1) {
-                $newsFeed.collapse('hide');
-            }
-           
-        });
-        
-        $(document).on('click', '.news-feed-show', function() {
-            $newsFeed.collapse('toggle');
-        });
-
-        $(document).on('click', '.news-feed-show', function() {
-            $newsFeed.collapse('toggle');
-        });
-
-        $(document).on('click', '.news-feed-cancel', function() {
-            $newsFeed.collapse('hide');
-        });
-
-        $(document).on('show.bs.collapse', '#news-feed', function() {
-            $newsFeed.addClass('max-height-80vh');
-        });
-        
-        $(document).on('hide.bs.collapse', '#news-feed', function() {
-            $newsFeed.removeClass('max-height-80vh');
-        });
-
-        $(document).on('click', '.tab-pane .line', function(event) {
-            $(this).addClass('active');
-            $(this).siblings().removeClass('active'); 
-        });
-        
-        $(document).on('hcp-loaded suggestion-loaded', function(event) {
-            _this.consoleLog('hcp-loaded suggestion-loaded EVENT');
-        });
-
-        $document.on('hcp-parsed', function(e) {
-            _this.renderHcp();
-        });
-
-        $document.on('hcp-loaded', function(e) {
-            _this.renderRelationshipCharts();
-        });
-
-        $document.on('shown.bs.modal', '#popup-modal', function() {
-            _this.renderRelationshipCharts();
-        });
-
-        $document.on('show.bs.collapse', function() {
-            _this.renderRelationshipCharts();
-        });
-    }
-    
-    Hcp.prototype.renderHcp = function() {
-        var _this = this;
-        //fillTemplate(container, templateObj, object, appendFlag, callback)
-        // var grouped = _.mapValues(_.groupBy(resource.hcp, 'type'),
-        //                   clist => clist.map(resource.hcp => _.omit(resource.hcp, 'make')));
-
-        _this.consoleLog('renderHcp ', resource.hcp);
-        resource.hcp = resource.hcp.reduce(function(r, a) {
-            r[a.type] = r[a.type] || [];
-            r[a.type].push(a);
-            return r;
-        }, Object.create(null));
-        _this.consoleLog('renderHcp ', resource.hcp);
-
-        _this.fillTemplate(_this.hcp.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp.person, false);
-        _this.fillTemplate(_this.hcp.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp.person, false);
-        _this.fillTemplate(_this.hospital.detailsContainer, componentsTemplate[_this.hcpDetailTemplatePath], resource.hcp.business, false);
-        _this.fillTemplate(_this.hospital.listContainer, componentsTemplate[_this.hcpListTemplatePath], resource.hcp.business, false);
-        $(document).trigger('hcp-loaded');
-    }
-    
-    Hcp.prototype.buildHcp = function() {
-        var _this = this;
-            _this.hcpDataPath = '/staticJson/hcp.json';
-        
-        $.ajax({
-            method: 'GET',
-            url: _this.hcpDataPath,
-            type: 'json',
-            success: function(data) {
-                var path = this.url;
-                resource.hcp = data;
-                _this.renderHcp();
-            },
-
-            error: function(err) {
-            }
-        });
-    }
-    
-    Hcp.prototype.init = function() {
-        var _this = this;
-        _this.hcp = {};
-        _this.hospital = {};
-        _this.hcp.listContainer = $('#hcp-list');
-        _this.hcp.detailsContainer = $('#hcp-details');
-        _this.hospital.listContainer = $('#hospital-list');
-        _this.hospital.detailsContainer = $('#hospital-details');
-        _this.hcpListTemplatePath = 'hcp-list';
-        _this.hcpDetailTemplatePath = 'hcp-detail';
-        _this.addSpinner(_this.hcp.listContainer);
-        _this.addSpinner(_this.hcp.detailsContainer);
-        if (applicationHost == 'iRep') {
-            try {
-                /* _this.clmQueryRecord(_this.queryConfig.accounts, function(result) {
-                    if (result.success == true) {
-                        _this.consoleLog('account- clmQueryRecord', result[_this.queryConfig.accounts.object]);
-                        _this.parseAccounts(result[_this.queryConfig.accounts.object]);
-                    } else {
-                        _this.consoleLog('account clmQueryRecord - response', result);
-                    }
-                }); */
-                _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
-                    _this.consoleLog('My Accounts - through DS library', accounts.length);
-                    _this.parseAccounts(accounts);
-                });
-                
-            } catch (error) {
-                _this.consoleLog('Error', error);
-            }
-            
-        } else {
-            _this.buildHcp();
-        }
-        
-        _this.bindHcpEvents();
-            
-    }
-    
-    _.extend(Hcp.prototype, Queries.prototype);
-    global.Hcp = Hcp;
-}(this));
-
-$(function() {
-    var hcp = new Hcp();
-    hcp.init();
-});
-(function(global) {
-    function Suggestions() {
-     // Constructor
-    };
-    
-    Suggestions.prototype.bindSuggestionsEvents = function() {
-        var _this = this,
-            $document = $(document);
-        $document.on('click', '[data-account-id]', function(e) {
-            var $this = $(this);
-               
-        });
-
-        $document.on('suggestion-parsed', function(e) {
-            _this.renderSuggestions();
-        });
-    }
-    
-     Suggestions.prototype.renderSuggestions = function() {
-        var _this = this;
-        //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(_this.suggestion.listContainer, componentsTemplate[_this.suggestionListTemplatePath], resource.suggestions, false);
-        _this.fillTemplate(_this.suggestion.detailsContainer, componentsTemplate[_this.suggestionDetailTemplatePath], resource.suggestions, false);
-    
-        $(document).trigger('suggestion-loaded');
-    }
-    
-    Suggestions.prototype.buildSuggestions = function() {
-        var _this = this;
-            _this.suggestionDataPath = '/staticJson/suggestions.json';
-      
-        $.ajax({
-            method: 'GET',
-            url: _this.suggestionDataPath,
-            type: 'json',
-            success: function(data) {
-                resource.suggestions = data;
-                _this.renderSuggestions();
-            },
-
-            error: function(err) {
-            }
-        });
-    }
-    
-    Suggestions.prototype.init = function() {
-        var _this = this;
-        _this.suggestion = {};
-        _this.suggestion.listContainer = $('#suggestions-list');
-        _this.suggestion.detailsContainer = $('#suggestion-details');
-        _this.addSpinner(_this.suggestion.listContainer);
-        _this.addSpinner(_this.suggestion.detailsContainer);
-        _this.suggestionListTemplatePath = 'suggestion-list';
-        _this.suggestionDetailTemplatePath = 'suggestion-detail';
-        _this.bindSuggestionsEvents();
-        if (applicationHost == 'iRep') {
-            try {
-                /* _this.clmQueryRecord(_this.queryConfig.suggestions, function(result) {
-                    if (result.success == true) {
-                        _this.consoleLog('suggestion', result[_this.queryConfig.suggestions.object]);
-                        _this.parseSuggestions(result[_this.queryConfig.suggestions.object]);
-                    } else {
-                        _this.consoleLog('suggestion - response', result);
-                    }
-                }); */
-                _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions) {
-                    _this.consoleLog('My suggestions through DS library', suggestions.length);
-                    _this.parseSuggestions(suggestions);
-                });
-            } catch (error) {
-                _this.consoleLog('Error', error);
-            }
-        } else {
-            _this.buildSuggestions();
-        }
-
-        // _this.bindSuggestionsEvents();
-            
-    }
-    
-    _.extend(Suggestions.prototype, Queries.prototype);
-    global.Suggestions = Suggestions;
-}(this));
-
-$(function() {
-    var suggestions = new Suggestions();
-    suggestions.init();
-});
-(function(global) {
-    function KeyPerformanceIndicator() {
-     // Constructor
-    };
-    
-    KeyPerformanceIndicator.prototype.bindKpiEvents = function() {
-        var _this = this,
-            $document = $(document);
-        $document.on('click', '[data-account-id]', function(e) {
-            var $this = $(this);
-               
-        });
-    }
-    
-    KeyPerformanceIndicator.prototype.renderKpi = function(container, kpiName) {
-        var _this = this;
-        //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(container, componentsTemplate[_this.kpiListTemplatePath], resource[_this.kpiDataPath][kpiName], false);
-    }
-    
-    KeyPerformanceIndicator.prototype.buildKpi = function() {
-        var _this = this;
-            _this.kpiListTemplatePath = 'kpi-list';
-            _this.kpiDataPath = '/staticJson/kpi.json';
-        
-        $.ajax({
-            method: 'GET',
-            url: _this.kpiDataPath,
-            type: 'json',
-            success: function(data) {
-                var path = this.url;
-                resource[this.url] = data;
-                _this.kpi.kpiContainer.each(function(index, element) {
-                    var $container = $(element);
-                    _this.addSpinner($container);
-                    _this.renderKpi($container, $container.attr('data-kpi-name'));
-                });
-                
-            },
-
-            error: function(err) {
-            }
-        });
-    }
-    
-    KeyPerformanceIndicator.prototype.init = function() {
-        var _this = this;
-        _this.kpi = {};
-        _this.kpi.kpiContainer = $('.kpi-container');
-        _this.buildKpi();
-            
-    }
-    
-    _.extend(KeyPerformanceIndicator.prototype, Util.prototype);
-    global.KeyPerformanceIndicator = KeyPerformanceIndicator;
-}(this));
-
-$(function() {
-    var Kpi = new KeyPerformanceIndicator();
-    Kpi.init();
-});
-(function(global) {
-    function Account() {
-     // Constructor
-    };
-    
-    Account.prototype.bindAccountEvents = function() {
-        var _this = this,
-            $document = $(document);
-        $document.on('click', '.update-email', function(e) {
-            var $this = $(this);
-            e.preventDefault();
-            _this.consoleLog('update-email - clicked');
-            _this.clmUpdateRecord();
-        });
-        
-        $document.on('click', '.create-record', function(e) {
-            var $this = $(this);
-            e.preventDefault();
-            _this.consoleLog('create-record - clicked');
-            _this.clmCreateRecord();
-        });
-        
-    }
-    
-    //jscs:disable	
-    Account.prototype.clmUpdateRecord = function() {
-        var _this = this,
-            newValues = {
-                "Gender_vod__c": "Male",
-                "Language_vod__c": "English",
-                "PersonTitle": "Mr.",
-                "Phone": "9962234889"
-            };
-        
-        _this.consoleLog('clmUpdateRecord:: entering');
-        com.veeva.clm.updateRecord('Account', '0010E00000FOr7gQAD', newValues, function(result) {
-            _this.consoleLog('clmUpdateRecord:: Resolved', result);
-        });
-    }
-    
-    Account.prototype.clmCreateRecord = function() {
-        var _this = this,
-            newRecord = {
-                "Gender_vod__c": "Male",
-                "Language_vod__c": "English",
-                "PersonTitle": "Mr.",
-                "Phone": "9962234889",
-                "FirstName": "Justin",
-                "LastName": "Sankarlal"
-            };
-        
-        _this.consoleLog('clmCreateRecord:: entering');
-        com.veeva.clm.createRecord('Account', newRecord, function(result) {
-            _this.consoleLog('clmCreateRecord:: Resolved', result);
-        });
-    }
-    //jscs:enable	
-
-    Account.prototype.renderAccount = function(container, kpiName) {
-        var _this = this;
-        //fillTemplate(container, templateObj, object, appendFlag, callback)
-        _this.fillTemplate(container, componentsTemplate[_this.kpiListTemplatePath], resource[_this.kpiDataPath][kpiName], false);
-    }
-    
-    Account.prototype.getAccounts = function() {
-        var _this = this,
-            objectName = 'Account',
-            fields = ['Id', 'Name'],
-            whereClause = 'WHERE Specialty_1_vod__c = "Cardiology"',
-            sortClause = ['Name, ASC'],
-            limit = '10';
-        _this.consoleLog('getAccounts::Entering');
-       _this.clm.queryRecord(objectName, fields, _this.updateAccount);
-    }
-    
-    Account.prototype.getCurrentAccount = function() {
-        var _this = this;
-        _this.consoleLog('getCurrentAccount:: Entering');
-        _this.clm.getDataForCurrentObject('Account', 'Id', _this.updateAccount);
-    }
-    
-    Account.prototype.updateAccount = function(response) {
-        var _this = this;
-        _this.consoleLog('CLM Testing', response);
-       /* if (result.success == true) {
-            var newValues = {};
-            newValues.My_Custom_Field__c = 'new value';
-            newValues.Number_Field_1__c = 42;
-            com.veeva.clm.updateRecord('Account', 'Id', result.Account.Id,callBack);
-        }*/
-    }
-    
-    Account.prototype.init = function() {
-        var _this = this;
-        _this.clm = com.veeva.clm;
-        _this.consoleLog('CLM Testing::INI');
-        _this.bindAccountEvents();
-   //     _this.getCurrentAccount();
-   //     _this.getAccounts();
-   /*      _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
-            _this.consoleLog('My Accounts - through DS library', accounts);
-        });
-        
-        _this.dsRunQuery(_this.queryConfig.suggestions).then(function(suggestions) {
-            _this.consoleLog('My suggestions through DS library', suggestions);
-        });
-        
-        _this.clmQueryRecord(_this.queryConfig.accounts).then(function(accounts) {
-            _this.consoleLog('My Accounts through clmQueryRecord', accounts);
-        });
-        
-        _this.clmQueryRecord(_this.queryConfig.suggestions).then(function(suggestions) {
-            _this.consoleLog('My suggestions through clmQueryRecord - suggestions.length - ', suggestions.length);
-            _this.parseSuggestions(suggestions);
-            _this.attachAccountIds();
-        });  */ 
-    }
-    
-    _.extend(Account.prototype, Queries.prototype);
-    global.Account = Account;
-}(this));
-
-$(function() {
-    var account = new Account();
-    account.init();
+	FRM.init();
 });
