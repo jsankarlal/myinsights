@@ -90865,7 +90865,19 @@ $q = window.Q;
         },
         calls: {
           object: 'Call2_vod__c',
-          fields: frmCallFields
+          fields: [
+            'Id',
+            'Account_vod__c',
+            'Call_Date_vod__c',
+            'Status_vod__c',
+            'Detailed_Products_vod__c',
+            'Name',
+            'Call_Type_AZ_US__c',
+            'CreatedByID',
+            'LastModifiedById',
+            'OwnerId',
+            'RecordTypeId'
+          ]
         //  where: 'OwnerId IN _userIDs'
         },
         frmAccounts:{
