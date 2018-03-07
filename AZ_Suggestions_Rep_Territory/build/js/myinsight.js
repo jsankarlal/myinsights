@@ -90972,13 +90972,8 @@ $q = window.Q;
            
             });
 
-            _this.dsRunQuery(_this.queryConfig.trends).then(function(trends) {
-                _this.consoleLog('trends Response', trends);
-           
-            });
-            
             _this.dsRunQuery(_this.queryConfig.frmAccounts).then(function(frmAccounts) {
-                _this.consoleLog('trends Response', frmAccounts);
+                _this.consoleLog('frmAccounts Response', frmAccounts);
            
             });
             
