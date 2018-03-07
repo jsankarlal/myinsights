@@ -23,7 +23,14 @@
         var _this = this;
         _this.consoleLog('FRM Testing::INI');
         try {
-            
+            _this.getCurrentObjectId('User', 'Id').then(function(result) {
+                _this.consoleLog('getCurrentObjectId :', result.User.Id);
+            });
+
+            // _this.getCurrentObjectId('User', 'Id').then(function(result) {
+            //     _this.consoleLog('getCurrentObjectId :', result.User.Id);
+            // });
+
             _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
                  _this.consoleLog('Incidents Response :', incidents.length);
             });
@@ -52,13 +59,13 @@
            
             });
 
-            _this.dsRunQuery(_this.queryConfig.allTierdAccounts).then(function(allTierdAccounts) {
-                _this.consoleLog('allTierdAccounts Response length:', allTierdAccounts.length);
+            // _this.dsRunQuery(_this.queryConfig.allTierdAccounts).then(function(allTierdAccounts) {
+            //     _this.consoleLog('allTierdAccounts Response length:', allTierdAccounts.length);
            
-            });
+            // });
             
         } catch (error) {
-            _this.consoleLog('Error in FRM', error);
+            _this.consoleLog('Error in FRM :', JSON.stringify(error, null, "\t"));
         }
     }
     

@@ -302,17 +302,12 @@ $q = window.Q;
         },
         users: {
           object: 'User',
-          fields: ['Name', 'Id'],
-          where: ''
+          fields: ['Name', 'Id']
         },
         incidents: {
           object: 'MI_Incident_AZ_US__c',
           fields: [
-            'Name',
-            'CreatedById',
-            'LastModifiedById',
-            'OwnerId',
-            'RecordTypeId'
+            'Name'
           ]
         //  where: 'OwnerId IN _userIDs'
         },
@@ -345,8 +340,7 @@ $q = window.Q;
             'LastModifiedById',
             'OwnerId',
             'RecordTypeId'
-          ],
-          where: ''
+          ]
         },
         callsById: {
           object: 'Call2_vod__c',
@@ -369,16 +363,7 @@ $q = window.Q;
           object: 'Call2_vod__c',
           fields: [
             'Id',
-            'Account_vod__c',
-            'Call_Date_vod__c',
-            'Status_vod__c',
-            'Detailed_Products_vod__c',
-            'Name',
-            'Call_Type_AZ_US__c',
-            'CreatedByID',
-            'LastModifiedById',
-            'OwnerId',
-            'RecordTypeId'
+            'Account_vod__c'
           ]
         //  where: 'OwnerId IN _userIDs'
         },
@@ -387,8 +372,8 @@ $q = window.Q;
           fields: [
             'ID',
             'Name'
-          ],
-          where: ''
+          ]
+        //  where: ''
         },
       
         allTierdAccounts:{
@@ -396,15 +381,12 @@ $q = window.Q;
           fields: [
             'ID',
             'Name',
-            'MI_Primary_StreetAddress_AZ_US__c',
-            'MI_Primary_City_AZ_US__c',
-            'MI_Primary_State_AZ_US__c',
             'Phone',
             'MI_MAPS_Tier_AZ_US__c',
             'MI_Oncology_Tier_AZ_US__c',
-            'Respiratory_Tier_AZ_US__c',
-          ],
-          where: 'MI_MAPS_Tier_AZ_US__c = "1" OR MI_Oncology_Tier_AZ_US__c = "1" OR Respiratory_Tier_AZ_US__c = "1"'
+            'Respiratory_Tier_AZ_US__c'
+          ]
+    //      where: 'MI_MAPS_Tier_AZ_US__c = "1" OR MI_Oncology_Tier_AZ_US__c = "1" OR Respiratory_Tier_AZ_US__c = "1"'
         }
 	};
     //jscs:enable
