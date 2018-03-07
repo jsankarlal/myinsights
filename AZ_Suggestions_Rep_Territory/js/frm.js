@@ -21,19 +21,22 @@
   
     FRM.prototype.init = function() {
         var _this = this;
-        _this.clm = com.veeva.clm;
         _this.consoleLog('FRM Testing::INI');
         try {
             _this.consoleLog('Incidents Query', _this.queryConfig.incidents);
             _this.dsRunQuery(_this.queryConfig.incidents).then(function(incidents) {
                 _this.consoleLog('Incidents Response', incidents);
-           //     _this.parseAccounts(accounts);
             });
 
-            _this.consoleLog('Incidents Query', _this.queryConfig.calls);
+            _this.consoleLog('Calls Query', _this.queryConfig.calls);
             _this.dsRunQuery(_this.queryConfig.calls).then(function(incidents) {
                 _this.consoleLog('Incidents Response', incidents);
-           //     _this.parseAccounts(accounts);
+            });
+
+            _this.consoleLog('accounts Query', _this.queryConfig.accounts);
+            _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
+                _this.consoleLog('accounts Response', accounts);
+           
             });
             
         } catch (error) {
@@ -47,9 +50,9 @@
 
 $(function() {
 	console.log('document ready');
-	var FRM = new FRM();
+	var frmObject = new FRM();
     
     $('#response').append('<pre>FRM document-ready</pre>');
     
-	FRM.init();
+	frmObject.init();
 });
