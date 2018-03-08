@@ -90925,6 +90925,7 @@ $q = window.Q;
 
             ds.getDataForCurrentObject('User', 'ID').then(function(result) {
                 deferred.resolve(result);
+                _this.consoleLog('getDataForCurrentObject Response :', result);
             });
 
             // _this.getCurrentObjectId('User', 'Id').then(function(result) {
