@@ -331,7 +331,7 @@ $q = window.Q;
             'OwnerId',
             'RecordTypeId'
           ],
-          where: 'OwnerId = _userID'
+          where: 'OwnerId = "005U0000005Z5J7IAK"'
         },
         trends: {
           object: 'MI_Trend_AZ_US__c',
@@ -360,7 +360,7 @@ $q = window.Q;
             'OwnerId',
             'RecordTypeId'
           ],
-          where: 'OwnerId = _userIDs'
+          where: 'OwnerId = "005U0000005Z5J7IAK"'
         },
         calls: {
           object: 'Call2_vod__c',

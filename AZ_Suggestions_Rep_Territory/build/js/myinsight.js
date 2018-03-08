@@ -90821,7 +90821,7 @@ $q = window.Q;
             'OwnerId',
             'RecordTypeId'
           ],
-          where: 'OwnerId = _userID'
+          where: 'OwnerId = "005U0000005Z5J7IAK"'
         },
         trends: {
           object: 'MI_Trend_AZ_US__c',
@@ -90850,7 +90850,7 @@ $q = window.Q;
             'OwnerId',
             'RecordTypeId'
           ],
-          where: 'OwnerId = _userIDs'
+          where: 'OwnerId = "005U0000005Z5J7IAK"'
         },
         calls: {
           object: 'Call2_vod__c',
@@ -90939,7 +90939,15 @@ $q = window.Q;
             });
 
             _this.dsRunQuery(_this.queryConfig.calls).then(function(calls) {
-                 _this.consoleLog('Incidents Response : ', calls.length);
+                 _this.consoleLog('calls Response : ', calls.length);
+            });
+			
+			_this.dsRunQuery(_this.queryConfig.incidentsById).then(function(incidents) {
+                 _this.consoleLog('incidentsById Response : ', incidents.length);
+            });
+			
+			_this.dsRunQuery(_this.queryConfig.callsById).then(function(calls) {
+                 _this.consoleLog('callsById Response : ', calls.length);
             });
 
             _this.dsRunQuery(_this.queryConfig.accounts).then(function(accounts) {
