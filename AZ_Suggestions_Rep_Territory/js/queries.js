@@ -51,7 +51,7 @@ $q = window.Q;
         _this.consoleLog('dsRunQuery - entering');
         _this.consoleLog('queryObject', queryObject);
 		if (collections) {
-			queryObject.where += ds.getInStatement(collection); //where: 'TerritoryId IN ' + inTerr //where: 'Account_vod__c =\''+ accountId +'\''
+			queryObject.where += ds.getInStatement(collections); //where: 'TerritoryId IN ' + inTerr //where: 'Account_vod__c =\''+ accountId +'\''
 		}
 
 		if (condition) {
