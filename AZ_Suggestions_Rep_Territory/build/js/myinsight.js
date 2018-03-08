@@ -90924,12 +90924,12 @@ $q = window.Q;
             // });
 			_this.consoleLog('getDataForCurrentObject STARTS :', result);
 			
-            ds.getDataForCurrentObject('User', 'Id').then(function(result) {
+           /*  ds.getDataForCurrentObject('User', 'Id').then(function(result) {
 				//console.log(result);
                 _this.consoleLog('getDataForCurrentObject Response :', result);
 				_this.consoleLog('getDataForCurrentObject Response :', result.User.Id);
 				deferred.resolve(result.User.Id);
-            });
+            }); */
 			
 			_this.consoleLog('After getDataForCurrentObject :');
 
