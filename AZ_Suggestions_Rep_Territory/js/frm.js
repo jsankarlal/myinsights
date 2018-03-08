@@ -20,11 +20,16 @@
     }
   
     FRM.prototype.init = function() {
-        var _this = this;
+        var _this = this,
+            deferred = $q.defer();
         _this.consoleLog('FRM Testing::INI');
         try {
-            _this.getCurrentObjectId('User', 'Id').then(function(result) {
-                _this.consoleLog('getCurrentObjectId :', JSON.stringify(result, null, '\t'));
+            // _this.getCurrentObjectId('User', 'Id').then(function(result) {
+            //     _this.consoleLog('getCurrentObjectId :', JSON.stringify(result, null, '\t'));
+            // });
+
+            ds.getDataForCurrentObject('User', 'ID').then(function(result) {
+                deferred.resolve(result);
             });
 
             // _this.getCurrentObjectId('User', 'Id').then(function(result) {
