@@ -90923,9 +90923,11 @@ $q = window.Q;
             //     _this.consoleLog('getCurrentObjectId :', JSON.stringify(result, null, '\t'));
             // });
 
-            ds.getDataForCurrentObject('User', 'ID').then(function(result) {
-                deferred.resolve(result);
+            ds.getDataForCurrentObject('User', 'Id').then(function(result) {
+				//console.log(result);
                 _this.consoleLog('getDataForCurrentObject Response :', result);
+				_this.consoleLog('getDataForCurrentObject Response :', result.User.Id);
+				deferred.resolve(result.User.Id);
             });
 
             // _this.getCurrentObjectId('User', 'Id').then(function(result) {
