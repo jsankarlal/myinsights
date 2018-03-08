@@ -27,14 +27,14 @@
             // _this.getCurrentObjectId('User', 'Id').then(function(result) {
             //     _this.consoleLog('getCurrentObjectId :', JSON.stringify(result, null, '\t'));
             // });
-			_this.consoleLog('getDataForCurrentObject STARTS :', result);
+			_this.consoleLog('getDataForCurrentObject STARTS :');
 			
-           /*  ds.getDataForCurrentObject('User', 'Id').then(function(result) {
+             ds.getDataForCurrentObject('User', 'Id').then(function(result) {
 				//console.log(result);
                 _this.consoleLog('getDataForCurrentObject Response :', result);
 				_this.consoleLog('getDataForCurrentObject Response :', result.User.Id);
 				deferred.resolve(result.User.Id);
-            }); */
+            }); 
 			
 			_this.consoleLog('After getDataForCurrentObject :');
 
