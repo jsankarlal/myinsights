@@ -643,6 +643,7 @@ $(document).ready(function() {
             map['status'] = 'Status';
             map['lastStatusUpdatedBy'] = 'Last Status Updated By';
             map['accountName'] = 'Account Name';
+			map['accountNameFormula'] = 'Account Name Formula';
             map['postedDate'] = 'Posted Date';
             map['expirationDate'] = 'Expiration Date';
             map['productTags'] = 'Tagged Products';
@@ -1238,6 +1239,7 @@ $(document).ready(function() {
 	            postedDate: moment(suggestion.Posted_Date_vod__c).format('LL'),
 				expirationDate: moment(suggestion.Expiration_Date_vod__c).format('LL'),
 				accountName: suggestion.AccountName,
+				accountNameFormula: suggestion.AccountNameFormula,
 				tags: suggestion.tags,
 				productTags: suggestion.productTags,
 				driverTags: suggestion.driverTags
@@ -1313,6 +1315,7 @@ $(document).ready(function() {
 					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
 					Account_vod__c: suggestions[i].Account_vod__c.value,
 					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
+					AccountNameFormula : suggestions[i].Account_Name_Formula_AZ_US__c.value,
 					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
 					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
 					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,

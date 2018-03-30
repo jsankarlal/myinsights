@@ -538,6 +538,7 @@ $(document).ready(function() {
             map['status'] = 'Status';
             map['lastStatusUpdatedBy'] = 'Last Status Updated By';
             map['accountName'] = 'Account Name';
+			map['accountNameFormula'] = 'Account Name Formula';
             map['postedDate'] = 'Posted Date';
             map['expirationDate'] = 'Expiration Date';
             map['productTags'] = 'Tagged Products';
@@ -825,7 +826,7 @@ $(document).ready(function() {
        var queryConfig = {
             suggestions: {
                 object: 'Suggestion_vod__c',
-                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Owner_District_AZ_US__c', 'Actioned_By_AZ_US__c', 'Completed_By_AZ_US__c', 'Dismissed_By_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c']
+                fields: ['OwnerId', 'Account_Name_Stamp_AZ_US__c', 'Account_Name_Formula_AZ_US__c','Owner_District_AZ_US__c', 'Actioned_By_AZ_US__c', 'Completed_By_AZ_US__c', 'Dismissed_By_AZ_US__c', 'Account_vod__c','CreatedDate', 'RecordTypeId', 'Id', 'Marked_As_Complete_vod__c', 'Actioned_vod__c', 'Dismissed_vod__c', 'Title_vod__c', 'Reason_vod__c', 'Posted_Date_vod__c', 'Expiration_Date_vod__c']
             }
         };
 
@@ -1071,6 +1072,7 @@ $(document).ready(function() {
 	            postedDate: moment(suggestion.Posted_Date_vod__c).format('LL'),
 				expirationDate: moment(suggestion.Expiration_Date_vod__c).format('LL'),
 				accountName: suggestion.AccountName,
+				accountNameFormula: suggestion.AccountNameFormula,
 				tags: suggestion.tags,
 				productTags: suggestion.productTags,
 				driverTags: suggestion.driverTags
@@ -1136,6 +1138,7 @@ $(document).ready(function() {
 					Expiration_Date_vod__c: suggestions[i].Expiration_Date_vod__c.value,
 					Account_vod__c: suggestions[i].Account_vod__c.value,
 					AccountName: suggestions[i].Account_Name_Stamp_AZ_US__c.value,
+					AccountNameFormula : suggestions[i].Account_Name_Formula_AZ_US__c.value,
 					Actioned_By_AZ_US__c: suggestions[i].Actioned_By_AZ_US__c.value,
 					Completed_By_AZ_US__c: suggestions[i].Completed_By_AZ_US__c.value,
 					Dismissed_By_AZ_US__c: suggestions[i].Dismissed_By_AZ_US__c.value,
